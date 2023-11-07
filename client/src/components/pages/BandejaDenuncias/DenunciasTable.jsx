@@ -125,9 +125,21 @@ export const DenunciasTable = () => {
         className='mb-8 shadow-3'
         header={HeaderTable()}
       >
-        <Column field='Nro' header='Nro' />
-        <Column field='Realizacion' header='Realización' />
-        <Column field='Seccional' header='Seccional' />
+        <Column field='idDenuncia' header='Nro' />
+        <Column
+          field='realizacion'
+          header='Realización'
+          body={(rowData) =>
+            rowData.realizacion ? rowData.realizacion : 'NO TIENE'
+          }
+        />
+        <Column
+          field='seccional'
+          header='Seccional'
+          body={(rowData) =>
+            rowData.seccional ? rowData.seccional : 'NO TIENE'
+          }
+        />
         <Column
           field='fechaDenuncia'
           header='Fecha de Denuncia'
@@ -140,7 +152,13 @@ export const DenunciasTable = () => {
           }}
         />
         <Column field='tipoDenuncia' header='Tipo de Denuncia' />
-        <Column field='Competencia' header='Competencia' />
+        <Column
+          field='competencia'
+          header='Competencia'
+          body={(rowData) =>
+            rowData.competencia ? rowData.competencia : 'NO TIENE'
+          }
+        />
         <Column field='Ratificada' header='Ratificada' />
         <Column field='FiscaliaAsignada' header='Fiscalía Asignada' />
         <Column field='NumLegajoAsignado' header='Nro de Legajo Asignado' />

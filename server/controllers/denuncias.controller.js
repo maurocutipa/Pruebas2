@@ -17,9 +17,13 @@ const getDenuncias = async (req, res) => {
         SELECT
             id_denuncia AS idDenuncia,
             fecha_denuncia AS fechaDenuncia,
-            td.nombre AS tipoDenuncia
+            realizacion,
+            competencia,
+            td.nombre AS tipoDenuncia,
+            s.nombre AS seccional
         FROM denuncia d
         JOIN denuncia_tipos td ON d.id_tipo_denuncia = td.id_tipo_denuncia
+        LEFT JOIN seccionales s ON d.id_seccional = s.id_seccional
         LIMIT ${limit}
         OFFSET ${offset}`;
     const denuncias = await queryHandler(query);
@@ -62,12 +66,10 @@ const getDatosDeFiltros = async (req, res) => {
 
     const delegacionesFiscales = await queryHandler(query);
 
-    res
-      .status(200)
-      .json({
-        message: 'ok',
-        data: { tiposDenuncia, seccionales, delegacionesFiscales },
-      });
+    res.status(200).json({
+      message: 'ok',
+      data: { tiposDenuncia, seccionales, delegacionesFiscales },
+    });
   } catch (error) {
     console.log(error);
     httpErrorHandler(res);
