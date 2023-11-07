@@ -1,0 +1,41 @@
+:root {
+  --blue-mpa-900: #051041;
+  --blue-mpa-800: #071866;
+  --lightblue-mpa-900: #1f3dc2;
+}
+
+body {
+  font-family: var(--font-family);
+  color: var(--text-color) !important;
+  background-color: var(--surface-ground) !important;
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.btn-blue-mpa {
+  background-color: var(--blue-mpa-800);
+  border-color: var(--blue-mpa-800);
+}
+
+.btn-blue-mpa:hover {
+  background-color: var(--blue-mpa-900);
+}
+
+.text-lightblue-mpa {
+  color: var(--lightblue-mpa-900);
+}
+
+.text-blue-mpa {
+  color: var(--blue-mpa-900);
+}
+
+.bg-lightblue-mpa {
+  background-color: var(--lightblue-mpa-900);
+}
+
+.bg-black {
+  background-color: black;
+}

@@ -1,0 +1,49 @@
+{
+  "name": "backend-mpa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "local": "nodemon server.js",
+    "dev": "cross-env NODE_ENV=development nodemon server.js",
+    "prod": "cross-env NODE_ENV=production nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.5.1",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "crypto": "^1.0.1",
+    "csrf-csrf": "^3.0.1",
+    "dayjs": "^1.11.10",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.1",
+    "express-validator": "^7.0.1",
+    "helmet": "^7.0.0",
+    "module-alias": "^2.2.3",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql": "^2.18.1",
+    "nodemailer": "^6.9.6",
+    "nodemon": "^3.0.1",
+    "pdf-creator-node": "^2.3.5",
+    "puppeteer": "^21.4.0",
+    "winston": "^3.11.0"
+  },
+  "_moduleAliases": {
+    "@root": ".",
+    "@routes": "./routes",
+    "@utils": "./utils",
+    "@middlewares": "./middlewares",
+    "@controllers": "./controllers",
+    "@config": "./config",
+    "@validators": "./validators",
+    "@data": "./data",
+    "@static": "./static"
+  }
+}

@@ -1,0 +1,11 @@
+.p-menuitem-text,.p-menuitem-icon,.p-menubar-button{
+  color: white;
+}
+
+.p-menuitem-link:hover,.p-menubar-button:hover{
+  background-color: #444C71;
+}
+
+.p-menubar,.p-menubar-root-list{
+  background-color: #051041;
+}
