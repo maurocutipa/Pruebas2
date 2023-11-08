@@ -13,19 +13,16 @@ import { useAppDispatch, useAppSelector } from '../../../store/hooks.js';
 import { getDenunciasThunk } from '@/store/denunciasSlice/denuncias.thunks.js';
 
 const filtersInitialState = {
-  Global: false,
-  GlobalValue: '',
-  Nro: '',
-  Realizacion: '',
-  Seccional: '',
-  FechaDenunciaDesde: null,
-  FechaDenunciaHasta: null,
-  TipoDenuncia: '',
-  Competencia: '',
-  Ratificada: '',
-  FiscaliaAsignada: '',
-  NumLegajoAsignado: '',
-  Acciones: '',
+  nro: '',
+  realizacion: '',
+  seccional: 0,
+  fechaDenunciaDesde: null,
+  fechaDenunciaHasta: null,
+  tipoDenuncia: 0,
+  competencia: '',
+  ratificada: '',
+  fiscaliaAsignada: '',
+  numLegajoAsignado: '',
 };
 
 export const DenunciasTable = () => {
@@ -46,8 +43,22 @@ export const DenunciasTable = () => {
   });
 
   useEffect(() => {
-    dispatch(getDenunciasThunk(lazyState));
+    dispatch(getDenunciasThunk({ ...lazyState, ...filters }));
   }, [dispatch, lazyState]);
+
+  // handleRealizarBusqueda: Evento onClick del boton "Realizar busqueda"
+  const handleRealizarBusqueda = () => {
+    dispatch(getDenunciasThunk({ ...lazyState, ...filters }));
+  };
+
+  // resetAllFilters: Limpia los filtros y reinicia la tabla
+  const resetAllFilters = () => {
+    setFilters(filtersInitialState);
+
+    setResetFilters(!resetFilters);
+    setGlobalFilterValue('');
+    dispatch(getDenunciasThunk({ ...lazyState }));
+  };
 
   const onFilterChange = (field, value) => {
     if (field === 'FechaDenunciaDesde' || field === 'FechaDenunciaHasta') {
@@ -56,13 +67,6 @@ export const DenunciasTable = () => {
     } else {
       setFilters({ ...filters, [field]: value });
     }
-  };
-
-  const resetAllFilters = () => {
-    setFilters(filtersInitialState);
-
-    setResetFilters(!resetFilters);
-    setGlobalFilterValue('');
   };
 
   const HeaderTable = () => {
@@ -107,6 +111,7 @@ export const DenunciasTable = () => {
         filters={filters}
         onFilterChange={onFilterChange}
         resetAllFilters={resetAllFilters}
+        handleRealizarBusqueda={handleRealizarBusqueda}
       />
 
       <ConfirmDialog draggable={false} />
@@ -159,14 +164,14 @@ export const DenunciasTable = () => {
             rowData.competencia ? rowData.competencia : 'NO TIENE'
           }
         />
-        <Column field='Ratificada' header='Ratificada' />
-        <Column field='FiscaliaAsignada' header='Fiscalía Asignada' />
-        <Column field='NumLegajoAsignado' header='Nro de Legajo Asignado' />
+        <Column field='ratificada' header='Ratificada' />
+        <Column field='fiscaliaAsignada' header='Fiscalía Asignada' />
+        <Column field='numLegajoAsignado' header='Nro de Legajo Asignado' />
         <Column
           field='Acciones'
           header='Acciones'
           body={(denuncia) => (
-            <AccionesTabla id={denuncia.Nro} setVisible={setVisible} />
+            <AccionesTabla id={denuncia.idDenuncia} setVisible={setVisible} />
           )}
         />
       </DataTable>

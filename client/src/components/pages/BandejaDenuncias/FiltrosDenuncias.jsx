@@ -5,10 +5,7 @@ import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
 
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import {
-  getDenunciasThunk,
-  getDatosDeFiltrosThunk,
-} from '@/store/denunciasSlice/denuncias.thunks';
+import { getDatosDeFiltrosThunk } from '@/store/denunciasSlice/denuncias.thunks';
 import { useEffect } from 'react';
 
 const today = new Date();
@@ -17,14 +14,14 @@ const maxDate = new Date();
 maxDate.setMonth(today.getMonth());
 maxDate.setFullYear(today.getFullYear());
 
-export const FiltrosDenuncias = ({ filters, onFilterChange }) => {
+export const FiltrosDenuncias = ({
+  filters,
+  onFilterChange,
+  handleRealizarBusqueda,
+}) => {
   const dispatch = useAppDispatch();
   const { datosDeFiltros } = useAppSelector((state) => state.denuncias);
   const { seccionales, tiposDenuncia, delegacionesFiscales } = datosDeFiltros;
-
-  const handleRealizarBusqueda = () => {
-    dispatch(getDenunciasThunk(filters));
-  };
 
   useEffect(() => {
     dispatch(getDatosDeFiltrosThunk());
@@ -37,7 +34,7 @@ export const FiltrosDenuncias = ({ filters, onFilterChange }) => {
           <div className='col-12 md:col-6 lg:col-3'>
             <InputText
               value={filters.Nro}
-              onChange={(e) => onFilterChange('Nro', e.target.value)}
+              onChange={(e) => onFilterChange('nro', e.target.value)}
               placeholder='N° Denuncia'
               className='w-12'
             />
@@ -45,7 +42,7 @@ export const FiltrosDenuncias = ({ filters, onFilterChange }) => {
           <div className='col-12 md:col-6 lg:col-3'>
             <Dropdown
               value={filters.Realizacion}
-              onChange={(e) => onFilterChange('Realizacion', e.target.value)}
+              onChange={(e) => onFilterChange('realizacion', e.target.value)}
               placeholder='Seleccione una Realización'
               className='w-full'
             />
@@ -55,8 +52,8 @@ export const FiltrosDenuncias = ({ filters, onFilterChange }) => {
               options={seccionales}
               optionLabel='seccional'
               optionValue='idSeccional'
-              value={filters.Seccional}
-              onChange={(e) => onFilterChange('Seccional', e.target.value)}
+              value={filters.seccional}
+              onChange={(e) => onFilterChange('seccional', e.target.value)}
               placeholder='Seleccione una seccional'
               className='w-12'
             />
@@ -66,8 +63,8 @@ export const FiltrosDenuncias = ({ filters, onFilterChange }) => {
               options={tiposDenuncia}
               optionLabel='tipoDenuncia'
               optionValue='idTipoDenuncia'
-              value={filters.TipoDenuncia}
-              onChange={(e) => onFilterChange('TipoDenuncia', e.target.value)}
+              value={filters.tipoDenuncia}
+              onChange={(e) => onFilterChange('tipoDenuncia', e.target.value)}
               placeholder='Seleccione un tipo de denuncia'
               className='w-12'
             />
@@ -75,7 +72,7 @@ export const FiltrosDenuncias = ({ filters, onFilterChange }) => {
           <div className='col-12 md:col-6 lg:col-3'>
             <Dropdown
               value={filters.Competencia}
-              onChange={(e) => onFilterChange('Competencia', e.target.value)}
+              onChange={(e) => onFilterChange('competencia', e.target.value)}
               placeholder='Seleccione Competencia'
               className='w-12'
             />
@@ -83,7 +80,7 @@ export const FiltrosDenuncias = ({ filters, onFilterChange }) => {
           <div className='col-12 md:col-6 lg:col-3'>
             <Dropdown
               value={filters.Ratificada}
-              onChange={(e) => onFilterChange('Ratificada', e.target.value)}
+              onChange={(e) => onFilterChange('ratificada', e.target.value)}
               placeholder='Seleccione estado'
               className='w-12'
             />
@@ -92,7 +89,7 @@ export const FiltrosDenuncias = ({ filters, onFilterChange }) => {
             <Calendar
               value={filters.FechaDenunciaDesde}
               onChange={(e) =>
-                onFilterChange('FechaDenunciaDesde', e.target.value)
+                onFilterChange('fechaDenunciaDesde', e.target.value)
               }
               dateFormat='dd/mm/yy'
               placeholder='Fecha Desde'
@@ -110,7 +107,7 @@ export const FiltrosDenuncias = ({ filters, onFilterChange }) => {
             <Calendar
               value={filters.FechaDenunciaHasta}
               onChange={(e) =>
-                onFilterChange('FechaDenunciaHasta', e.target.value)
+                onFilterChange('fechaDenunciaHasta', e.target.value)
               }
               dateFormat='dd/mm/yy'
               placeholder='Fecha Hasta'
@@ -131,7 +128,7 @@ export const FiltrosDenuncias = ({ filters, onFilterChange }) => {
               optionValue='idDelegacionFiscal'
               value={filters.FiscaliaAsignada}
               onChange={(e) =>
-                onFilterChange('FiscaliaAsignada', e.target.value)
+                onFilterChange('fiscaliaAsignada', e.target.value)
               }
               placeholder='Seleccione fiscalia asignada'
               className='w-12'
@@ -141,7 +138,7 @@ export const FiltrosDenuncias = ({ filters, onFilterChange }) => {
             <InputText
               value={filters.NumLegajoAsignado}
               onChange={(e) =>
-                onFilterChange('NumLegajoAsignado', e.target.value)
+                onFilterChange('numLegajoAsignado', e.target.value)
               }
               placeholder='N° De legajo asignado'
               className='w-12'
