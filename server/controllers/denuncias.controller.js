@@ -9,23 +9,35 @@ const showError = require('../utils/showError');
 const getDenuncias = async (req, res) => {
   const { limit, offset } = req.body;
 
+  let filters = ``;
+
+  if (req.body.tipoDenuncia !== undefined && req.body.tipoDenuncia !== 0) {
+    filters += `AND d.id_tipo_denuncia = ${req.body.tipoDenuncia}`;
+  }
+
+  if (req.body.seccional !== undefined && req.body.seccional !== 0) {
+    filters += ` AND d.id_seccional = ${req.body.seccional}`;
+  }
+
   try {
-    let query = `SELECT COUNT(*) AS total_records FROM denuncia;`;
+    let query = `SELECT COUNT(*) AS total_records FROM denuncia d WHERE estado = 1 ${filters};`;
     const count = await queryHandler(query);
 
     query = `
-        SELECT
-            id_denuncia AS idDenuncia,
-            fecha_denuncia AS fechaDenuncia,
-            realizacion,
-            competencia,
-            td.nombre AS tipoDenuncia,
-            s.nombre AS seccional
-        FROM denuncia d
-        JOIN denuncia_tipos td ON d.id_tipo_denuncia = td.id_tipo_denuncia
-        LEFT JOIN seccionales s ON d.id_seccional = s.id_seccional
-        LIMIT ${limit}
-        OFFSET ${offset}`;
+      SELECT
+          id_denuncia AS idDenuncia,
+          fecha_denuncia AS fechaDenuncia,
+          realizacion,
+          competencia,
+          td.nombre AS tipoDenuncia,
+          s.nombre AS seccional
+      FROM denuncia d
+      JOIN denuncia_tipos td ON d.id_tipo_denuncia = td.id_tipo_denuncia
+      LEFT JOIN seccionales s ON d.id_seccional = s.id_seccional
+      WHERE d.estado = 1 ${filters}
+      LIMIT ${limit}
+      OFFSET ${offset}
+    `;
     const denuncias = await queryHandler(query);
 
     res.status(200).json({
@@ -59,9 +71,10 @@ const getDatosDeFiltros = async (req, res) => {
 
     query = `
         SELECT
-            id_delegacion_fiscal AS idDelegacionFiscal,
-            nombre AS delegacionFiscal
-        FROM delegaciones_fiscales
+            id_sector AS idDelegacionFiscal,
+            label AS delegacionFiscal
+        FROM sectores
+        WHERE fiscalia_h = 'SI'
     `;
 
     const delegacionesFiscales = await queryHandler(query);
