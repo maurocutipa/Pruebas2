@@ -63,7 +63,7 @@ export const VictimasDenunciantesTable = () => {
         totalRecords={victimasDenunciantesData.length} // Actualiza con el total de registros
         loading={false} // Cambia a `true` cuando se está cargando
         emptyMessage='No se encontraron víctimas/denunciantes'
-        className='mb-8 shadow-3'
+        className='mb-4 shadow-3'
         header={HeaderTable()}
       >
         <Column field='apellido' header='Apellido' />
@@ -72,6 +72,9 @@ export const VictimasDenunciantesTable = () => {
         <Column field='calidad' header='Calidad' />
         <Column field='acciones' header='Acciones' />
       </DataTable>
+
+      <Button label='Agregar Victima/Denunciante'/>
+
     </>
   );
 };

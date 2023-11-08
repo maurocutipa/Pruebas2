@@ -10,7 +10,7 @@ export const DenunciadosTable = () => {
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [resetFilters, setResetFilters] = useState(false);
 
-  const [denunciadosData, setDenunciadosData] = useState([]); 
+  const [denunciadosData, setDenunciadosData] = useState([]);
 
   const resetAllFilters = () => {
     // Restablecer filtros y borrar la búsqueda global
@@ -63,7 +63,7 @@ export const DenunciadosTable = () => {
         totalRecords={denunciadosData.length} // Actualiza con el total de registros
         loading={false} // Cambia a `true` cuando se está cargando
         emptyMessage='No se encontraron víctimas/denunciantes'
-        className='mb-8 shadow-3'
+        className='mb-4 shadow-3'
         header={HeaderTable()}
       >
         <Column field='tipoIdentificacion' header='Tipo de Identificación' />
@@ -72,6 +72,9 @@ export const DenunciadosTable = () => {
         <Column field='nombre' header='Nombre' />
         <Column field='acciones' header='Acciones' />
       </DataTable>
+
+      <Button label='Agregar Denunciado' />
+
     </>
   );
 };
