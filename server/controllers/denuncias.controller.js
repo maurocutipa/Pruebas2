@@ -74,6 +74,82 @@ const getDenuncias = async (req, res) => {
   }
 };
 
+const getDenunciaById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    let query = `
+      SELECT
+        d.id_denuncia AS idDenuncia,
+        d.descripcion_como AS descripcionComo,
+        d.descripcion_que AS descripcionQue,
+        d.fecha_denuncia AS fechaDenuncia,
+        d.hora_denuncia AS horaDenuncia,
+        d.calle_hecho AS calleHecho,
+        d.num_calle AS numCalle,
+        d.piso_hecho AS pisoHecho,
+        d.departamento_hecho AS departamentoHecho,
+        d.informacion_adicional AS informacionAdicional,
+        d.detalle_adjunto AS detalleAdjunto,
+        s.nombre AS seccional,
+        l.nombre AS nombreLocalidad,
+        b.nombre_barrio AS nombreBarrio
+      FROM denuncia d
+      LEFT JOIN seccionales s ON d.id_seccional = s.id_seccional
+      LEFT JOIN localidades l ON d.id_localidad = l.id_localidad
+      LEFT JOIN barrios b ON d.id_barrio = b.id_barrio
+      WHERE id_denuncia = ?
+      LIMIT 1`;
+    const denuncia = await queryHandler(query, [id]);
+
+    if (denuncia.lenght === 0) {
+      return res.status(404).json({
+        message: `Denuncia con el id: ${id} no existe`,
+        data: { denuncia },
+      });
+    }
+
+    query = `
+      SELECT 
+        i.id,
+        i.nombre,
+        i.apellido,
+        i.tipo_identificacion AS tipoIdentificacion,
+        i.numero_identificacion AS numeroIdentificacion,
+        -- INTERVINIENTES
+        it.tipo_interviniente AS tipoInterviniente,
+        it.nombre_tipo AS nombreTipo
+      FROM interviniente_denuncia id
+      LEFT JOIN interviniente i ON id.id_interviniente = i.id
+      LEFT JOIN interviniente_tipo it ON i.id_interviniente_tipo = it.id_interviniente_tipo
+      WHERE id_denuncia = ?`;
+    const intervinientes = await queryHandler(query, [id]);
+
+    const victimas = intervinientes.filter(
+      (interviniente) => interviniente.tipoInterviniente === 'Victima'
+    );
+
+    const denunciados = intervinientes.filter(
+      (interviniente) => interviniente.tipoInterviniente === 'Denunciado'
+    );
+
+    const testigos = intervinientes.filter(
+      (interviniente) => interviniente.tipoInterviniente === 'Testigo'
+    );
+
+    res.status(200).json({
+      message: `Denuncia con el id: ${id}`,
+      data: {
+        denuncia: denuncia[0],
+        intervinientes: { victimas, denunciados, testigos },
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    httpErrorHandler(res);
+  }
+};
+
 const getDatosDeFiltros = async (req, res) => {
   try {
     let query = `
@@ -132,4 +208,9 @@ const deleteDenuncia = async (req, res) => {
   }
 };
 
-module.exports = { getDenuncias, getDatosDeFiltros, deleteDenuncia };
+module.exports = {
+  getDenuncias,
+  getDatosDeFiltros,
+  deleteDenuncia,
+  getDenunciaById,
+};

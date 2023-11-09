@@ -1,16 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
   deleteDenunciaThunk,
-  getDenunciaThunk,
+  getDenunciaByIdThunk,
   getDenunciasThunk,
   getDatosDeFiltrosThunk,
 } from './denuncias.thunks';
+import dayjs from 'dayjs';
 
 const initialState = {
   loading: true,
   denuncias: [],
   totalRecords: 0,
-  selectedDenuncia: null,
+  currentDenuncia: null,
   selectedIdDenuncia: 0,
   datosDeFiltros: {
     seccionales: [],
@@ -48,9 +49,14 @@ export const denunciasSlice = createSlice({
           (denuncia) => denuncia.idDenuncia != payload.data.id
         );
       })
-      .addCase(getDenunciaThunk.fulfilled, (state, { payload }) => {
-        state.selectedDenuncia = payload;
-        console.log(state.selectedDenuncia);
+      // Get Denuncia By Id
+      .addCase(getDenunciaByIdThunk.fulfilled, (state, { payload }) => {
+        state.currentDenuncia = {
+          ...payload.data.denuncia,
+          fechaDenuncia: dayjs(payload.data.denuncia.fechaDenuncia).format(
+            'YYYY-MM-DD'
+          ),
+        };
       });
   },
 });
