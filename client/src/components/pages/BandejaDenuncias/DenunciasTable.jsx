@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { InputText } from 'primereact/inputtext';
+// import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import { Tooltip } from 'primereact/tooltip';
+// import { Tooltip } from 'primereact/tooltip';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 
 import { FiltrosDenuncias } from './FiltrosDenuncias.jsx';
@@ -13,16 +13,16 @@ import { useAppDispatch, useAppSelector } from '../../../store/hooks.js';
 import { getDenunciasThunk } from '@/store/denunciasSlice/denuncias.thunks.js';
 
 const filtersInitialState = {
-  idDenuncia: null,
+  idDenuncia: '',
   realizacion: '',
   seccional: 0,
-  fechaDenunciaDesde: null,
-  fechaDenunciaHasta: null,
+  fechaDenunciaDesde: '',
+  fechaDenunciaHasta: '',
   tipoDenuncia: 0,
   competencia: '',
   ratificada: '',
   fiscaliaAsignada: '',
-  numLegajoAsignado: '',
+  idLegajo: '',
 };
 
 export const DenunciasTable = () => {
@@ -32,7 +32,6 @@ export const DenunciasTable = () => {
   );
 
   const [globalFilterValue, setGlobalFilterValue] = useState('');
-  const [resetFilters, setResetFilters] = useState(false);
   const [visible, setVisible] = useState(false);
 
   const [filters, setFilters] = useState(filtersInitialState);
@@ -43,7 +42,7 @@ export const DenunciasTable = () => {
   });
 
   useEffect(() => {
-    dispatch(getDenunciasThunk({ ...lazyState, ...filters }));
+    dispatch(getDenunciasThunk({ ...lazyState, ...filtersInitialState }));
   }, [dispatch, lazyState]);
 
   // handleRealizarBusqueda: Evento onClick del boton "Realizar busqueda"
@@ -54,10 +53,9 @@ export const DenunciasTable = () => {
   // resetAllFilters: Limpia los filtros y reinicia la tabla
   const resetAllFilters = () => {
     setFilters(filtersInitialState);
-
-    setResetFilters(!resetFilters);
     setGlobalFilterValue('');
-    dispatch(getDenunciasThunk({ ...lazyState }));
+
+    dispatch(getDenunciasThunk({ ...lazyState, ...filtersInitialState }));
   };
 
   const onFilterChange = (field, value) => {
@@ -80,7 +78,7 @@ export const DenunciasTable = () => {
           onClick={resetAllFilters}
           className='md:mb-0 mb-8 text-lightblue-mpa'
         />
-        <div>
+        {/* <div>
           <Tooltip target='.info-icon' />
           <i
             className='pi pi-info-circle mr-4 info-icon'
@@ -98,7 +96,7 @@ export const DenunciasTable = () => {
             />
           </span>
           <Button label='Buscar' className=' btn-blue-mpa ml-2' />
-        </div>
+        </div> */}
       </div>
     );
   };
@@ -164,9 +162,23 @@ export const DenunciasTable = () => {
             rowData.competencia ? rowData.competencia : 'NO TIENE'
           }
         />
-        <Column field='ratificada' header='Ratificada' />
-        <Column field='fiscaliaAsignada' header='Fiscalía Asignada' />
-        <Column field='numLegajoAsignado' header='Nro de Legajo Asignado' />
+        <Column
+          field='idUserRatificacion'
+          header='Ratificada'
+          body={(rowData) => (rowData.idUserRatificacion ? 'SI' : 'NO')}
+        />
+        <Column
+          field='fiscaliaAsignada'
+          header='Fiscalía Asignada'
+          body={(rowData) =>
+            rowData.fiscaliaAsignada ? rowData.fiscaliaAsignada : 'NO TIENE'
+          }
+        />
+        <Column
+          field='idLegajo'
+          header='Nro de Legajo Asignado'
+          body={(rowData) => (rowData.idLegajo ? rowData.idLegajo : 'NO TIENE')}
+        />
         <Column
           field='Acciones'
           header='Acciones'
