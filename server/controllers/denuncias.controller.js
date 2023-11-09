@@ -5,13 +5,15 @@ const queryHandler = require('../utils/queryHandler');
 const safeConcatQuery = require('../utils/safeConcatQuery');
 const convertToSnakeCase = require('../utils/convertToSnakeCase');
 const showError = require('../utils/showError');
+const { formatDate } = require('../utils/formatDate');
 
 const getDenuncias = async (req, res) => {
+  console.log(req.body);
   const { limit, offset } = req.body;
 
   let filters = ``;
 
-  if (req.body.idDenuncia !== undefined && req.body.idDenuncia !== null) {
+  if (req.body.idDenuncia !== undefined && req.body.idDenuncia !== '') {
     filters += ` AND d.id_denuncia = ${req.body.idDenuncia}`;
   }
 
@@ -23,21 +25,39 @@ const getDenuncias = async (req, res) => {
     filters += ` AND d.id_seccional = ${req.body.seccional}`;
   }
 
+  if (req.body.idLegajo !== undefined && req.body.idLegajo !== '') {
+    filters += ` AND d.id_legajo = ${req.body.idLegajo}`;
+  }
+
+  if (
+    req.body.fechaDenunciaDesde !== '' &&
+    req.body.fechaDenunciaHasta !== ''
+  ) {
+    filters += ` AND d.fecha_denuncia BETWEEN '${formatDate(
+      req.body.fechaDenunciaDesde
+    )}' AND '${formatDate(req.body.fechaDenunciaHasta)}'`;
+  }
+
   try {
     let query = `SELECT COUNT(*) AS total_records FROM denuncia d WHERE estado = 1 ${filters};`;
     const count = await queryHandler(query);
 
     query = `
       SELECT
-          id_denuncia AS idDenuncia,
-          fecha_denuncia AS fechaDenuncia,
-          realizacion,
-          competencia,
+          d.id_denuncia AS idDenuncia,
+          d.fecha_denuncia AS fechaDenuncia,
+          d.realizacion,
+          d.id_user_ratificacion AS idUserRatificacion,
+          d.competencia,
           td.nombre AS tipoDenuncia,
-          s.nombre AS seccional
+          s.nombre AS seccional,
+          l.id_legajo AS idLegajo,
+          sc.label AS fiscaliaAsignada
       FROM denuncia d
       JOIN denuncia_tipos td ON d.id_tipo_denuncia = td.id_tipo_denuncia
       LEFT JOIN seccionales s ON d.id_seccional = s.id_seccional
+      LEFT JOIN legajo l ON d.id_legajo = l.id_legajo
+      LEFT JOIN sectores sc ON l.id_sector = sc.id_sector
       WHERE d.estado = 1 ${filters}
       LIMIT ${limit}
       OFFSET ${offset}
@@ -102,12 +122,10 @@ const deleteDenuncia = async (req, res) => {
       return res.status(404).json({ message: 'Denuncia con ese id no existe' });
     }
 
-    res
-      .status(200)
-      .json({
-        message: 'Denuncia eliminada con éxito',
-        data: { id: req.params.id },
-      });
+    res.status(200).json({
+      message: 'Denuncia eliminada con éxito',
+      data: { id: req.params.id },
+    });
   } catch (error) {
     console.log(error);
     httpErrorHandler(res);
