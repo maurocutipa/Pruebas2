@@ -1,16 +1,16 @@
 /* eslint-disable react/prop-types */
+import { useRef } from 'react';
 import { Button } from 'primereact/button';
 import { confirmDialog } from 'primereact/confirmdialog';
-import { useAppDispatch } from '@/store/hooks';
-import {
-  deleteDenunciaThunk,
-  getDenunciaThunk,
-} from '@/store/denunciasSlice/denuncias.thunks';
-import { setIdDenuncia } from '@/store/denunciasSlice/denuncias.slice';
 import { Menu } from 'primereact/menu';
-import { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { useAppDispatch } from '@/store/hooks';
+import { deleteDenunciaThunk } from '@/store/denunciasSlice/denuncias.thunks';
+import { setIdDenuncia } from '@/store/denunciasSlice/denuncias.slice';
 
 export const AccionesTabla = ({ id, setVisible }) => {
+  const navigate = useNavigate();
   const menuLeft = useRef(null);
   const dispatch = useAppDispatch();
 
@@ -30,8 +30,7 @@ export const AccionesTabla = ({ id, setVisible }) => {
   };
 
   const mostrarDetalles = () => {
-    dispatch(getDenunciaThunk(id));
-    console.log('DETALLES', id);
+    navigate(`/ver-denuncia/${id}`);
   };
 
   const realizarPase = () => {

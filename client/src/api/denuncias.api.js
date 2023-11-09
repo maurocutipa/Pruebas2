@@ -3,6 +3,7 @@ import api from '.';
 const URLS = {
   getAll: '/denuncias/get-all',
   getDatosDeFiltros: '/denuncias/get-datos-filtros',
+  getDenunciaById: (id) => `/denuncias/get/${id}`,
   deleteDenuncia: (id) => `/denuncias/delete/${id}`,
 };
 
@@ -12,6 +13,10 @@ export const getAllDenuncias = (body) => {
 
 export const getDatosDeFiltros = () => {
   return api.get(URLS.getDatosDeFiltros);
+};
+
+export const getDenunciaById = (id) => {
+  return api.get(URLS.getDenunciaById(id));
 };
 
 export const deleteDenuncia = (id) => {

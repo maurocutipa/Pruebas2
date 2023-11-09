@@ -30,9 +30,9 @@ export const router = createBrowserRouter([
         element: <BandejaPasesDenuncias />,
       },
       {
-        path: '/ver-denuncia',
+        path: '/ver-denuncia/:id',
         element: <VerDenuncia />,
-      }
+      },
     ],
   },
 ]);
