@@ -41,9 +41,9 @@ export const FiltrosDenuncias = ({
           </div>
           <div className='col-12 md:col-6 lg:col-3'>
             <Dropdown
-              value={filters.Realizacion}
+              value={filters.realizacion}
               onChange={(e) => onFilterChange('realizacion', e.target.value)}
-              placeholder='Seleccione una Realización'
+              placeholder='Seleccione una realización'
               className='w-full'
             />
           </div>
@@ -71,15 +71,15 @@ export const FiltrosDenuncias = ({
           </div>
           <div className='col-12 md:col-6 lg:col-3'>
             <Dropdown
-              value={filters.Competencia}
+              value={filters.competencia}
               onChange={(e) => onFilterChange('competencia', e.target.value)}
-              placeholder='Seleccione Competencia'
+              placeholder='Seleccione competencia'
               className='w-12'
             />
           </div>
           <div className='col-12 md:col-6 lg:col-3'>
             <Dropdown
-              value={filters.Ratificada}
+              value={filters.ratificada}
               onChange={(e) => onFilterChange('ratificada', e.target.value)}
               placeholder='Seleccione estado'
               className='w-12'
@@ -87,12 +87,12 @@ export const FiltrosDenuncias = ({
           </div>
           <div className='col-12 md:col-6 lg:col-3'>
             <Calendar
-              value={filters.FechaDenunciaDesde}
+              value={filters.fechaDenunciaDesde}
               onChange={(e) =>
                 onFilterChange('fechaDenunciaDesde', e.target.value)
               }
               dateFormat='dd/mm/yy'
-              placeholder='Fecha Desde'
+              placeholder='Fecha desde'
               className='w-12'
               showIcon
               maxDate={maxDate}
@@ -105,12 +105,12 @@ export const FiltrosDenuncias = ({
           </div>
           <div className='col-12 md:col-6 lg:col-3'>
             <Calendar
-              value={filters.FechaDenunciaHasta}
+              value={filters.fechaDenunciaHasta}
               onChange={(e) =>
                 onFilterChange('fechaDenunciaHasta', e.target.value)
               }
               dateFormat='dd/mm/yy'
-              placeholder='Fecha Hasta'
+              placeholder='Fecha hasta'
               className='w-12'
               showIcon
               maxDate={maxDate}
@@ -126,7 +126,7 @@ export const FiltrosDenuncias = ({
               options={delegacionesFiscales}
               optionLabel='delegacionFiscal'
               optionValue='idDelegacionFiscal'
-              value={filters.FiscaliaAsignada}
+              value={filters.fiscaliaAsignada}
               onChange={(e) =>
                 onFilterChange('fiscaliaAsignada', e.target.value)
               }
@@ -136,11 +136,9 @@ export const FiltrosDenuncias = ({
           </div>
           <div className='col-12 md:col-6 lg:col-3'>
             <InputText
-              value={filters.NumLegajoAsignado}
-              onChange={(e) =>
-                onFilterChange('numLegajoAsignado', e.target.value)
-              }
-              placeholder='N° De legajo asignado'
+              value={filters.idLegajo}
+              onChange={(e) => onFilterChange('idLegajo', e.target.value)}
+              placeholder='N° Legajo asignado'
               className='w-12'
             />
           </div>
