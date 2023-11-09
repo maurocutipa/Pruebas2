@@ -11,6 +11,10 @@ const getDenuncias = async (req, res) => {
 
   let filters = ``;
 
+  if (req.body.idDenuncia !== undefined && req.body.idDenuncia !== null) {
+    filters += ` AND d.id_denuncia = ${req.body.idDenuncia}`;
+  }
+
   if (req.body.tipoDenuncia !== undefined && req.body.tipoDenuncia !== 0) {
     filters += `AND d.id_tipo_denuncia = ${req.body.tipoDenuncia}`;
   }
@@ -89,4 +93,25 @@ const getDatosDeFiltros = async (req, res) => {
   }
 };
 
-module.exports = { getDenuncias, getDatosDeFiltros };
+const deleteDenuncia = async (req, res) => {
+  // TODO: Validar idDenuncia
+  try {
+    const query = `UPDATE denuncia SET estado = 0 WHERE id_denuncia = ${req.params.id}`;
+    const result = await queryHandler(query);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Denuncia con ese id no existe' });
+    }
+
+    res
+      .status(200)
+      .json({
+        message: 'Denuncia eliminada con éxito',
+        data: { id: req.params.id },
+      });
+  } catch (error) {
+    console.log(error);
+    httpErrorHandler(res);
+  }
+};
+
+module.exports = { getDenuncias, getDatosDeFiltros, deleteDenuncia };

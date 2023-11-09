@@ -113,7 +113,11 @@ export let data = [
 ];
 
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { getAllDenuncias, getDatosDeFiltros } from '@/api/denuncias.api';
+import {
+  getAllDenuncias,
+  getDatosDeFiltros,
+  deleteDenuncia,
+} from '@/api/denuncias.api';
 
 export const getDenunciasThunk = createAsyncThunk(
   'denuncias/getAll',
@@ -159,8 +163,9 @@ export const deleteDenunciaThunk = createAsyncThunk(
   'denuncias/delete',
   async (idDenuncia, { rejectWithValue }) => {
     try {
-      // const deletedDenuncia = await ....
-      return idDenuncia;
+      const { data } = await deleteDenuncia(idDenuncia);
+
+      return data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }

@@ -44,9 +44,8 @@ export const denunciasSlice = createSlice({
       })
       // Delete Denuncia
       .addCase(deleteDenunciaThunk.fulfilled, (state, { payload }) => {
-        state.loading = false;
         state.denuncias = state.denuncias.filter(
-          (denuncia) => denuncia.Nro != payload
+          (denuncia) => denuncia.idDenuncia != payload.data.id
         );
       })
       .addCase(getDenunciaThunk.fulfilled, (state, { payload }) => {

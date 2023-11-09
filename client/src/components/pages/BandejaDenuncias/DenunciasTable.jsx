@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from '../../../store/hooks.js';
 import { getDenunciasThunk } from '@/store/denunciasSlice/denuncias.thunks.js';
 
 const filtersInitialState = {
-  nro: '',
+  idDenuncia: null,
   realizacion: '',
   seccional: 0,
   fechaDenunciaDesde: null,

@@ -33,8 +33,8 @@ export const FiltrosDenuncias = ({
         <div className='grid'>
           <div className='col-12 md:col-6 lg:col-3'>
             <InputText
-              value={filters.Nro}
-              onChange={(e) => onFilterChange('nro', e.target.value)}
+              value={filters.idDenuncia}
+              onChange={(e) => onFilterChange('idDenuncia', e.target.value)}
               placeholder='N° Denuncia'
               className='w-12'
             />
