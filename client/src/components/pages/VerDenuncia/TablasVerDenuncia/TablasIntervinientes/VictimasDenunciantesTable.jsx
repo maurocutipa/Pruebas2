@@ -6,11 +6,9 @@ import { Button } from 'primereact/button';
 import { Tooltip } from 'primereact/tooltip';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 
-export const VictimasDenunciantesTable = () => {
+export const VictimasDenunciantesTable = ({ victimas }) => {
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [resetFilters, setResetFilters] = useState(false);
-
-  const [victimasDenunciantesData, setVictimasDenunciantesData] = useState([]); // Tu data de víctimas/denunciantes
 
   const resetAllFilters = () => {
     // Restablecer filtros y borrar la búsqueda global
@@ -57,24 +55,22 @@ export const VictimasDenunciantesTable = () => {
       <ConfirmDialog draggable={false} />
 
       <DataTable
-        value={victimasDenunciantesData}
+        value={victimas}
         paginator
         rows={5}
-        totalRecords={victimasDenunciantesData.length} // Actualiza con el total de registros
+        totalRecords={victimas.length} // Actualiza con el total de registros
         loading={false} // Cambia a `true` cuando se está cargando
         emptyMessage='No se encontraron víctimas/denunciantes'
-        className='mb-4 shadow-3'
         header={HeaderTable()}
       >
         <Column field='apellido' header='Apellido' />
         <Column field='nombre' header='Nombre' />
-        <Column field='dni' header='DNI' />
+        <Column field='tipoIdentificacion' header='Tipo de Identificación' />
         <Column field='calidad' header='Calidad' />
         <Column field='acciones' header='Acciones' />
       </DataTable>
 
-      <Button label='Agregar Victima/Denunciante'/>
-
+      <Button className='btn-blue-mpa' label='Agregar Victima/Denunciante' />
     </>
   );
 };

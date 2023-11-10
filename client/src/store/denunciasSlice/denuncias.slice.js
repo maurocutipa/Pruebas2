@@ -52,10 +52,15 @@ export const denunciasSlice = createSlice({
       // Get Denuncia By Id
       .addCase(getDenunciaByIdThunk.fulfilled, (state, { payload }) => {
         state.currentDenuncia = {
-          ...payload.data.denuncia,
-          fechaDenuncia: dayjs(payload.data.denuncia.fechaDenuncia).format(
-            'YYYY-MM-DD'
-          ),
+          denuncia: {
+            ...payload.data.denuncia,
+            fechaDenuncia: dayjs(payload.data.denuncia.fechaDenuncia).format(
+              'YYYY-MM-DD'
+            ),
+          },
+          intervinientes: {
+            ...payload.data.intervinientes,
+          },
         };
       });
   },

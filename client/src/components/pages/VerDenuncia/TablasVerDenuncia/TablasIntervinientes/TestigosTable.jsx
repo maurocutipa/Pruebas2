@@ -6,11 +6,9 @@ import { Button } from 'primereact/button';
 import { Tooltip } from 'primereact/tooltip';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 
-export const TestigosTable = () => {
+export const TestigosTable = ({ testigos }) => {
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [resetFilters, setResetFilters] = useState(false);
-
-  const [testigosData, setTestigosData] = useState([]);
 
   const resetAllFilters = () => {
     // Restablecer filtros y borrar la búsqueda global
@@ -57,24 +55,23 @@ export const TestigosTable = () => {
       <ConfirmDialog draggable={false} />
 
       <DataTable
-        value={testigosData}
+        value={testigos}
         paginator
         rows={5}
-        totalRecords={testigosData.length} // Actualiza con el total de registros
+        totalRecords={testigos.length} // Actualiza con el total de registros
         loading={false} // Cambia a `true` cuando se está cargando
         emptyMessage='No se encontraron testigos'
-        className='mb-4 shadow-3'
+        className='mb-4'
         header={HeaderTable()}
       >
         <Column field='tipoIdentificacion' header='Tipo de Identificación' />
-        <Column field='numero' header='Número' />
+        <Column field='numeroIdentificacion' header='Número' />
         <Column field='apellido' header='Apellido' />
         <Column field='nombre' header='Nombre' />
         <Column field='acciones' header='Acciones' />
       </DataTable>
 
-      <Button label='Agregar Testigo'/>
-
+      <Button className='btn-blue-mpa' label='Agregar Testigo' />
     </>
   );
 };

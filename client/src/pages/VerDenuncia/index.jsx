@@ -11,10 +11,10 @@ import { getDenunciaByIdThunk } from '@/store/denunciasSlice/denuncias.thunks';
 import { ProgressSpinner } from 'primereact/progressspinner';
 
 export const VerDenuncia = () => {
-  const { id } = useParams();
   const dispatch = useAppDispatch();
   const { currentDenuncia } = useAppSelector((state) => state.denuncias);
-  console.log(currentDenuncia);
+
+  const { id } = useParams();
 
   const tipo = 'robo/hurto'; //tipo de prueba
 
@@ -47,7 +47,7 @@ export const VerDenuncia = () => {
           {/* Seccion de Datos Generales de la denuncia */}
 
           <section>
-            <DatosGenerales denuncia={currentDenuncia} />
+            <DatosGenerales denuncia={currentDenuncia.denuncia} />
           </section>
 
           <Divider />
@@ -55,7 +55,7 @@ export const VerDenuncia = () => {
           {/* Seccion de Tablas */}
 
           <section>
-            <TablasDenuncia />
+            <TablasDenuncia intervinientes={currentDenuncia.intervinientes} />
           </section>
 
           <Divider />
@@ -63,7 +63,7 @@ export const VerDenuncia = () => {
           {/* Seccion de Datos del hecho */}
 
           <section className='pl-4'>
-            <DatosDelHecho tipo={tipo} denuncia={currentDenuncia} />
+            <DatosDelHecho tipo={tipo} denuncia={currentDenuncia.denuncia} />
           </section>
         </div>
       ) : (
