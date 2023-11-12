@@ -2,7 +2,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   getAllDenuncias,
-  getDatosDeFiltros,
   getDenunciaById,
   deleteDenuncia,
 } from '@/api/denuncias.api';
@@ -14,19 +13,6 @@ export const getDenunciasThunk = createAsyncThunk(
       body = { ...body, limit: body.rows, offset: body.first };
 
       const { data } = await getAllDenuncias(body);
-
-      return data.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-
-export const getDatosDeFiltrosThunk = createAsyncThunk(
-  'denuncias/getDatosDeFiltros',
-  async (_, { rejectWithValue }) => {
-    try {
-      const { data } = await getDatosDeFiltros();
 
       return data.data;
     } catch (error) {

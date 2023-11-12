@@ -8,7 +8,6 @@ const showError = require('../utils/showError');
 const { formatDate } = require('../utils/formatDate');
 
 const getDenuncias = async (req, res) => {
-  console.log(req.body);
   const { limit, offset } = req.body;
 
   let filters = ``;
@@ -18,7 +17,7 @@ const getDenuncias = async (req, res) => {
   }
 
   if (req.body.tipoDenuncia !== undefined && req.body.tipoDenuncia !== 0) {
-    filters += `AND d.id_tipo_denuncia = ${req.body.tipoDenuncia}`;
+    filters += ` AND d.id_tipo_denuncia = ${req.body.tipoDenuncia}`;
   }
 
   if (req.body.seccional !== undefined && req.body.seccional !== 0) {
@@ -102,7 +101,7 @@ const getDenunciaById = async (req, res) => {
       LIMIT 1`;
     const denuncia = await queryHandler(query, [id]);
 
-    if (denuncia.lenght === 0) {
+    if (!denuncia[0]) {
       return res.status(404).json({
         message: `Denuncia con el id: ${id} no existe`,
         data: { denuncia },
