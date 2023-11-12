@@ -3,7 +3,6 @@ import {
   deleteDenunciaThunk,
   getDenunciaByIdThunk,
   getDenunciasThunk,
-  getDatosDeFiltrosThunk,
 } from './denuncias.thunks';
 import dayjs from 'dayjs';
 
@@ -13,11 +12,6 @@ const initialState = {
   totalRecords: 0,
   currentDenuncia: null,
   selectedIdDenuncia: 0,
-  datosDeFiltros: {
-    seccionales: [],
-    tiposDenuncia: [],
-    delegacionesFiscales: [],
-  },
 };
 
 export const denunciasSlice = createSlice({
@@ -38,10 +32,6 @@ export const denunciasSlice = createSlice({
         state.loading = false;
         state.denuncias = payload.denuncias;
         state.totalRecords = payload.totalRecords;
-      })
-      // Get Datos de Filtros
-      .addCase(getDatosDeFiltrosThunk.fulfilled, (state, { payload }) => {
-        state.datosDeFiltros = payload;
       })
       // Delete Denuncia
       .addCase(deleteDenunciaThunk.fulfilled, (state, { payload }) => {

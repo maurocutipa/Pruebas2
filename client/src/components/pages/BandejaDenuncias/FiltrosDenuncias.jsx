@@ -5,7 +5,7 @@ import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
 
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { getDatosDeFiltrosThunk } from '@/store/denunciasSlice/denuncias.thunks';
+import { getDenunciaDataThunk } from '@/store/dataSlice/data.thunks';
 import { useEffect } from 'react';
 
 const today = new Date();
@@ -20,11 +20,17 @@ export const FiltrosDenuncias = ({
   handleRealizarBusqueda,
 }) => {
   const dispatch = useAppDispatch();
-  const { datosDeFiltros } = useAppSelector((state) => state.denuncias);
-  const { seccionales, tiposDenuncia, delegacionesFiscales } = datosDeFiltros;
+  const { data } = useAppSelector((state) => state.data);
+  const {
+    seccionales,
+    tiposDenuncia,
+    delegacionesFiscales,
+    realizaciones,
+    competencias,
+  } = data;
 
   useEffect(() => {
-    dispatch(getDatosDeFiltrosThunk());
+    dispatch(getDenunciaDataThunk());
   }, [dispatch]);
 
   return (
@@ -42,6 +48,9 @@ export const FiltrosDenuncias = ({
           <div className='col-12 md:col-6 lg:col-3'>
             <Dropdown
               value={filters.realizacion}
+              options={realizaciones}
+              optionLabel='realizacion'
+              optionValue='idRealizacion'
               onChange={(e) => onFilterChange('realizacion', e.target.value)}
               placeholder='Seleccione una realización'
               className='w-full'
@@ -72,6 +81,9 @@ export const FiltrosDenuncias = ({
           <div className='col-12 md:col-6 lg:col-3'>
             <Dropdown
               value={filters.competencia}
+              options={competencias}
+              optionLabel='competencia'
+              optionValue='idCompetencia'
               onChange={(e) => onFilterChange('competencia', e.target.value)}
               placeholder='Seleccione competencia'
               className='w-12'

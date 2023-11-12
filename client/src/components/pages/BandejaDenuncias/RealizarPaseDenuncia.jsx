@@ -2,17 +2,29 @@
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
+import { InputTextarea } from 'primereact/inputtextarea';
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { InputText } from 'primereact/inputtext';
 
 import { useAppSelector } from '@/store/hooks';
+import { useState } from 'react';
+
+const paseFormInitialState = {
+  competencia: 1,
+  usuario: '',
+  motivoDelPase: '',
+};
 
 export const RealizarPaseDenuncia = ({ visible, setVisible }) => {
+  const [paseForm, setPaseForm] = useState(paseFormInitialState);
+
   const { user } = useAppSelector((state) => state.auth);
   const { selectedIdDenuncia } = useAppSelector((state) => state.denuncias);
+  const { data } = useAppSelector((state) => state.data);
 
   const accept = () => {
-    console.log('PASE REALIZADO');
+    setPaseForm({ ...paseForm, usuario: user });
+    console.log(paseForm);
   };
 
   const handleRealizarPase = (event) => {
@@ -21,8 +33,19 @@ export const RealizarPaseDenuncia = ({ visible, setVisible }) => {
       message: '¿Esta seguro de realizar el pase?',
       icon: 'pi pi-info-circle',
       accept,
-      reject: () => {},
     });
+  };
+
+  const handleInputChange = (ev) => {
+    setPaseForm({
+      ...paseForm,
+      [ev.target.name]: ev.target.value,
+    });
+  };
+
+  const onHide = () => {
+    setVisible(false);
+    setPaseForm(paseFormInitialState);
   };
 
   return (
@@ -30,28 +53,21 @@ export const RealizarPaseDenuncia = ({ visible, setVisible }) => {
       draggable={false}
       header={`Realizar Pase de la Denuncia #${selectedIdDenuncia}`}
       visible={visible}
-      onHide={() => setVisible(false)}
+      onHide={onHide}
       className='md:w-6 w-8'
     >
       <form className='mx-2'>
         <div className='mb-5'>
-          <label htmlFor='sectorOrigen'>Sector Origen</label>
-          <InputText
-            id='sectorOrigen'
-            name='sectorOrigen'
-            className='w-full mt-2'
-            disabled={true}
-            value='SECTOR ORIGEN'
-          />
-        </div>
-
-        <div className='mb-5'>
-          <label htmlFor='sectorDestino'>Sector Destino</label>
+          <label htmlFor='competencia'>Competencia</label>
           <Dropdown
-            id='sectorDestino'
-            name='sectorDestino'
-            placeholder='Seleccion el sector de destino'
+            id='competencia'
+            name='competencia'
             className='w-full mt-2'
+            value={paseForm.competencia}
+            onChange={handleInputChange}
+            options={data.competencias}
+            optionValue='idCompetencia'
+            optionLabel='competencia'
           />
         </div>
 
@@ -63,6 +79,20 @@ export const RealizarPaseDenuncia = ({ visible, setVisible }) => {
             className='w-full mt-2'
             disabled={true}
             value={user.username}
+          />
+        </div>
+
+        <div className='mb-5'>
+          <label htmlFor='motivoPase'>Motivo del Pase *</label>
+          <InputTextarea
+            id='motivoPase'
+            className='w-full mt-2'
+            name='motivoDelPase'
+            rows={5}
+            cols={30}
+            placeholder='Breve redacción del motivo del pase de la denuncia...'
+            value={paseForm.motivoDelPase}
+            onChange={handleInputChange}
           />
         </div>
 
