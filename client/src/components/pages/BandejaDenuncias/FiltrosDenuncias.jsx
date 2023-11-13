@@ -4,9 +4,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
 
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { getDenunciaDataThunk } from '@/store/dataSlice/data.thunks';
-import { useEffect } from 'react';
+import { useAppSelector } from '@/store/hooks';
 
 const today = new Date();
 const maxDate = new Date();
@@ -19,7 +17,6 @@ export const FiltrosDenuncias = ({
   onFilterChange,
   handleRealizarBusqueda,
 }) => {
-  const dispatch = useAppDispatch();
   const { data } = useAppSelector((state) => state.data);
   const {
     seccionales,
@@ -28,10 +25,6 @@ export const FiltrosDenuncias = ({
     realizaciones,
     competencias,
   } = data;
-
-  useEffect(() => {
-    dispatch(getDenunciaDataThunk());
-  }, [dispatch]);
 
   return (
     <>
