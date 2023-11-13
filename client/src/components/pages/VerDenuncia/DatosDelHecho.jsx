@@ -6,8 +6,9 @@ import { MultiSelect } from 'primereact/multiselect';
 import { VehiculosInvolucradosTable } from './TablasVerDenuncia/VehiculosInvolucradosTable';
 import { ObjetosSustraidosTable } from './TablasVerDenuncia/ObjetosSustraidosTable';
 
-export const DatosDelHecho = ({ tipo, denuncia }) => {
-  const tipoDenuncia = tipo;
+export const DatosDelHecho = ({ denuncia }) => {
+  const tipoDenuncia = denuncia.tipoDenuncia;
+  console.log(denuncia)
   return (
     <>
       <h2>Datos del Hecho</h2>
@@ -46,11 +47,15 @@ export const DatosDelHecho = ({ tipo, denuncia }) => {
           <h4>Departamento: {denuncia.departamentoHecho}</h4>
         </div>
         <div className='col'>
-          <img
-            src='https://www.nuevojujuy.com.ar/images/03-Mar2022/Google-Maps-Sitios-Memoria-Jujuy-02.jpg'
-            className='w-10 h-18rem'
-            alt=''
-          />
+          {/* Reemplaza la imagen del mapa con el componente Embed de Google Maps */}
+          <iframe
+            width="100%"
+            height="100%"
+            style={{border:0}}
+            loading="lazy"
+            src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyB9XerbY6zq1u0LZYj-LYq47n3Pkkn2vXU
+            &q=${denuncia.latitudHecho},${denuncia.longitudHecho}`}>
+          </iframe>
         </div>
       </div>
 
@@ -77,17 +82,36 @@ export const DatosDelHecho = ({ tipo, denuncia }) => {
       <Divider />
 
       {/* En caso de Violencia de Genero */}
-      {tipoDenuncia === 'violenciaDeGenero' ? (
+      {tipoDenuncia === 7 ? (
         <h3>Anexo de Violencia de Genero</h3>
-      ) : tipoDenuncia === 'siniestrosViales' ? (
+      ) : tipoDenuncia === 6 ? (
         <VehiculosInvolucradosTable />
-      ) : tipoDenuncia === 'robo/hurto' ? (
+      ) : tipoDenuncia === 3 ? (
         <ObjetosSustraidosTable />
       ) : null}
 
       <Divider />
 
-      <h3>Denuncia Digital Firmada</h3>
+      {/* Denuncia digital */}
+      <section className='mb-8'>
+        <h3>Denuncia Digital Firmada</h3>
+        <img
+          src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/1200px-PDF_file_icon.svg.png'
+          className='w-1 p-1'
+        />
+        <Button label='Generar y firmar' size='small' className='m-2' />
+        <Button label='Subir archivo' size='small' className='m-2' />
+      </section>
+
+      <div className="grid">
+        <div className="col-4">
+          <Button label='Volver' />
+        </div>
+        <div className="col-4 col-offset-4">
+          <Button label='Convertir denuncia a legajo' />
+        </div>
+      </div>
+
     </>
   );
 };
