@@ -3,10 +3,10 @@ import { InputText } from 'primereact/inputtext';
 import { Image } from 'primereact/image';
 import { Button } from 'primereact/button';
 import { Message } from 'primereact/message';
+import { useNavigate } from 'react-router-dom';
 import crypto from 'crypto-js';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-
 import * as Yup from 'yup';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   loginThunk,
   logouthThunk,
@@ -21,30 +21,36 @@ const validationSchema = Yup.object().shape({
 });
 
 export const LoginForm = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { message } = useAppSelector((state) => state.auth);
 
-  // const [message, setMessage] = useState(null);
-
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
+      email: 'admin@admin',
+      password: 'admin',
     },
     validationSchema: validationSchema, // Especificamos el esquema de validación Yup
     onSubmit: (values) => handleSubmitForm(values),
   });
 
-  const handleSubmitForm = (values) => {
+  const handleSubmitForm = async (values) => {
     let passwordHash = crypto.SHA512(values.password);
     passwordHash = passwordHash.toString(crypto.enc.Hex);
 
-    dispatch(loginThunk({ ...values, password: passwordHash }));
+    const { meta } = await dispatch(
+      // loginThunk({ ...values, password: passwordHash })
+      loginThunk({ ...values })
+    );
+
+    if (meta.requestStatus === 'fulfilled') {
+      navigate('/bandeja-denuncias');
+    }
   };
 
   return (
     <div>
-      <button
+      {/* <button
         onClick={() => {
           dispatch(refreshThunk());
         }}
@@ -58,7 +64,7 @@ export const LoginForm = () => {
         }}
       >
         logout
-      </button>
+      </button> */}
 
       {message && (
         <div className='text-center'>

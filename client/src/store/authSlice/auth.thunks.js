@@ -6,10 +6,19 @@ export const loginThunk = createAsyncThunk(
   'auth/login',
   async (body, { rejectWithValue }) => {
     try {
-      const { data } = await login(body);
-      return data;
+      let dataFake = null;
+      if (body.email !== 'admin@admin' || body.password !== 'admin') {
+        throw new Error('Usuario o contraseña incorrecta');
+      }
+
+      // const { data } = await login(body);
+
+      dataFake = { username: 'ADMIN', id: 123 };
+      return { data: dataFake, message: 'Login exitoso' };
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      console.log(error.message);
+      // return rejectWithValue(error.response.data);
+      return rejectWithValue(error.message);
     }
   }
 );

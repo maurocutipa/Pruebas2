@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { loginThunk, logouthThunk, refreshThunk } from './auth.thunks';
 
 const initialState = {
-  user: { username: 'ADMIN', id: 123 },
+  user: null,
   loading: false,
   message: '',
 };
@@ -21,7 +21,8 @@ export const authSlice = createSlice({
         state.message = payload.message;
         state.user = payload.data;
       })
-      .addCase(loginThunk.rejected, (state) => {
+      .addCase(loginThunk.rejected, (state, { payload }) => {
+        state.message = payload.message;
         state.loading = false;
       })
       // REFRESH TOKEN
