@@ -1,10 +1,21 @@
+/* eslint-disable react/prop-types */
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dropdown } from 'primereact/dropdown';
+import { useEffect } from 'react';
 
-export const AsignarDelito = () => {
+import { useAppDispatch } from '@/store/hooks';
+import { getDelitosThunk } from '@/store/dataSlice/data.thunks';
+
+export const AsignarDelito = ({ denunciados, delitos }) => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getDelitosThunk());
+  }, [dispatch]);
+
   return (
     <Card className='shadow-1 px-7 py-3 mt-6'>
       <h2>Asignar delitos</h2>
@@ -12,12 +23,27 @@ export const AsignarDelito = () => {
       <div className='grid mt-6'>
         <div className='col-12 md:col-6'>
           <label htmlFor='delitos'>Delitos</label>
-          <Dropdown id='delitos' className='w-full mt-2' />
+          <Dropdown
+            id='delitos'
+            options={delitos}
+            optionLabel='nombre'
+            optionValue='idDelito'
+            placeholder='Seleccione'
+            filter
+            className='w-full mt-2'
+          />
         </div>
 
         <div className='col-12 md:col-6'>
           <label htmlFor='denunciados'>Denunciados</label>
-          <Dropdown id='denunciados' className='w-full mt-2' />
+          <Dropdown
+            id='denunciados'
+            options={denunciados}
+            optionLabel='nombreCompleto'
+            optionValue='id'
+            placeholder='Seleccione'
+            className='w-full mt-2'
+          />
         </div>
 
         <div className='col-12 sm:col-6 md:col-4 lg:col-2 mb-4'>

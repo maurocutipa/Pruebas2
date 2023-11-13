@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { Column } from 'primereact/column';
@@ -12,7 +13,7 @@ const resumenes = [
   { idResumen: 1, denunciado: 'JOSE', descripcion: 'lalalala' },
 ];
 
-export const ResumenHechos = () => {
+export const ResumenHechos = ({ denunciados, delegacionesFiscales }) => {
   return (
     <Card className='shadow-1 px-7 mt-6'>
       <div className=''>
@@ -21,7 +22,14 @@ export const ResumenHechos = () => {
         <div className='grid mt-6'>
           <div className='col-12 lg:col-5'>
             <label htmlFor='fiscalia'>Seleccione una fiscalía</label>
-            <Dropdown id='fiscalia' className='w-full mt-2' />
+            <Dropdown
+              id='fiscalia'
+              options={delegacionesFiscales}
+              optionLabel='delegacionFiscal'
+              optionValue='idDelegacionFiscal'
+              placeholder='Seleccione'
+              className='w-full mt-2'
+            />
           </div>
         </div>
       </div>
@@ -34,7 +42,14 @@ export const ResumenHechos = () => {
         <div className='grid mt-6'>
           <div className='col-12 lg:col-5'>
             <label htmlFor='denunciados'>Denunciados</label>
-            <Dropdown id='denunciados' className='w-full mt-2' />
+            <Dropdown
+              id='denunciados'
+              options={denunciados}
+              optionLabel='nombreCompleto'
+              optionValue='id'
+              placeholder='Seleccione'
+              className='w-full mt-2'
+            />
           </div>
         </div>
 
