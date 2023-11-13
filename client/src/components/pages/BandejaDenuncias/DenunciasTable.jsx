@@ -9,6 +9,7 @@ import { AccionesTabla } from './AccionesTabla.jsx';
 import { RealizarPaseDenuncia } from './RealizarPaseDenuncia.jsx';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks.js';
 import { getDenunciasThunk } from '@/store/denunciasSlice/denuncias.thunks.js';
+import { Badge } from 'primereact/badge';
 
 const filtersInitialState = {
   idDenuncia: '',
@@ -53,7 +54,9 @@ export const DenunciasTable = () => {
   // resetAllFilters: Limpia los filtros y reinicia la tabla
   const resetAllFilters = () => {
     setFilters(filtersInitialState);
-    setlazyState(lazyInitialState);
+    dispatch(
+      getDenunciasThunk({ ...lazyInitialState, ...filtersInitialState })
+    );
   };
 
   const onFilterChange = (field, value) => {
@@ -141,11 +144,19 @@ export const DenunciasTable = () => {
             rowData.competencia ? rowData.competencia : 'NO TIENE'
           }
         />
+
         <Column
           field='idUserRatificacion'
           header='Ratificada'
-          body={(rowData) => (rowData.idUserRatificacion ? 'SI' : 'NO')}
+          body={(rowData) =>
+            rowData.idUserRatificacion ? (
+              <Badge value='SI' className='bg-green-700' />
+            ) : (
+              <Badge value='NO' className='bg-red-700' />
+            )
+          }
         />
+
         <Column
           field='fiscaliaAsignada'
           header='Fiscalía Asignada'
@@ -157,7 +168,11 @@ export const DenunciasTable = () => {
           field='idLegajo'
           header='Nro de Legajo Asignado'
           body={(rowData) =>
-            rowData.idLegajo ? rowData.idLegajo : 'Pendiente'
+            rowData.idLegajo ? (
+              <Badge value={rowData.idLegajo} className='bg-blue-700' />
+            ) : (
+              <Badge value='Pendiente' className='bg-gray-300 text-gray-900' />
+            )
           }
         />
         <Column

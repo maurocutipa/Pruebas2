@@ -43,6 +43,7 @@ export const FiltrosDenuncias = ({
               onChange={(e) => onFilterChange('idDenuncia', e.target.value)}
               placeholder='N° Denuncia'
               className='w-12'
+              type='number'
             />
           </div>
           <div className='col-12 md:col-6 lg:col-3'>
@@ -152,6 +153,7 @@ export const FiltrosDenuncias = ({
               onChange={(e) => onFilterChange('idLegajo', e.target.value)}
               placeholder='N° Legajo asignado'
               className='w-12'
+              type='number'
             />
           </div>
         </div>

@@ -157,6 +157,9 @@ const value = {
         root: { className: 'btn-blue-mpa' },
       },
     },
+    steps: {
+      action: { className: 'hover:bg-white' },
+    },
   },
 };
 
