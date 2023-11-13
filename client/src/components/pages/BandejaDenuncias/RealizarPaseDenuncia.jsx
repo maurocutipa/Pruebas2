@@ -92,7 +92,7 @@ export const RealizarPaseDenuncia = ({ visible, setVisible }) => {
   return (
     <Dialog
       draggable={false}
-      header={`Realizar Pase de la Denuncia #${selectedIdDenuncia}`}
+      header={`Realizar Pase de la Denuncia: #${selectedIdDenuncia}`}
       visible={visible}
       onHide={onHide}
       className='md:w-6 w-8'
@@ -237,13 +237,7 @@ export const RealizarPaseDenuncia = ({ visible, setVisible }) => {
           </div>
         </div>
       </form>
-      <ConfirmPopup
-        pt={{
-          root: { className: 'surface-100' },
-          acceptButton: { root: { className: 'btn-blue-mpa' } },
-          rejectButton: { root: { className: 'text-blue-mpa' } },
-        }}
-      />
+      <ConfirmPopup />
     </Dialog>
   );
 };
