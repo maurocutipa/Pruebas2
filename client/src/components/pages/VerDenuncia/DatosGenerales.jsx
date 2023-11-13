@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Dropdown } from 'primereact/dropdown';
 import { useState } from 'react';
+import { parseHHMM } from '@/utils/parseDate.js';
 
 export const DatosGenerales = ({ denuncia }) => {
   const opcionesFlagrancia = [
@@ -23,7 +24,7 @@ export const DatosGenerales = ({ denuncia }) => {
           <h4 className='col'>
             Fecha de Realizacion de la Denuncia: {denuncia.fechaDenuncia}
           </h4>
-          <h4 className='col'>Hora: {denuncia.horaDenuncia}</h4>
+          <h4 className='col'>Hora: {parseHHMM(denuncia.horaDenuncia)}</h4>
           <h4 className='col'></h4>
         </div>
         <div className='grid'>

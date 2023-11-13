@@ -4,7 +4,7 @@ import {
   getDenunciaByIdThunk,
   getDenunciasThunk,
 } from './denuncias.thunks';
-import dayjs from 'dayjs';
+import { parseDDMMYYYY } from '@/utils/parseDate';
 
 const initialState = {
   loading: true,
@@ -44,9 +44,7 @@ export const denunciasSlice = createSlice({
         state.currentDenuncia = {
           denuncia: {
             ...payload.data.denuncia,
-            fechaDenuncia: dayjs(payload.data.denuncia.fechaDenuncia).format(
-              'YYYY-MM-DD'
-            ),
+            fechaDenuncia: parseDDMMYYYY(payload.data.denuncia.fechaDenuncia),
           },
           intervinientes: {
             ...payload.data.intervinientes,

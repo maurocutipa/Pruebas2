@@ -3,13 +3,14 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { ConfirmDialog } from 'primereact/confirmdialog';
+import { Badge } from 'primereact/badge';
 
 import { FiltrosDenuncias } from './FiltrosDenuncias.jsx';
 import { AccionesTabla } from './AccionesTabla.jsx';
 import { RealizarPaseDenuncia } from './RealizarPaseDenuncia.jsx';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks.js';
 import { getDenunciasThunk } from '@/store/denunciasSlice/denuncias.thunks.js';
-import { Badge } from 'primereact/badge';
+import { parseDDMMYYYYHHMM } from '@/utils/parseDate.js';
 
 const filtersInitialState = {
   idDenuncia: '',
@@ -128,13 +129,9 @@ export const DenunciasTable = () => {
         <Column
           field='fechaDenuncia'
           header='Fecha de Denuncia'
-          body={(rowData) => {
-            const fecha = new Date(rowData.fechaDenuncia);
-            const dia = fecha.getDate().toString();
-            const mes = (fecha.getMonth() + 1).toString();
-            const anio = fecha.getFullYear();
-            return `${dia}/${mes}/${anio}`;
-          }}
+          body={(rowData) =>
+            parseDDMMYYYYHHMM(rowData.fechaDenuncia, rowData.horaDenuncia)
+          }
         />
         <Column field='tipoDenuncia' header='Tipo de Denuncia' />
         <Column
