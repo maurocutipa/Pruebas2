@@ -8,8 +8,8 @@ export const AccionesResumenHechos = () => {
 
   const eliminarResumen = () => {
     confirmDialog({
-      message: '¿Está seguro de eliminar esta denuncia?',
-      header: 'Confirmación para eliminar una denuncia',
+      message: '¿Está seguro de eliminar este resumen?',
+      header: 'Eliminar resumen',
       icon: 'pi pi-exclamation-triangle',
       acceptClassName: 'p-button-danger',
       accept: () => {},
@@ -37,18 +37,19 @@ export const AccionesResumenHechos = () => {
 
   return (
     <>
-      <Menu
-        popup
-        model={menuitems}
-        ref={menuLeft}
-        pt={{
-          label: { className: 'text-gray-800 font-medium' },
-          action: { className: 'hover:bg-gray-300' },
-        }}
-      />
+      <Menu popup model={menuitems} ref={menuLeft} />
 
       <Button
         icon='pi pi-ellipsis-v'
+        className='text-lightblue-mpa'
+        rounded
+        text
+        severity='info'
+        onClick={(ev) => menuLeft.current.toggle(ev)}
+      />
+
+      <Button
+        icon='pi pi-trash'
         className='text-lightblue-mpa'
         rounded
         text

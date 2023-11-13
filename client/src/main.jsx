@@ -168,6 +168,10 @@ const value = {
       acceptButton: { root: { className: 'btn-blue-mpa' } },
       rejectButton: { root: { className: 'text-blue-mpa' } },
     },
+    menu: {
+      label: { className: 'text-gray-800 font-medium' },
+      action: { className: 'hover:bg-gray-300' },
+    },
   },
 };
 
