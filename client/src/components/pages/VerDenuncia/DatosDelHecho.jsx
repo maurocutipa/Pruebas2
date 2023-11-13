@@ -15,16 +15,16 @@ export const DatosDelHecho = ({ denuncia }) => {
 
       <h3>¿Qué Pasó?</h3>
       <p>{denuncia.descripcionQue}</p>
-      <Button label='Modificar' size='small' />
+      <Button label='Modificar' size='small' className='btn-blue-mpa' />
 
       <Divider />
 
       <h3>¿Cómo Pasó?</h3>
       <p>{denuncia.descripcionComo}</p>
-      <Button label='Modificar' size='small' />
+      <Button label='Modificar' size='small' className='btn-blue-mpa' />
 
       {/* En caso de llegar una denuncia de Robo/Hurto */}
-      {tipoDenuncia === 'robo/hurto' && (
+      {tipoDenuncia === 3 && (
         <div className='grid'>
           <div className='col pt-4'>
             <Dropdown placeholder='Objetos Sustraidos' />
@@ -51,7 +51,7 @@ export const DatosDelHecho = ({ denuncia }) => {
           <iframe
             width="100%"
             height="100%"
-            style={{border:0}}
+            style={{ border: 0 }}
             loading="lazy"
             src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyB9XerbY6zq1u0LZYj-LYq47n3Pkkn2vXU
             &q=${denuncia.latitudHecho},${denuncia.longitudHecho}`}>
@@ -99,17 +99,13 @@ export const DatosDelHecho = ({ denuncia }) => {
           src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/1200px-PDF_file_icon.svg.png'
           className='w-1 p-1'
         />
-        <Button label='Generar y firmar' size='small' className='m-2' />
-        <Button label='Subir archivo' size='small' className='m-2' />
+        <Button label='Generar y firmar' size='small' className='m-2 btn-blue-mpa' />
+        <Button label='Subir archivo' size='small' className='m-2 btn-blue-mpa' />
       </section>
 
-      <div className="grid">
-        <div className="col-4">
-          <Button label='Volver' />
-        </div>
-        <div className="col-4 col-offset-4">
-          <Button label='Convertir denuncia a legajo' />
-        </div>
+      <div className="flex justify-content-between flex-wrap">
+        <Button label='Volver' className='btn-blue-mpa flex align-items-center justify-content-center h-3rem m-2' />
+        <Button label='Convertir denuncia a legajo' className='btn-blue-mpa flex align-items-center justify-content-center h-3rem m-2' />
       </div>
 
     </>
