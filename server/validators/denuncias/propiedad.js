@@ -5,17 +5,17 @@ const validateCreatePropiedad = [
     body("idDenuncia").
         exists().not().isEmpty(),
     body("danoCosas").
-        optional().isNumeric({min:0,max:1}),
+        optional().isBoolean(),
     body("armas").
-        optional().isNumeric({min:0,max:1}),
+        optional().isBoolean(),
     body("violenciaFisica").
-        optional().isNumeric({min:0,max:1}),
+        optional().isBoolean(),
     body("amenaza").
-        optional().isNumeric({min:0,max:1}),
+        optional().isBoolean(),
     body("arrebato").
-        optional().isNumeric({min:0,max:1}),
+        optional().isBoolean(),
     body("otra").
-        optional().isNumeric({min:0,max:1}),
+        optional().isBoolean(),
     body("cantTelefonos").
         optional(),
     body("cantAutomoviles").
