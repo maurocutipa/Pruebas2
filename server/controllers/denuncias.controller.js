@@ -23,6 +23,14 @@ const getDenuncias = async (req, res) => {
     filters += ` AND d.id_legajo = ${req.body.idLegajo}`;
   }
 
+  if (req.body.competencia !== undefined && req.body.competencia !== 0) {
+    filters += ` AND d.competencia = ${req.body.competencia}`;
+  }
+
+  if (req.body.realizacion !== undefined && req.body.realizacion !== 0) {
+    filters += ` AND d.realizacion = ${req.body.realizacion}`;
+  }
+
   if (
     req.body.fiscaliaAsignada !== undefined &&
     req.body.fiscaliaAsignada !== ''
