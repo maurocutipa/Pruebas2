@@ -40,6 +40,7 @@ export const AccionesTabla = ({ id, setVisible }) => {
 
   const convertirDenuncia = () => {
     console.log('CONVERTIR DENUNCIA', id);
+    navigate(`/convertir-denuncia-legajo/${id}`);
   };
 
   const menuitems = [

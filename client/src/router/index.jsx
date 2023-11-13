@@ -4,7 +4,8 @@ import Header_ from '@/components/layouts/Header_';
 import LoginPage from '@/pages/Login/Login.jsx';
 import BandejaDenuncias from '@/pages/BandejaDenuncias';
 import BandejaPasesDenuncias from '@/pages/BandejaPaseDenuncias';
-import { VerDenuncia } from '../pages/VerDenuncia';
+import { VerDenuncia } from '@/pages/VerDenuncia';
+import { ConvertirDenunciaALegajo } from '@/pages/ConvertirDenunciaALegajo';
 
 export const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ export const router = createBrowserRouter([
       {
         path: '/ver-denuncia/:id',
         element: <VerDenuncia />,
+      },
+      {
+        path: '/convertir-denuncia-legajo/:id',
+        element: <ConvertirDenunciaALegajo />,
       },
     ],
   },
