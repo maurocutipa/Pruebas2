@@ -50,12 +50,16 @@ MainController.mainDenunciaCreate = async (req, res) => {
 
         let intervinientesId = []
 
+        let idIntervinienteVictima = 0
+
         //INTERVININIENTES
         intervinientes && (
             intervinientesId = await Promise.all(
                 intervinientes.map(async interviniente => {
                     const intData = await interntalAPI.post('/intervinientes/create', interviniente)
+                    if(interviniente.idIntervinienteTipo == 1) idIntervinienteVictima = intData.data.id //id de victima para busqueda personas
                     return intData.data.id
+
                 })
             )
         )
@@ -107,7 +111,8 @@ MainController.mainDenunciaCreate = async (req, res) => {
             let idDenunciaEsp
             ({ data: { id: idDenunciaEsp } } = await interntalAPI.post(`/denuncias/${denuncia.url}`, {
                 ...denuncia,
-                idDenuncia
+                idDenuncia,
+                idInterviniente : idIntervinienteVictima
             }))
 
             //incidentes viales vehiculos
@@ -145,7 +150,7 @@ MainController.mainDenunciaCreate = async (req, res) => {
             const [tipoDenuncia] = await queryHandler(`select nombre from denuncia_tipos where id_tipo_denuncia = ? limit 1`, [denuncia.idTipoDenuncia])
             const [fechaHora] = await queryHandler(`select fecha_denuncia,hora_denuncia from denuncia where id_denuncia = ?`, [idDenuncia])
 
-            
+            //TODO: a donde mandamos el comprobante
             /*
             await generatePdf(getComprobanteHtml({
                 denuncia: {

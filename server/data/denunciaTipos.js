@@ -1,4 +1,11 @@
 const denunciaTipos = {
+  1 : {
+    enable:true,
+  },
+  2 : {
+    enable:true,
+    url: '/busqueda-persona-create'
+  },   
   3 : {
       enable:true,
       url: '/propiedad-create'
