@@ -16,8 +16,6 @@ export const VerDenuncia = () => {
 
   const { id } = useParams();
 
-  const tipo = 'robo/hurto'; //tipo de prueba
-
   useEffect(() => {
     dispatch(getDenunciaByIdThunk(id));
   }, [dispatch, id]);
@@ -63,7 +61,7 @@ export const VerDenuncia = () => {
           {/* Seccion de Datos del hecho */}
 
           <section className='pl-4'>
-            <DatosDelHecho tipo={tipo} denuncia={currentDenuncia.denuncia} />
+            <DatosDelHecho denuncia={currentDenuncia.denuncia} />
           </section>
         </div>
       ) : (

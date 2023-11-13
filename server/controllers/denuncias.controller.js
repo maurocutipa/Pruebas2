@@ -116,6 +116,9 @@ DenunciasController.getDenunciaById = async (req, res) => {
         d.departamento_hecho AS departamentoHecho,
         d.informacion_adicional AS informacionAdicional,
         d.detalle_adjunto AS detalleAdjunto,
+        d.id_tipo_denuncia AS tipoDenuncia,
+        d.latitud_hecho AS latitudHecho, 
+        d.longitud_hecho AS longitudHecho, 
         s.nombre AS seccional,
         l.nombre AS nombreLocalidad,
         b.nombre_barrio AS nombreBarrio
