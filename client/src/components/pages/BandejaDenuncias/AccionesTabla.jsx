@@ -17,7 +17,7 @@ export const AccionesTabla = ({ id, setVisible }) => {
   const eliminarDenuncia = () => {
     confirmDialog({
       message: '¿Está seguro de eliminar esta denuncia?',
-      header: 'Confirmación para eliminar una denuncia',
+      header: `Eliminar Denuncia: #${id}`,
       icon: 'pi pi-exclamation-triangle',
       acceptClassName: 'p-button-danger',
       accept: () => dispatch(deleteDenunciaThunk(id)),
@@ -40,6 +40,7 @@ export const AccionesTabla = ({ id, setVisible }) => {
 
   const convertirDenuncia = () => {
     console.log('CONVERTIR DENUNCIA', id);
+    navigate(`/convertir-denuncia-legajo/${id}`);
   };
 
   const menuitems = [

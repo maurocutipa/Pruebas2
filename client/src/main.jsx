@@ -160,6 +160,18 @@ const value = {
     steps: {
       action: { className: 'hover:bg-white' },
     },
+    confirmDialog: {
+      rejectButton: { label: 'text-blue-mpa' },
+    },
+    confirmPopup: {
+      root: { className: 'surface-100' },
+      acceptButton: { root: { className: 'btn-blue-mpa' } },
+      rejectButton: { root: { className: 'text-blue-mpa' } },
+    },
+    menu: {
+      label: { className: 'text-gray-800 font-medium' },
+      action: { className: 'hover:bg-gray-300' },
+    },
   },
 };
 
