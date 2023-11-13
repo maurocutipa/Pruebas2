@@ -61,6 +61,7 @@ const getDenuncias = async (req, res) => {
       SELECT
           d.id_denuncia AS idDenuncia,
           d.fecha_denuncia AS fechaDenuncia,
+          d.hora_denuncia AS horaDenuncia,
           d.realizacion,
           d.id_user_ratificacion AS idUserRatificacion,
           d.competencia,
