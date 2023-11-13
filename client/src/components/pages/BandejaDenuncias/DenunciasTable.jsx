@@ -54,7 +54,9 @@ export const DenunciasTable = () => {
   // resetAllFilters: Limpia los filtros y reinicia la tabla
   const resetAllFilters = () => {
     setFilters(filtersInitialState);
-    setlazyState(lazyInitialState);
+    dispatch(
+      getDenunciasThunk({ ...lazyInitialState, ...filtersInitialState })
+    );
   };
 
   const onFilterChange = (field, value) => {

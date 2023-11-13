@@ -1,10 +1,5 @@
-const { matchedData } = require('express-validator');
-
 const httpErrorHandler = require('../utils/httpErrorHandler');
 const queryHandler = require('../utils/queryHandler');
-const safeConcatQuery = require('../utils/safeConcatQuery');
-const convertToSnakeCase = require('../utils/convertToSnakeCase');
-const showError = require('../utils/showError');
 const { formatDate } = require('../utils/formatDate');
 
 const getDenuncias = async (req, res) => {
@@ -29,6 +24,13 @@ const getDenuncias = async (req, res) => {
   }
 
   if (
+    req.body.fiscaliaAsignada !== undefined &&
+    req.body.fiscaliaAsignada !== ''
+  ) {
+    filters += ` AND sc.id_sector = ${req.body.fiscaliaAsignada}`;
+  }
+
+  if (
     req.body.fechaDenunciaDesde !== '' &&
     req.body.fechaDenunciaHasta !== ''
   ) {
@@ -38,7 +40,13 @@ const getDenuncias = async (req, res) => {
   }
 
   try {
-    let query = `SELECT COUNT(*) AS total_records FROM denuncia d WHERE estado = 1 ${filters};`;
+    let query = `
+      SELECT 
+        COUNT(*) AS total_records
+      FROM denuncia d
+      LEFT JOIN legajo l ON d.id_legajo = l.id_legajo
+      LEFT JOIN sectores sc ON l.id_sector = sc.id_sector
+      WHERE d.estado = 1 ${filters};`;
     const count = await queryHandler(query);
 
     query = `
