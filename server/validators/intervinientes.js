@@ -44,7 +44,10 @@ const validateCreateInterviniente = [
         optional(),
     body("grado").
         optional(),
-    //estado_preso y matricula profesional            
+    body("estadoPreso").
+        optional(),
+    body("matriculaProfesional").
+        optional(),           
     
     (req, res, next) => {
         validateHelper(req, res, next)
@@ -79,9 +82,9 @@ const validateCreateIntervinienteVitima = [
         not().isEmpty().
         isIn(['Padre','Madre','Hijo/a','Hermano/a','Pareja','ExPareja','Familiar','Compañero','Otro']),
     body("detalleVinculo").if(body("vinculoVictima").equals("Otro")).not().isEmpty().optional(),
-    body("dependeIngresos").optional().isNumeric({min:0, max:1}),
-    body("hijosMenores").optional().isNumeric({min:0, max:1}),
-    body("riesgoVida").optional().isNumeric({min:0, max:1}),
+    body("dependeIngresos").optional().isBoolean(),
+    body("hijosMenores").optional().isBoolean(),
+    body("riesgoVida").optional().isBoolean(),
     (req, res, next) => {
         validateHelper(req, res, next)
     }
