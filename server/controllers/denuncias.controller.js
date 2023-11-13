@@ -344,29 +344,6 @@ DenunciasController.createDenunciaFamiliar = async (req, res) => {
     }
 }
 
-DenunciasController.createDenunciaBusquedaPersona = async (req, res) => {
-    try {
-
-        const data = matchedData(req)
-        const keys = Object.keys(data).map(key => convertToSnakeCase(key))
-        const values = Object.values(data)
-
-        const query = `INSERT INTO denuncia_busqueda_persona(${keys.join(', ')}) VALUES (${keys.map(key => "?").join(', ')})`
-
-        const resQuery = await queryHandler(query, values)
-
-        res.status(200).json({
-            ok: true,
-            message: "Denuncia de Busqueda de Persona creada",
-            id: resQuery.insertId
-        })
-    } catch (error) {
-        showError(error)
-        httpErrorHandler(res)
-    }
-}
-
-
 DenunciasController.createDenunciaAbigeato = async (req, res) => {
     try {
 
@@ -577,6 +554,28 @@ DenunciasController.createDenunciaMaltratoAnimal = async (req, res) => {
         showError(error)
         httpErrorHandler(res)
     }
+}
+
+DenunciasController.createDenunciaBusquedaPersona = async (req, res) => {
+  try {
+
+      const data = matchedData(req)
+      const keys = Object.keys(data).map(key => convertToSnakeCase(key))
+      const values = Object.values(data)
+
+      const query = `INSERT INTO denuncia_busqueda_persona(${keys.join(', ')}) VALUES (${keys.map(key => "?").join(', ')})`
+
+      const resQuery = await queryHandler(query, values)
+
+      res.status(200).json({
+          ok: true,
+          message: "Denuncia de Busqueda de Persona creada",
+          id: resQuery.insertId
+      })
+  } catch (error) {
+      showError(error)
+      httpErrorHandler(res)
+  }
 }
 
 DenunciasController.uploadFile = async (req, res) => {
