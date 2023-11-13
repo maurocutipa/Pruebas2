@@ -7,7 +7,7 @@ const validateCreateGeneral = [
     body("descripcionComo").
         exists().not().isEmpty(),
     body("certezaFecha").
-        exists().not().isEmpty().isNumeric({min:0,max:1}),
+        exists().not().isEmpty().isBoolean(),
     body("fechaHecho").
         if(body("certezaFecha").equals("1")).
             exists().not().isEmpty(),
@@ -18,7 +18,7 @@ const validateCreateGeneral = [
         if(body("certezaFecha").equals("0")).
             exists().not().isEmpty(),
     body("certezaLugar").
-        exists().not().isEmpty().isNumeric({min:0,max:1}),
+        exists().not().isEmpty().isBoolean(),
     body("idLocalidad").
         exists().not().isEmpty().isNumeric(),
     body("idBarrio").
@@ -42,18 +42,18 @@ const validateCreateGeneral = [
     body("longitudHecho").
         if(body("certezaLugar").equals("1")).
             exists().not().isEmpty(),
-    /* body("detalleLugar").
+    body("detalleLugar").
         if(body("certezaLugar").equals("0")).
-            exists().not().isEmpty(),   */  
+            exists().not().isEmpty(),
     body("informacionAdicional").optional(),
     body("anonimo").
-        optional().isNumeric({min:0,max:1}),
+        optional().isBoolean(),
     body("datosDenunciado").
-        optional().isNumeric({min:0,max:1}),
+        optional().isBoolean(),
     body("testigo").
-        optional().isNumeric({min:0,max:1}),
+        optional().isBoolean(),
     body("datosTestigo").
-        optional().isNumeric({min:0,max:1}),
+        optional().isBoolean(),
     body("idTipoDenuncia").
         exists().not().isEmpty().isNumeric(),
     (req, res, next) => {
