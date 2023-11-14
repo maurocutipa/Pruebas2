@@ -76,12 +76,9 @@ const validateUpload = [
 const validateCreateIntervinienteVitima = [
     body("idDenuncia").exists().not().isEmpty().isNumeric(),
     body("idInterviniente").exists().not().isEmpty().isNumeric(),
-    body("conocimientoVictima").optional(),
-    body("vinculoVictima").
-        exists().
-        not().isEmpty().
-        isIn(['Padre','Madre','Hijo/a','Hermano/a','Pareja','ExPareja','Familiar','Compañero','Otro']),
-    body("detalleVinculo").if(body("vinculoVictima").equals("Otro")).not().isEmpty().optional(),
+    body("conocimientoVictima").optional().isBoolean(),
+    body("vinculoVictima").optional().isIn(['Padre','Madre','Hijo/a','Hermano/a','Pareja','ExPareja','Familiar','Compañero','Otro']),
+    body("detalleVinculo").optional(),
     body("dependeIngresos").optional().isBoolean(),
     body("hijosMenores").optional().isBoolean(),
     body("riesgoVida").optional().isBoolean(),
