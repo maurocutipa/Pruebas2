@@ -18,8 +18,11 @@ MainController = {}
 
 MainController.mainDenunciaCreate = async (req, res, next) => {
     try {
+
+        //TODO: desencriptar token, agarrar ip
+
         //console.log(req)
-        let { denuncia, intervinientes, denunciantes, victimasRelaciones } = matchedData(req)
+        let { denuncia, intervinientes, denunciantes, victimasRelaciones, idUsuario } = matchedData(req)
         if(!denunciaTipos[denuncia.idTipoDenuncia]) throw new Error('Id tipo denuncia no valido')
         denuncia.url = denunciaTipos[denuncia.idTipoDenuncia].url
         denuncia.enable = denunciaTipos[denuncia.idTipoDenuncia].enable
