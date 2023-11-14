@@ -20,7 +20,7 @@ const filtersInitialState = {
   fechaDenunciaHasta: '',
   tipoDenuncia: 0,
   competencia: 0,
-  ratificada: '',
+  estado: '',
   fiscaliaAsignada: '',
   idLegajo: '',
 };
@@ -38,6 +38,7 @@ export const DenunciasTable = () => {
   );
 
   const [visible, setVisible] = useState(false);
+  useState(false);
 
   const [filters, setFilters] = useState(filtersInitialState);
   const [lazyState, setlazyState] = useState(lazyInitialState);
@@ -176,7 +177,11 @@ export const DenunciasTable = () => {
           field='Acciones'
           header='Acciones'
           body={(denuncia) => (
-            <AccionesTabla id={denuncia.idDenuncia} setVisible={setVisible} />
+            <AccionesTabla
+              id={denuncia.idDenuncia}
+              setVisible={setVisible}
+              isRatificada={!!denuncia.idUserRatificacion}
+            />
           )}
         />
       </DataTable>

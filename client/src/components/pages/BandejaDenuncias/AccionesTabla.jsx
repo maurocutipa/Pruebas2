@@ -9,7 +9,7 @@ import { useAppDispatch } from '@/store/hooks';
 import { deleteDenunciaThunk } from '@/store/denunciasSlice/denuncias.thunks';
 import { setIdDenuncia } from '@/store/denunciasSlice/denuncias.slice';
 
-export const AccionesTabla = ({ id, setVisible }) => {
+export const AccionesTabla = ({ id, setVisible, isRatificada }) => {
   const navigate = useNavigate();
   const menuLeft = useRef(null);
   const dispatch = useAppDispatch();
@@ -25,7 +25,11 @@ export const AccionesTabla = ({ id, setVisible }) => {
     });
   };
 
-  const descargarDenuncias = () => {
+  const ratificarDenuncia = () => {
+    console.log('RATIFICADO', isRatificada);
+  };
+
+  const descargarPdf = () => {
     console.log('DESCARGADO', id);
   };
 
@@ -52,8 +56,8 @@ export const AccionesTabla = ({ id, setVisible }) => {
           command: () => mostrarDetalles(),
         },
         {
-          label: 'Descargar como PDF',
-          command: () => descargarDenuncias(),
+          label: 'Ratificar denuncia',
+          command: () => (isRatificada ? descargarPdf() : ratificarDenuncia()),
         },
         {
           label: 'Realizar pase',

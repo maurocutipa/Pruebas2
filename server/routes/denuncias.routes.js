@@ -28,6 +28,7 @@ const {
 } = require('../validators/denuncias');
 
 router.post('/get-all', DenunciasController.getDenuncias);
+router.patch('/ratificar-denuncia/:id', DenunciasController.ratificarDenuncia);
 router.get('/get-datos-filtros', DenunciasController.getDatosDeFiltros);
 router.get('/get/:id', DenunciasController.getDenunciaById);
 router.delete('/delete/:id', DenunciasController.deleteDenuncia);

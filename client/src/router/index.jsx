@@ -6,6 +6,7 @@ import BandejaDenuncias from '@/pages/BandejaDenuncias';
 import BandejaPasesDenuncias from '@/pages/BandejaPaseDenuncias';
 import { VerDenuncia } from '@/pages/VerDenuncia';
 import { ConvertirDenunciaALegajo } from '@/pages/ConvertirDenunciaALegajo';
+import { RatificarDenuncia } from '@/pages/RatificarDenuncia';
 
 export const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ export const router = createBrowserRouter([
       {
         path: '/convertir-denuncia-legajo/:id',
         element: <ConvertirDenunciaALegajo />,
+      },
+      {
+        path: '/ratificar-denuncia/:id',
+        element: <RatificarDenuncia />,
       },
     ],
   },
