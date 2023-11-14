@@ -6,9 +6,10 @@ import { MultiSelect } from 'primereact/multiselect';
 import { VehiculosInvolucradosTable } from './TablasVerDenuncia/VehiculosInvolucradosTable';
 import { ObjetosSustraidosTable } from './TablasVerDenuncia/ObjetosSustraidosTable';
 
-export const DatosDelHecho = ({ denuncia }) => {
+export const DatosDelHecho = ({ denuncia, adjuntos }) => {
   const tipoDenuncia = denuncia.tipoDenuncia;
-  console.log(denuncia)
+  const adjuntosDenuncia = adjuntos; 
+
   return (
     <>
       <h2>Datos del Hecho</h2>
@@ -70,14 +71,11 @@ export const DatosDelHecho = ({ denuncia }) => {
       <h4>Descripción: </h4>
       <p>{denuncia.detalleAdjunto}</p>
       <h4>Adjuntos: </h4>
-      <img
-        src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/1200px-PDF_file_icon.svg.png'
-        className='w-1 p-1'
-      />
-      <img
-        src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQTliJEbXiRic3bf7HoMVdEPR9fvMLjyDWWg&usqp=CAU'
-        className='p-1'
-      />
+      <ul>
+        {Object.values(adjuntosDenuncia).map((elemento, indice) => (
+          <li key={indice}>{elemento.nombreOriginal}</li>
+        ))}
+      </ul>
 
       <Divider />
 
