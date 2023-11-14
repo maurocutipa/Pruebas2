@@ -3,6 +3,7 @@ import {
   deleteDenunciaThunk,
   getDenunciaByIdThunk,
   getDenunciasThunk,
+  ratificarDenunciaThunk,
 } from './denuncias.thunks';
 import { parseDDMMYYYY } from '@/utils/parseDate';
 
@@ -54,7 +55,11 @@ export const denunciasSlice = createSlice({
             ...payload.data.adjuntos
           }
         };
-      });
+      })
+      // Ratificar Denuncia
+      .addCase(ratificarDenunciaThunk.fulfilled, () => {
+        
+      })
   },
 });
 
