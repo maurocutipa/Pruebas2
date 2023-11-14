@@ -11,14 +11,14 @@ const denunciaTipos = {
       url: '/propiedad-create'
   },
   4: {
-      enable:false,
+      enable:true,
       url: '/delitos-personas-create',
   },
   5 : {
       enable:true,
   },
   6: {
-      enable:false,
+      enable:true,
       url: '/incidente-vial-create'
   },
   7: {
@@ -26,7 +26,7 @@ const denunciaTipos = {
       url: '/genero-create'
   },
   8: { 
-      enable:false,
+      enable:true,
       url: '/delitos-sexuales-create'
   },
   9: {
@@ -49,15 +49,15 @@ const denunciaTipos = {
       enable:true,
   },
   14: {
-      enable:false,
+      enable:true,
       url: '/abigeato-create'
   },
   15: {
-      enable:false,
+      enable:true,
       url: '/danos-create'
   },
   16: {
-      enable:false,
+      enable:true,
       url: '/maltrato-animal-create'
   },
 }
