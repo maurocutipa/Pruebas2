@@ -5,7 +5,7 @@ const convertToSnakeCase = require('@utils/convertToSnakeCase');
 //const sendEmail = require('@utils/sendEmail')
 const { matchedData } = require('express-validator');
 const showError = require('@utils/showError')
-//const { getComprobanteHtml } = require('@config/comprobante')
+const { getComprobanteHtml } = require('@config/comprobante')
 const generatePdf = require('@utils/generatePdf')
 const dayjs = require('dayjs')
 const denunciaTipos = require('@data/denunciaTipos')
@@ -150,8 +150,8 @@ MainController.mainDenunciaCreate = async (req, res) => {
             const [tipoDenuncia] = await queryHandler(`select nombre from denuncia_tipos where id_tipo_denuncia = ? limit 1`, [denuncia.idTipoDenuncia])
             const [fechaHora] = await queryHandler(`select fecha_denuncia,hora_denuncia from denuncia where id_denuncia = ?`, [idDenuncia])
 
-            //TODO: a donde mandamos el comprobante
-            /*
+            
+            
             await generatePdf(getComprobanteHtml({
                 denuncia: {
                     ...denuncia,
@@ -168,6 +168,7 @@ MainController.mainDenunciaCreate = async (req, res) => {
                 victimas: intervinientes.filter(int => int.idIntervinienteTipo == 1 || int.idIntervinienteTipo == 3),
                 denunciados: intervinientes.filter(int => int.idIntervinienteTipo == 5),
                 testigos: intervinientes.filter(int => int.idIntervinienteTipo == 9),
+                //test
                 adjuntos: req.files.map(file => ({nombre:file.originalname})) || [
                     {
                         nombre: 'mayko.jpg'
@@ -176,10 +177,13 @@ MainController.mainDenunciaCreate = async (req, res) => {
                     }
                 ]
             }))
+
+            //TODO: a donde mandamos el comprobante
+            /*
             denunciantes.forEach(den => {
                 //sendEmail(den.email)
-            })
-            */
+            }) */
+            
         }
 
         res.status(200).json({
