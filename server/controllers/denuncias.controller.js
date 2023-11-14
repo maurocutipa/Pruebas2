@@ -196,10 +196,18 @@ DenunciasController.getDenunciaById = async (req, res) => {
 DenunciasController.ratificarDenuncia = async (req, res) => {
   const { id } = req.params;
 
-  const [fecha, hora]= formatDateHour(new Date()).split(' ');
+  const [fecha, hora] = formatDateHour(new Date()).split(' ');
 
   try {
-    const query = `
+    let query = `SELECT id_user_ratificacion as idUserRatificacion FROM denuncia WHERE id_denuncia = ?`;
+    let [data] = await queryHandler(query, [id]);
+    if (data.idUserRatificacion) {
+      return res
+        .status(400)
+        .json({ message: `Denuncia con el id: ${id} ya fue ratificada` });
+    }
+
+    query = `
       UPDATE
         denuncia
       SET 
@@ -207,13 +215,13 @@ DenunciasController.ratificarDenuncia = async (req, res) => {
         hora_ratificacion = ?
       WHERE id_denuncia = ?`;
 
-    const response = await queryHandler(query, [fecha, hora, id]);
+    response = await queryHandler(query, [fecha, hora, id]);
 
     if (response.changedRows === 0) {
-      res.status(400). json({ message: 'Ninguna denuncia fue ratificada'})
+      return res
+        .status(400)
+        .json({ message: `Denuncia con el id: ${id} no fue ratificada` });
     }
-
-    console.log(response.changedRows);
 
     res.status(200).json({ message: 'ok' });
   } catch (error) {

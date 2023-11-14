@@ -5,6 +5,7 @@ const URLS = {
   getDatosDeFiltros: '/denuncias/get-datos-filtros',
   getDenunciaById: (id) => `/denuncias/get/${id}`,
   deleteDenuncia: (id) => `/denuncias/delete/${id}`,
+  ratificarDenuncia: (id) => `/denuncias/ratificar-denuncia/${id}`,
 };
 
 export const getAllDenuncias = (body) => {
@@ -21,4 +22,8 @@ export const getDenunciaById = (id) => {
 
 export const deleteDenuncia = (id) => {
   return api.delete(URLS.deleteDenuncia(id));
+};
+
+export const ratificarDenuncia = (id) => {
+  return api.patch(URLS.ratificarDenuncia(id));
 };

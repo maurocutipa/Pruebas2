@@ -26,7 +26,7 @@ export const AccionesTabla = ({ id, setVisible, isRatificada }) => {
   };
 
   const ratificarDenuncia = () => {
-    console.log('RATIFICADO', isRatificada);
+    navigate(`/ratificar-denuncia/${id}`);
   };
 
   const descargarPdf = () => {
@@ -56,7 +56,7 @@ export const AccionesTabla = ({ id, setVisible, isRatificada }) => {
           command: () => mostrarDetalles(),
         },
         {
-          label: 'Ratificar denuncia',
+          label: isRatificada ? 'Descargar PDF' : 'Ratificar denuncia',
           command: () => (isRatificada ? descargarPdf() : ratificarDenuncia()),
         },
         {
