@@ -49,6 +49,10 @@ export const denunciasSlice = createSlice({
           intervinientes: {
             ...payload.data.intervinientes,
           },
+          adjuntos: 
+          {
+            ...payload.data.adjuntos
+          }
         };
       });
   },
