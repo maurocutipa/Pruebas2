@@ -17,6 +17,17 @@ const realizaciones = [
   { idRealizacion: 3, realizacion: 'Oficio' },
 ];
 
+const estados = [
+  {
+    idEstado: 1,
+    estado: 'Generado',
+  },
+  {
+    idEstado: 2,
+    estado: 'Sin generar',
+  },
+];
+
 const initialState = {
   loading: true,
   data: {
@@ -37,7 +48,7 @@ export const dataSlice = createSlice({
     builder
       // Get Datos de Filtros
       .addCase(getDenunciaDataThunk.fulfilled, (state, { payload }) => {
-        state.data = { ...payload, competencias, realizaciones };
+        state.data = { ...payload, competencias, realizaciones, estados };
       })
       .addCase(getDelitosThunk.fulfilled, (state, { payload }) => {
         state.data.delitos = payload.delitos;

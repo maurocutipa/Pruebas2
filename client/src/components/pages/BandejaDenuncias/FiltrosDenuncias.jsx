@@ -24,6 +24,7 @@ export const FiltrosDenuncias = ({
     delegacionesFiscales,
     realizaciones,
     competencias,
+    estados,
   } = data;
 
   return (
@@ -85,8 +86,11 @@ export const FiltrosDenuncias = ({
           </div>
           <div className='col-12 md:col-6 lg:col-3'>
             <Dropdown
-              value={filters.ratificada}
-              onChange={(e) => onFilterChange('ratificada', e.target.value)}
+              value={filters.estado}
+              options={estados}
+              optionLabel='estado'
+              optionValue='idEstado'
+              onChange={(e) => onFilterChange('estado', e.target.value)}
               placeholder='Seleccione estado'
               className='w-12'
             />
