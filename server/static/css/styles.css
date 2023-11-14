@@ -1,0 +1,14 @@
+@page {
+    size: A4;
+    margin: 4in;
+    @top-right {
+      content: "Page " counter(pageNumber);
+    }
+}
+@page wide {
+    size: a4 landscape;
+}
+
+body {
+  background-color: red;
+}
