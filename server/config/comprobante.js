@@ -13,7 +13,8 @@ let adjuntos = []
 // }
 
 const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,denunciados,victimas,adjuntos}) => {
-    return `
+
+    const denunciaTipica =  `
     <!DOCTYPE html>
     <html lang="en">
     
@@ -1248,6 +1249,51 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
         </body>
     </html>
     `
+
+    const denunciaBusqueda = `<!DOCTYPE html>
+    <html lang="en">
+    
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <!-- <link href="http://localhost:3000/css/bootstrap.min.css" type="text/css" rel="stylesheet"> -->
+            <!-- <link href="http://localhost:3000/css/styles.css" type="text/css" rel="stylesheet"> -->
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+            <style>
+                @page {
+                    size: A4;
+                    margin: .5in;
+                    /* @top-right {
+                    content: "Page " counter(pageNumber);
+                    } */
+                }
+                @page wide {
+                    size: a4 landscape;
+                }
+                [id^="item"] {
+                    page-break-inside: avoid;
+                }
+                .table,
+                .list-group,
+                [id^="datos"]{
+                    page-break-inside: avoid;
+                }
+                #item14 {
+                    page-break-before: always;
+                }
+            </style>
+        </head>
+    
+        <body>
+            <h1>suuuu</h1>
+        </body>
+    </html>`
+
+    if(denuncia.tipoDenuncia != "Busqueda de Personas" ){
+        return denunciaTipica;
+    }else{
+        return denunciaBusqueda;
+    }
 }
 
 

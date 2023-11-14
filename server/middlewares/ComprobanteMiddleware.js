@@ -6,11 +6,10 @@ const { getComprobanteHtml } = require('@config/comprobante')
 //const sendEmail = require('@utils/sendEmail')
 const dayjs = require('dayjs')
 
-const ComprobanteMiddleware = async (req, res) => {
+const ComprobanteMiddleware = async (req, res, next) => {
     try {
 
         let { denuncia, denunciantes, intervinientes, victimasRelaciones } = req
-
 
         const localidades = await queryHandler(`select id_localidad as id, nombre from localidades`)
         const barrios = await queryHandler(`select id_barrio as id, nombre_barrio as nombre from barrios`)
@@ -20,6 +19,8 @@ const ComprobanteMiddleware = async (req, res) => {
 
         const [tipoDenuncia] = await queryHandler(`select nombre from denuncia_tipos where id_tipo_denuncia = ? limit 1`, [denuncia.idTipoDenuncia])
         const [fechaHora] = await queryHandler(`select fecha_denuncia,hora_denuncia from denuncia where id_denuncia = ?`, [denuncia.idDenuncia])
+
+        const usuario = await queryHandler(`select nombre, apellido, grado,  from localidades`)
 
         if(denuncia.certezaLugar){
             denuncia.barrio = barrios.filter(barrio => barrio.id = denuncia.idBarrio)[0].nombre
@@ -61,8 +62,18 @@ const ComprobanteMiddleware = async (req, res) => {
             victimas: intervinientes.filter(int => int.idIntervinienteTipo == 1 || int.idIntervinienteTipo == 3),
             denunciados: intervinientes.filter(int => int.idIntervinienteTipo == 5),
             testigos: intervinientes.filter(int => int.idIntervinienteTipo == 9),
-            adjuntos: req.files.map(file => ({ nombre: file.originalname })) || []
+            adjuntos: req.files.map(file => ({ nombre: file.originalname })) || [],
+
+            //BUSQUEDA PERSONAS
+            usuario: usuario
         }))
+
+        
+        //AUDITORIA
+        req.actividad = "CREAR DENUNCIA"
+        req.idUsuario = 2 //test
+        req.denuncia.tipoDenuncia = (tipoDenuncia && tipoDenuncia.nombre) || "Sin especificar",
+        next()
 
         /* denunciantes.forEach(den => {
             sendEmail(den.email)

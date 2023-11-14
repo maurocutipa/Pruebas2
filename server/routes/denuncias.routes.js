@@ -6,6 +6,9 @@ const { doubleCsrfProtection, csrfErrorHandler } = require('../middlewares/CsrfM
 const UploadMiddleware = require('../middlewares/UploadMiddlware')
 const ParseDataMiddleware = require('../middlewares/ParseDataMiddleware')
 const ComprobanteMiddleware = require('../middlewares/ComprobanteMiddleware');
+
+const AuditoriaMiddleware = require("../middlewares/auditoriaMiddleware")
+
 const router = Router();
 
 const {
@@ -51,7 +54,7 @@ router.post('/maltrato-animal-create', /* doubleCsrfProtection, csrfErrorHandler
 //router.put('/upload/:id', validateUpload, DenunciasController.uploadFile)
 
 
-router.post('/create', UploadMiddleware,  ParseDataMiddleware, validateMain, mainDenunciaCreate, ComprobanteMiddleware)
+router.post('/create', UploadMiddleware,  ParseDataMiddleware, validateMain, mainDenunciaCreate, ComprobanteMiddleware, AuditoriaMiddleware)
 
 //router.post('/consultar', validateConsultar, DenunciasController.getDenuncia)
 
