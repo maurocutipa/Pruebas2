@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Dropdown } from 'primereact/dropdown';
 import { Divider } from 'primereact/divider';
@@ -13,10 +13,10 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 export const VerDenuncia = () => {
   const dispatch = useAppDispatch();
   const { currentDenuncia } = useAppSelector((state) => state.denuncias);
+  const { data } = useAppSelector((state) => state.data);
 
+  console.log(currentDenuncia);
   const { id } = useParams();
-
-  const tipo = 'robo/hurto'; //tipo de prueba
 
   useEffect(() => {
     dispatch(getDenunciaByIdThunk(id));
@@ -33,14 +33,23 @@ export const VerDenuncia = () => {
               <label htmlFor='tiposDenuncia' className='p-2'>
                 Tipo de Denuncia:
               </label>
-              <Dropdown placeholder='Seleccione el tipo de denuncia' />
+              <Dropdown placeholder='Seleccione el tipo de denuncia'
+                options={data.tiposDenuncia}
+                optionLabel='tipoDenuncia'
+                optionValue='idTipoDenuncia'
+                value={currentDenuncia.denuncia.tipoDenuncia} 
+                />
             </div>
-
             <div className='col pt-4'>
               <label htmlFor='competenciaDenuncia' className='p-2 ml-8'>
                 Competencia
               </label>
-              <Dropdown placeholder='Seleccione competencia' />
+              <Dropdown placeholder='Seleccione competencia'
+                options={data.competencias} 
+                optionLabel='competencia'
+                optionValue='idCompetencia'
+                value={currentDenuncia.competencia}
+                />
             </div>
           </section>
 
@@ -63,7 +72,7 @@ export const VerDenuncia = () => {
           {/* Seccion de Datos del hecho */}
 
           <section className='pl-4'>
-            <DatosDelHecho tipo={tipo} denuncia={currentDenuncia.denuncia} />
+            <DatosDelHecho denuncia={currentDenuncia.denuncia} adjuntos={currentDenuncia.adjuntos} />
           </section>
         </div>
       ) : (

@@ -4,6 +4,7 @@ import {
   getAllDenuncias,
   getDenunciaById,
   deleteDenuncia,
+  ratificarDenuncia
 } from '@/api/denuncias.api';
 
 export const getDenunciasThunk = createAsyncThunk(
@@ -26,6 +27,7 @@ export const getDenunciaByIdThunk = createAsyncThunk(
   async (idDenuncia, { rejectWithValue }) => {
     try {
       const { data } = await getDenunciaById(idDenuncia);
+      console.log(data)
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -34,12 +36,25 @@ export const getDenunciaByIdThunk = createAsyncThunk(
 );
 
 export const deleteDenunciaThunk = createAsyncThunk(
-  'denuncias/delete',
+  'denuncias/deleteDenuncia',
   async (idDenuncia, { rejectWithValue }) => {
     try {
       const { data } = await deleteDenuncia(idDenuncia);
 
       return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const ratificarDenunciaThunk = createAsyncThunk(
+  'denuncias/ratificarDenuncia',
+  async (idDenuncia, { rejectWithValue }) => {
+    try {
+      await ratificarDenuncia(idDenuncia);
+
+      return idDenuncia;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }

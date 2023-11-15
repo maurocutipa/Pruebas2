@@ -5,7 +5,7 @@ const validateCreateBusquedaPersona = [
     // Interviniente
     body("idInterviniente").exists().not().isEmpty(),
     // Denuncia
-    //body("idDenuncia").exists().not().isEmpty(),
+    body("idDenuncia").exists().not().isEmpty(),
 
     // Conyugue
     body("nombreConyugue").optional(),

@@ -5,7 +5,7 @@ const convertToSnakeCase = require('@utils/convertToSnakeCase');
 //const sendEmail = require('@utils/sendEmail')
 const { matchedData } = require('express-validator');
 const showError = require('@utils/showError')
-//const { getComprobanteHtml } = require('@config/comprobante')
+const { getComprobanteHtml } = require('@config/comprobante')
 const generatePdf = require('@utils/generatePdf')
 const dayjs = require('dayjs')
 const denunciaTipos = require('@data/denunciaTipos')
@@ -16,15 +16,17 @@ const oneToManyHelper = require('@utils/oneToManyHelper')
 
 MainController = {}
 
-MainController.mainDenunciaCreate = async (req, res) => {
+MainController.mainDenunciaCreate = async (req, res, next) => {
     try {
-        //console.log(req)
 
-        let { denuncia, intervinientes, denunciantes, victimasRelaciones } = matchedData(req)
+        //TODO: desencriptar token, agarrar ip
+
+        //console.log(req)
+        let { denuncia, intervinientes, denunciantes, victimasRelaciones, idUsuario } = matchedData(req)
         if(!denunciaTipos[denuncia.idTipoDenuncia]) throw new Error('Id tipo denuncia no valido')
         denuncia.url = denunciaTipos[denuncia.idTipoDenuncia].url
         denuncia.enable = denunciaTipos[denuncia.idTipoDenuncia].enable
-        
+
 
         //formateo de fechas y horas
         intervinientes = intervinientes.map(int => {
@@ -47,11 +49,12 @@ MainController.mainDenunciaCreate = async (req, res) => {
         //DENUNCIA
         let idDenuncia
         ({ data: { id: idDenuncia } } = await interntalAPI.post('/denuncias/general-create', denuncia))
+        denuncia.idDenuncia = idDenuncia
+
+
 
         let intervinientesId = []
-
         let idIntervinienteVictima = 0
-
         //INTERVININIENTES
         intervinientes && (
             intervinientesId = await Promise.all(
@@ -59,17 +62,18 @@ MainController.mainDenunciaCreate = async (req, res) => {
                     const intData = await interntalAPI.post('/intervinientes/create', interviniente)
                     if(interviniente.idIntervinienteTipo == 1) idIntervinienteVictima = intData.data.id //id de victima para busqueda personas
                     return intData.data.id
-
                 })
             )
         )
 
         //DENUNCIANTES
-        let denunciantesIds = []
         denunciantes && (
-            denunciantesIds = await Promise.all(denunciantes.map(async denunciante => {
+            denunciantes = await Promise.all(denunciantes.map(async denunciante => {
                 const denuncianteData = await interntalAPI.post('/intervinientes/create', denunciante)
-                return denuncianteData.data.id
+                return {
+                    idInterviniente: denuncianteData.data.id,
+                    ...denunciante
+                }
             }))
         )
 
@@ -79,28 +83,43 @@ MainController.mainDenunciaCreate = async (req, res) => {
                 await interntalAPI.post('/intervinientes/interviniente-victima-create', {
                     ...datos,
                     idDenuncia,
-                    idInterviniente: denunciantesIds[index]
+                    idInterviniente: denunciantes[index].idInterviniente
                 })
                 return undefined
             }))
         )
 
         //INTERVINIENTE-DENUNCIA
-        await Promise.all([...denunciantesIds, ...intervinientesId].map(async (idInterviniente) => {
+        await Promise.all([...(denunciantes.map(den => den.idInterviniente)), ...intervinientesId].map(async (idInterviniente) => {
             const denIntData = await interntalAPI.post('/intervinientes/interviniente-denuncia-create', {
                 idDenuncia,
                 idInterviniente
             })
         }))
 
+
         //SUBA-ARCHIVOS (solo denuncia adjuntos)
         req.files && await Promise.all(req.files.map((file) => {
+            
+            //SUBA ARCHIVOS DNI INTERVINIENTE
+            if (file.fieldname == 'filedni') {
 
-            let query = `INSERT INTO denuncia_adjuntos(id_denuncia, nombre_original, nombre_archivo, fecha, estado) VALUES(?,?,?,NOW(),1)`
-            if (file.fieldname == 'filedni')
-                query = `INSERT INTO interviniente_dni (id_denuncia, nombre_original, nombre_archivo, fecha_archivo, estado) VALUES(?,?,?,NOW(),1)`
+                const idFile = parseInt(file.originalname.split('_')[0])
+                
+                let [denunciante] = denunciantes.filter(den => den.fotosIdentificacion.includes(idFile))
+                if(!denunciante)
+                    denunciante = intervinientes.filter(int => int.fotosIdentificacion && int.fotosIdentificacion.includes(idFile) && (int.idIntervinienteTipo == 1 || int.idIntervinienteTipo == 3))[0]
 
-            //TODO: add id interveniente
+                if(!denunciante) throw new Error('No se pudo asociar algun interviniente con sus fotos de identificacion')
+
+                const originalname = file.originalname.substring(file.originalname.indexOf('_') + 1)
+
+                const query = `INSERT INTO interviniente_dni (id_denuncia, nombre_original, nombre_archivo, fecha_archivo, estado, id_interviniente) VALUES(?,?,?,NOW(),1,?)`
+                return queryHandler(query, [idDenuncia, originalname, file.filename, denunciante.idInterviniente])
+            }
+
+            //SUBA ARCHIVOS DENUNCIA
+            const query = `INSERT INTO denuncia_adjuntos(id_denuncia, nombre_original, nombre_archivo, fecha, estado) VALUES(?,?,?,NOW(),1)`
             return queryHandler(query, [idDenuncia, file.originalname, file.filename])
         }))
 
@@ -112,12 +131,12 @@ MainController.mainDenunciaCreate = async (req, res) => {
             ({ data: { id: idDenunciaEsp } } = await interntalAPI.post(`/denuncias/${denuncia.url}`, {
                 ...denuncia,
                 idDenuncia,
-                idInterviniente : idIntervinienteVictima
+                idInterviniente: idIntervinienteVictima
             }))
 
             //incidentes viales vehiculos
-            if(denuncia.vehiculoIncidentes && denuncia.idTipoDenuncia == 6) 
-                await oneToManyHelper('/denuncias/incidente-vial-vehiculo-create', denuncia.vehiculoIncidentes, 'idDenunciaIncidentesViales')
+            if (denuncia.vehiculosIncidentes && denuncia.idTipoDenuncia == 6)
+                await oneToManyHelper('/denuncias/incidente-vial-vehiculo-create', denuncia.vehiculosIncidentes, 'idDenunciaIncidentesViales')
 
 
             //DENUNCIA PROPIEDAD (automoviles, autopartes,bicicletas, cheques, documentacion, otro, tarjetas, telefonos)
@@ -133,71 +152,34 @@ MainController.mainDenunciaCreate = async (req, res) => {
             }
 
             //ABIGEATO DETALLES 
-            if(denuncia.abigeatoDetalles && denuncia.idTipoDenuncia == 14)
+            if (denuncia.abigeatoDetalles && denuncia.idTipoDenuncia == 14)
                 await oneToManyHelper('/denuncias/abigeato-detalle-create', denuncia.abigeatoDetalles, idDenunciaEsp, 'idDenunciaAbigeato')
         }
 
-        
 
-        //ENVIO DE CORREO
         if (denunciantes && denunciantes.length) {
-            let localidad, barrio
-            if(denuncia.certezaLugar){
-                localidad = await queryHandler(`select nombre  from localidades where id_localidad = ?`, [denuncia.idLocalidad])
-                barrio = await queryHandler(`select nombre_barrio as nombre from barrios where id_barrio = ?`, [denuncia.idBarrio])
-            }
-            
-            const [tipoDenuncia] = await queryHandler(`select nombre from denuncia_tipos where id_tipo_denuncia = ? limit 1`, [denuncia.idTipoDenuncia])
-            const [fechaHora] = await queryHandler(`select fecha_denuncia,hora_denuncia from denuncia where id_denuncia = ?`, [idDenuncia])
-
-            //TODO: a donde mandamos el comprobante
-            /*
-            await generatePdf(getComprobanteHtml({
-                denuncia: {
-                    ...denuncia,
-                    localidad: (localidad && localidad.length && localidad[0] && localidad[0].nombre) || "Sin especificar",
-                    barrio: (barrio && barrio.length && barrio[0] && barrio[0].nombre) ||  "Sin especificar",
-                    tipoDenuncia: (tipoDenuncia && tipoDenuncia.nombre) || "Sin especificar",
-                    fechaDenuncia: (fechaHora && dayjs(fechaHora.fecha_denuncia).format('DD/MM/YYYY')) || "Sin especificar",
-                    horaDenuncia: (fechaHora && fechaHora.hora_denuncia.toString()) || "Sin especificar",
-                    detalleAdjunto: denuncia.detalleAdjunto? denuncia.detalleAdjunto:'Sin detalles',
-                    idDenuncia,
-                },
-                denunciantes,
-                victimasRelaciones,
-                victimas: intervinientes.filter(int => int.idIntervinienteTipo == 1 || int.idIntervinienteTipo == 3),
-                denunciados: intervinientes.filter(int => int.idIntervinienteTipo == 5),
-                testigos: intervinientes.filter(int => int.idIntervinienteTipo == 9),
-                adjuntos: req.files.map(file => ({nombre:file.originalname})) || [
-                    {
-                        nombre: 'mayko.jpg'
-                    },{
-                        nombre: 'comprobante.pdf'
-                    }
-                ]
-            }))
-            denunciantes.forEach(den => {
-                //sendEmail(den.email)
-            })
-            */
+            req.denuncia = denuncia
+            req.intervinientes = intervinientes
+            req.denunciantes = denunciantes
+            req.victimasRelaciones = victimasRelaciones
+            next()
         }
-
-        res.status(200).json({
-            ok: true,
-            message: "Denuncia creada",
-            idDenuncia,
-            email: denunciantes[0] && denunciantes[0].email
-        })
-
+        else {
+            res.status(200).json({
+                ok: true,
+                message: "Denuncia creada",
+                idDenuncia,
+                email: denunciantes[0] && denunciantes[0].email
+            })
+        }
     } catch (error) {
-        if(error instanceof axios.AxiosError)
-        {
+        if (error instanceof axios.AxiosError) {
             showError(error.response.statusText + ' ' + error.request.path)
             res.status(error.response.status).json(error.response.data)
         }
         else {
             showError(error)
-            httpErrorHandler(res,500,"500 SERVER ERROR",false,error.message)
+            httpErrorHandler(res, 500, "500 SERVER ERROR", false, error.message)
         }
     }
 }

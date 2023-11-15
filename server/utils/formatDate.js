@@ -4,4 +4,8 @@ const formatDate = (date) => {
   return dayjs(date).format('YYYY-MM-DD');
 };
 
-module.exports = { formatDate };
+const formatDateHour = (date) => {
+  return dayjs(date).format('YYYY-MM-DD HH:mm:s');
+};
+
+module.exports = { formatDate, formatDateHour };

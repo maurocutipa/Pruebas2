@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getDenunciaDataThunk } from './data.thunks';
+import { getDelitosThunk, getDenunciaDataThunk } from './data.thunks';
 
 const competencias = [
   { idCompetencia: 1, competencia: 'No penal' },
@@ -17,6 +17,17 @@ const realizaciones = [
   { idRealizacion: 3, realizacion: 'Oficio' },
 ];
 
+const estados = [
+  {
+    idEstado: 1,
+    estado: 'Generado',
+  },
+  {
+    idEstado: 2,
+    estado: 'Sin generar',
+  },
+];
+
 const initialState = {
   loading: true,
   data: {
@@ -25,6 +36,7 @@ const initialState = {
     delegacionesFiscales: [],
     competencias: [],
     realizaciones: [],
+    delitos: [],
   },
 };
 
@@ -36,7 +48,16 @@ export const dataSlice = createSlice({
     builder
       // Get Datos de Filtros
       .addCase(getDenunciaDataThunk.fulfilled, (state, { payload }) => {
-        state.data = { ...payload, competencias, realizaciones };
+        state.data = {
+          ...state.data,
+          ...payload,
+          competencias,
+          realizaciones,
+          estados,
+        };
+      })
+      .addCase(getDelitosThunk.fulfilled, (state, { payload }) => {
+        state.data.delitos = payload.delitos;
       });
   },
 });

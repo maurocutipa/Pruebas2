@@ -4,6 +4,7 @@ import authSlice from './authSlice/auth.slice';
 import denunciasSlice from './denunciasSlice/denuncias.slice';
 import pasesSlice from './pasesSlice/pases.slice';
 import dataSlice from './dataSlice/data.slice';
+import legajoSlice from './legajoSlice/legajo.slice';
 
 export const store = configureStore({
   reducer: {
@@ -11,5 +12,6 @@ export const store = configureStore({
     data: dataSlice,
     denuncias: denunciasSlice,
     pases: pasesSlice,
+    legajo: legajoSlice,
   },
 });
