@@ -4,7 +4,8 @@ import {
   getAllDenuncias,
   getDenunciaById,
   deleteDenuncia,
-  ratificarDenuncia
+  ratificarDenuncia,
+  getResumenDenuncia,
 } from '@/api/denuncias.api';
 
 export const getDenunciasThunk = createAsyncThunk(
@@ -27,7 +28,7 @@ export const getDenunciaByIdThunk = createAsyncThunk(
   async (idDenuncia, { rejectWithValue }) => {
     try {
       const { data } = await getDenunciaById(idDenuncia);
-      console.log(data)
+      console.log(data);
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -55,6 +56,19 @@ export const ratificarDenunciaThunk = createAsyncThunk(
       await ratificarDenuncia(idDenuncia);
 
       return idDenuncia;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const getResumenDenunciaThunk = createAsyncThunk(
+  'denuncias/getResumenDenuncia',
+  async (idDenuncia, { rejectWithValue }) => {
+    try {
+      const { data } = await getResumenDenuncia(idDenuncia);
+
+      return data.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }

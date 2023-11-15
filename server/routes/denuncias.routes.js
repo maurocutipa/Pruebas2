@@ -32,10 +32,11 @@ const {
 } = require('../validators/denuncias');
 
 router.post('/get-all', DenunciasController.getDenuncias);
-router.patch('/ratificar-denuncia/:id', DenunciasController.ratificarDenuncia);
 router.get('/get-datos-filtros', DenunciasController.getDatosDeFiltros);
 router.get('/get/:id', DenunciasController.getDenunciaById);
+router.get('/get-resumen-ratificar/:id', DenunciasController.getResumenParaRatificar);
 router.delete('/delete/:id', DenunciasController.deleteDenuncia);
+router.patch('/ratificar-denuncia/:id', DenunciasController.ratificarDenuncia);
 
 router.post('/general-create', /* doubleCsrfProtection, csrfErrorHandler, */ validateCreateGeneral, DenunciasController.createDenunciaGeneral);
 router.post('/genero-create', /* doubleCsrfProtection, csrfErrorHandler, */ validateCreateGenero, DenunciasController.createDenunciaGenero);
