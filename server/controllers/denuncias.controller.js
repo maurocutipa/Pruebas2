@@ -342,7 +342,7 @@ DenunciasController.createDenunciaGeneral = async (req, res) => {
       ', '
     )},estado,fecha_denuncia,hora_denuncia,fecha_ratificacion,hora_ratificacion) VALUES (${keys
       .map((key) => '?')
-      .join(', ')},1,CURDATE(),CURTIME,CURDATE(),CURTIME)`;
+      .join(', ')},1,CURDATE(),CURTIME(),CURDATE(),CURTIME())`;
         const resQuery = await queryHandler(query, values)
 
     res.status(200).json({
