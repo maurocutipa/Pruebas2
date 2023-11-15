@@ -48,7 +48,13 @@ export const dataSlice = createSlice({
     builder
       // Get Datos de Filtros
       .addCase(getDenunciaDataThunk.fulfilled, (state, { payload }) => {
-        state.data = { ...payload, competencias, realizaciones, estados };
+        state.data = {
+          ...state.data,
+          ...payload,
+          competencias,
+          realizaciones,
+          estados,
+        };
       })
       .addCase(getDelitosThunk.fulfilled, (state, { payload }) => {
         state.data.delitos = payload.delitos;

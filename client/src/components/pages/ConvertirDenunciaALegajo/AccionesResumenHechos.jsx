@@ -1,11 +1,7 @@
 import { Button } from 'primereact/button';
 import { confirmDialog } from 'primereact/confirmdialog';
-import { Menu } from 'primereact/menu';
-import { useRef } from 'react';
 
 export const AccionesResumenHechos = () => {
-  const menuLeft = useRef(null);
-
   const eliminarResumen = () => {
     confirmDialog({
       message: '¿Está seguro de eliminar este resumen?',
@@ -19,42 +15,29 @@ export const AccionesResumenHechos = () => {
 
   const modificarResumen = () => {};
 
-  const menuitems = [
-    {
-      label: 'Acciones',
-      items: [
-        {
-          label: 'Modificar',
-          command: () => modificarResumen(),
-        },
-        {
-          label: 'Eliminar',
-          command: () => eliminarResumen(),
-        },
-      ],
-    },
-  ];
-
   return (
     <>
-      <Menu popup model={menuitems} ref={menuLeft} />
-
       <Button
-        icon='pi pi-ellipsis-v'
+        icon='pi pi-pencil'
+        size='large'
         className='text-lightblue-mpa'
         rounded
         text
         severity='info'
-        onClick={(ev) => menuLeft.current.toggle(ev)}
+        onClick={modificarResumen}
+        tooltip='Modificar'
+        tooltipOptions={{ position: 'top' }}
       />
 
       <Button
         icon='pi pi-trash'
-        className='text-lightblue-mpa'
+        size='large'
         rounded
         text
-        severity='info'
-        onClick={(ev) => menuLeft.current.toggle(ev)}
+        severity='danger'
+        onClick={eliminarResumen}
+        tooltip='Eliminar'
+        tooltipOptions={{ position: 'top' }}
       />
     </>
   );
