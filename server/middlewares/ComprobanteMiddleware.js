@@ -20,7 +20,7 @@ const ComprobanteMiddleware = async (req, res, next) => {
         const [tipoDenuncia] = await queryHandler(`select nombre from denuncia_tipos where id_tipo_denuncia = ? limit 1`, [denuncia.idTipoDenuncia])
         const [fechaHora] = await queryHandler(`select fecha_denuncia,hora_denuncia from denuncia where id_denuncia = ?`, [denuncia.idDenuncia])
 
-        const usuario = await queryHandler(`select nombre, apellido, grado,  from localidades`)
+        const usuario = await queryHandler(`select nombre, apellido, grado from usuarios`)
 
         if(denuncia.certezaLugar){
             denuncia.barrio = barrios.filter(barrio => barrio.id = denuncia.idBarrio)[0].nombre
