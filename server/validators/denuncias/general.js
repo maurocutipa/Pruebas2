@@ -56,6 +56,25 @@ const validateCreateGeneral = [
         optional().isBoolean(),
     body("idTipoDenuncia").
         exists().not().isEmpty().isNumeric(),
+    
+    //nuevos campos 
+    body("idSeccional").
+        exists().not().isEmpty().isNumeric(),
+    body("idUsuario").
+        exists().not().isEmpty().isNumeric(),
+    body("funcionGrado").
+        exists().not().isEmpty(),
+    body("flagrancia").
+        exists().not().isEmpty().isBoolean(),
+    body("firmaDenunciante").
+        exists().not().isEmpty().isBoolean(),
+    body("firmaAutoridad").
+        exists().not().isEmpty().isBoolean(),
+    body("realizacion").
+        exists().not().isEmpty(),
+    body("idUserRatificacion").
+        exists().not().isEmpty().isNumeric(),
+
     (req, res, next) => {
         validateHelper(req, res, next)
     }

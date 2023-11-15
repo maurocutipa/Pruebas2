@@ -332,19 +332,18 @@ DenunciasController.getDenuncia = async (req, res) => {
 //CREAR DENUNCIAS
 
 DenunciasController.createDenunciaGeneral = async (req, res) => {
-  try {
-    const data = matchedData(req);
+    try {
 
-    const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
-    const values = Object.values(data);
+        const data = matchedData(req)
+        const keys = Object.keys(data).map(key => convertToSnakeCase(key))
+        const values = Object.values(data)
 
     const query = `INSERT INTO denuncia(${keys.join(
       ', '
-    )},estado,fecha_denuncia,hora_denuncia) VALUES (${keys
+    )},estado,fecha_denuncia,hora_denuncia,fecha_ratificacion,hora_ratificacion) VALUES (${keys
       .map((key) => '?')
-      .join(', ')},1,CURDATE(),CURTIME())`;
-
-    const resQuery = await queryHandler(query, values);
+      .join(', ')},1,CURDATE(),CURTIME,CURDATE(),CURTIME)`;
+        const resQuery = await queryHandler(query, values)
 
     res.status(200).json({
       ok: true,
