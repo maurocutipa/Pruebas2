@@ -53,6 +53,10 @@ export const denunciasSlice = createSlice({
           adjuntos: 
           {
             ...payload.data.adjuntos
+          },
+          datosDenunciaPropiedad: 
+          {
+            ...payload.data.datosDenunciaPropiedad
           }
         };
       })
