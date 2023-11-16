@@ -12,7 +12,7 @@ let adjuntos = []
 //   adjuntos
 // }
 
-const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,denunciados,victimas,adjuntos}) => {
+const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,denunciados,victimas,adjuntos,usuario}) => {
 
     const denunciaTipica = `
     <!DOCTYPE html>
@@ -1281,42 +1281,364 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
     </html>
     `
 
+    //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
     const denunciaBusqueda = `<!DOCTYPE html>
     <html lang="en">
     
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <!-- <link href="http://localhost:3000/css/bootstrap.min.css" type="text/css" rel="stylesheet"> -->
-            <!-- <link href="http://localhost:3000/css/styles.css" type="text/css" rel="stylesheet"> -->
+            <!--<link href="./static/css/bootstrap.min.css" rel="stylesheet">-->
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-            <style>
-                @page {
-                    size: A4;
-                    margin: .5in;
-                    /* @top-right {
-                    content: "Page " counter(pageNumber);
-                    } */
-                }
-                @page wide {
-                    size: a4 landscape;
-                }
-                [id^="item"] {
-                    page-break-inside: avoid;
-                }
-                .table,
-                .list-group,
-                [id^="datos"]{
-                    page-break-inside: avoid;
-                }
-                #item14 {
-                    page-break-before: always;
-                }
-            </style>
         </head>
     
         <body>
-            <h1>suuuu</h1>
+            <div id="contenedorBase">
+                <div class="px-3" id="item1">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <img src="https://sistema.mpajujuy.gob.ar/images/logompa2.png" alt="Logo MPA" class="img-fluid w-25 h-25">
+                    </div>
+                    <div class="mb-4 d-grid">
+                        <h3 class="fw-bold col text-center d-flex align-items-center justify-content-center">
+                            DENUNCIA DE DESAPARICION DE PERSONAS
+                        </h3>
+                    </div>
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">RECEPTOR DE LA DENUNCIA</h4>
+                        <div class="card p-4 border">
+                            <p><span class="fw-bold">FECHA: </span> <span class="">${denuncia.fechaDenuncia + " " + denuncia.horaDenuncia }</span></p>
+                            <p><span class="fw-bold">LUGAR: </span> <span class="">${usuario.lugar}</span></p>
+                            <p><span class="fw-bold">NOMBRE COMPLETO: </span> <span class="">${usuario.nombre +" "+ usuario.apellido}</span></p>
+                            <p><span class="fw-bold">FUNCION Y GRADO: </span> <span class="">${denuncia.funcionGrado? denuncia.funcionGrado : "Sin Especificar" }</span></p>
+                            <p><span class="fw-bold">FUERZA, INSTITUCIÓN, ORGANIZACIÓN: </span> <span class="">${usuario.fuerza}</span></p>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="p-3" id="item2">
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">TIPO DE DENUNCIA</h4>
+                        <p class="fw-bold ">Marcar lo que corresponda</p>
+                        <div class="card p-4 border">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                  <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                    FUGA DEL HOGAR
+                                </li>
+                                <li class="list-group-item">
+                                  <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                    FUGA DE UNA INSTITUCIÓN ( de salud, hogar, asilo, etc. ) 
+                                </li>
+                                <li class="list-group-item">
+                                  <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                    DESAPARICIÓN
+                                </li>
+                                <li class="list-group-item">
+                                  <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                    TRATA DE PERSONAS
+                                </li>
+                                <li class="list-group-item">
+                                  <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                    AVERIGUACIÓN DE PARADERO
+                                </li>
+                                <li class="list-group-item">
+                                    <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                      VIOLENCIA INSTITUCIONAL
+                                </li>
+                                <li class="list-group-item">
+                                <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                    OTRO
+                                </li>
+                              </ul>                       
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3" id="item3">
+                    <div class="mb-3">
+                        <p class="fw-bold ">Fiscal Interviniente: NOSEEEEEEEEEEEE</p>
+                        <h4 class="fw-bold border py-2 px-1">INFORMACION DE LA PERSONA DENUNCIANTE</h4>
+                        ${
+                            denunciantes.map((den, index) => `
+                                <div class="row mx-1 justify-content-center">
+                                    <div class="col-12">
+                                        <div class="card my-3 py-1">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Apellido:</span> ${den.apellido}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Nombre:</span> ${den.nombre}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Alias:</span> ${den.alias? den.alias: "Sin Especificar"}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Nacionalidad:</span> ${den.nacionalidad? den.nacionalidad : `Sin Especificar`}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Identificacion:</span> ${den.tipoIdentificacion} ${den.numeroIdentificacion}</p>
+                                                </div>
+                                                <div class="col">
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Fecha de Nacimiento:</span> ${den.fechaNacimiento}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Género:</span> ${den.identidadAutopercibida? den.identidadAutopercibida : `Sin Especificar`}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Teléfono Móvil:</span> ${den.telefonoMovil? den.telefonoMovil : "Sin Especificar"}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Teléfono Fijo:</span> ${den.telefonoFijo? den.telefonoFijo : "Sin Especificar"}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Correo Electrónico:</span> ${den.email}</p>
+                                                    ${victimasRelaciones[index] && victimasRelaciones[index].conocimientoVictima !== 0? 
+                                                        `
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Vinculo con la persona buscada:</span> ${victimasRelaciones[index].vinculoVictima !== "Otro"? victimasRelaciones[index].vinculoVictima : victimasRelaciones[index].detalleVinculo }</p>
+                                                        `:`
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">No conoce a la victima</span></p>
+                                                        `
+                                                    }
+                                                </div>
+                                            </div>
+                                            <p class="mt-2 ms-3"><span class="fw-bold">Ubicación:</span> 
+                                                ${den.provincia? den.provincia + ", "  : ""} 
+                                                ${den.localidad? (den.barrio? den.localidad + ", ": den.localidad) : ""}
+                                                ${den.barrio? den.barrio + ", " : ""} 
+                                                ${den.domicilio? den.domicilio : ""}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')
+                        }
+                    </div>
+                </div>
+                <div class="p-3" id="item4">
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">INFORMACION GENERAL DE LA PERSONA BUSCADA</h4>
+                        ${victimas.length !== 0?
+                            `
+                            <div class="px-4 mb-4" id="2">
+                                <div class="row mx-1 justify-content-center">
+                                    ${ 
+                                        victimas.map((victima) => `
+                                        <div class="col-12">
+                                            <div class="card my-3 py-1">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Apellido:</span> ${victima.apellido}</p>
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Nombre:</span> ${victima.nombre}</p>
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Alias:</span> ${victima.alias? victima.alias: "Sin Especificar"}</p>
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Nacionalidad:</span> ${victima.nacionalidad? victima.nacionalidad : `Sin Especificar`}</p>
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Identificacion:</span> ${victima.tipoIdentificacion} ${victima.numeroIdentificacion}</p>
+                                                    </div>
+                                                    <div class="col">
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Fecha de Nacimiento:</span> ${victima.fechaNacimiento}</p>
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Género:</span> ${victima.identidadAutopercibida? victima.identidadAutopercibida : `Sin Especificar`}</p>
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Teléfono Móvil:</span> ${victima.telefonoMovil? victima.telefonoMovil : "Sin Especificar"}</p>
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Teléfono Fijo:</span> ${victima.telefonoFijo? victima.telefonoFijo : "Sin Especificar"}</p>
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Correo Electrónico:</span> ${victima.email}</p>
+                                                    </div>
+                                                </div>
+                                                <p class="mt-2 ms-3"><span class="fw-bold">Ubicación:</span> 
+                                                    ${victima.provincia? victima.provincia + ", "  : ""} 
+                                                    ${victima.localidad? (victima.barrio? victima.localidad + ", ": victima.localidad) : ""}
+                                                    ${victima.barrio? victima.barrio + ", " : ""} 
+                                                    ${victima.domicilio? victima.domicilio : ""}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        `).join('')
+                                    }
+                                </div>
+                            </div>
+                            `:``
+                        }
+                    </div>
+                </div>
+    
+                <div class="p-3" id="item5">
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">EN CASO DE ESTAR EN PAREJA</h4>
+                        <div class="card p-4 border">
+                            <p><span class="fw-bold">NOMBRE DEL CÓNJUGE: </span> <span class="">${denuncia.nombreConyugue? denuncia.nombreConyugue : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">DATOS DE CONTACTO: </span> <span class="">${denuncia.datosContactoConyugue? denuncia.datosContactoConyugue : "Sin especificar"}</span></p>
+                            <p><span class="fw-bold">DOMICILIO: </span> <span class="">${denuncia.domicilioConyugue? denuncia.domicilioConyugue : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">TELEFONO DE LINEA: </span> <span class="">${denuncia.telefonoLineaConyugue? denuncia.telefonoLineaConyugue : "Sin especificar" }</span></p>
+                            <p><span class="fw-bold">CELULAR: </span> <span class="">${denuncia.celularConyugue? denuncia.celularConyugue : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">CORREO ELECTRONICO: </span> <span class="">${denuncia.emailConyugue? denuncia.emailConyugue : "Sin Especificar"}</span></p> 
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="p-3" id="item6">
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">EN CASO DE CORRESPONDER DATOS DE LAS HIJAS/OS</h4>
+    
+                        <p class="fw-bold ">DATOS DEL PADRE</p>
+    
+                        <div class="card p-4 border">
+                            <p><span class="fw-bold">NOMBRE COMPLETO: </span> <span class="">${denuncia.nombrePadre? denuncia.nombrePadre : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">DNI N°: </span> <span class="">${denuncia.dniPadre? denuncia.dniPadre : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">DATOS DE CONTACTO: </span> <span class="">${denuncia.datosContactoPadre? denuncia.datosContactoPadre : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">DOMICILIO: </span> <span class="">${denuncia.domicilioPadre? denuncia.domicilioPadre : "Sin Especificar" }</span></p>
+                            <p><span class="fw-bold">TELEFONO DE LINEA: </span> <span class="">${denuncia.telefonoLineaPadre? denuncia.telefonoLineaPadre : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">CELULAR: </span> <span class="">${denuncia.celularPadre? denuncia.celularPadre : "Sin Especificar" }</span></p>
+                            <p><span class="fw-bold">CORREO ELECTRONICO: </span> <span class="">${denuncia.emailPadre? denuncia.emailPadre : "Sin Especificar"}</span></p>
+                        
+                        </div>
+    
+                        <p class="fw-bold ">DATOS DE LA MADRE</p>
+    
+                        <div class="card p-4 border">
+                            <p><span class="fw-bold">NOMBRE COMPLETO: </span> <span class="">${denuncia.nombreMadre? denuncia.nombreMadre : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">DNI N°: </span> <span class="">${denuncia.dniMadre? denuncia.dniMadre : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">DATOS DE CONTACTO: </span> <span class="">${denuncia.datosContactoMadre? denuncia.datosContactoMadre : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">DOMICILIO: </span> <span class="">${denuncia.domicilioMadre? denuncia.domicilioMadre : "Sin Especificar" }</span></p>
+                            <p><span class="fw-bold">TELEFONO DE LINEA: </span> <span class="">${denuncia.telefonoLineaMadre? denuncia.telefonoLineaMadre : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">CELULAR: </span> <span class="">${denuncia.celularMadre? denuncia.celularMadre : "Sin Especificar" }</span></p>
+                            <p><span class="fw-bold">CORREO ELECTRONICO: </span> <span class="">${denuncia.emailMadre? denuncia.emailMadre : "Sin Especificar"}</span></p>
+                        
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="p-3" id="item7">
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">¿LA PERSONA BUSCADA TRABAJABA?</h4>
+                        <div class="card p-4 border">
+                            <p><span class="fw-bold">LUGAR: </span> <span class="">${denuncia.lugarTrabajo? denuncia.lugarTrabajo : "No"}</span></p>
+                            <p><span class="fw-bold">FUNCIÓN QUE DESEMPEÑABA: </span> <span class="">${denuncia.funcionTrabajo? denuncia.funcionTrabajo : "No"}</span></p>
+                        </div>
+                    </div>
+    
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">DATOS DE COMPAÑERAS/OS</h4>
+                        <div class="card p-4 border">
+                            <p>${denuncia.datosCompañerosTrabajo? denuncia.datosCompañerosTrabajo : "No"}</p>
+                        </div>
+                    </div>
+                        
+                </div>
+    
+                <div class="p-3" id="item8">
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">¿LA PERSONA BUSCADA ESTUDIABA?</h4>
+                        <div class="card p-4 border">
+                            <p><span class="fw-bold">LUGAR: </span> <span class="">${denuncia.lugarEstudio? denuncia.lugarEstudio : "No"}</span></p>
+                            <p><span class="fw-bold">DIRECCIÓN: </span> <span class="">${denuncia.direccionEstudio? denuncia.direccionEstudio : "No"}</span></p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">DATOS DE COMPAÑERAS/OS</h4>
+                        <div class="card p-4 border">
+                            <p>${denuncia.datosCompañerosEstudio? denuncia.datosCompañerosEstudio : "No"}</p>
+                        </div>
+                    </div>
+                    
+                </div>
+    
+                <div class="p-3" id="item9">
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">DATOS DEL HECHO</h4>
+                        <div class="card p-4 border">
+                            <p><span class="fw-bold">FECHA DE DESAPARICIÓN: </span> <span class="">${denuncia.fechaDesaparicion? denuncia.fechaDesaparicion : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">LUGAR DE DESAPARICIÓN: </span> <span class="">${denuncia.lugarDesaparicion? denuncia.lugarDesaparicion : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">VESTIMENTA AL MOMENTO DE DESAPARECER: </span> <span class="">${denuncia.vestimentaDesaparicion? denuncia.vestimentaDesaparicion : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">EFECTOS PERSONALES: </span> <span class="">${denuncia.efectosPersonales? denuncia.efectosPersonales : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">CAMBIOS RECIENTES EN LA PERSONA DESAPARECIDA (habitos, lugares, o personas a las que frecuentaba, etc): </span> <span class="">${denuncia.cambiosRecientes? denuncia.cambiosRecientes : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">PUEDE RECORDAR ALGUNA PERSONA QUE HAYA MOSTRADO RECIENTEMENTE UNA ATENCION O INTERES INUSITADO EN LA PEROSNA DESAPARECIDA: </span> <span class="">${denuncia.personaInteres? denuncia.personaInteres : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">¿ESTABA BUSCANDO TRABAJO?: </span> <span class="">${denuncia.busquedaTrabajo? "Si" : "No"}</span></p>                  
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="p-3" id="item10">
+                    <div class="mb-3">
+                        <div class="card p-4 border">
+                            <p><span class="fw-bold">CONTEXTO DE DESAPARICIÓN: </span> <span class="">${denuncia.contextoDesaparicion? denuncia.contextoDesaparicion : "Sin Especificar"}</span></p>                 
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="p-3" id="item11">
+                    <div class="mb-3">
+                        <div class="card p-4 border">
+                            <p><span class="fw-bold">RELATO DEL HECHO: </span> <span class="">${denuncia.relatoHecho? denuncia.relatoHecho : "Sin Especificar"}</span></p>                 
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="p-3" id="item12">
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">TESTIGOS O PERSONAS QUE PUDIERAN APORTAR DATOS DEL HECHO</h4>
+                        ${denuncia.testigo?
+                            (denuncia.datosTestigo?
+                                `
+                                    <div class="px-4 mb-4" id="datos4">    
+                                        <div class="row mx-1 justify-content-around" id="testigos">
+                                            ${testigos.map(testigo =>  `
+                                                <div class="col-12">
+                                                    <div class="card my-3 py-1">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Tipo Persona:</span> ${testigo.tipoPersona}</p>
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Apellido:</span> ${testigo.apellido}</p>
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Nombre:</span> ${testigo.nombre}</p>
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Alias:</span> ${testigo.alias? testigo.alias: "Sin Especificar"}</p>
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Nacionalidad:</span> ${testigo.nacionalidad? testigo.nacionalidad : `Sin Especificar`}</p>
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Identificacion:</span> ${testigo.tipoIdentificacion} ${testigo.numeroIdentificacion}</p>
+                                                            </div>
+                                                            <div class="col">
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Fecha de Nacimiento:</span> ${testigo.fechaNacimiento}</p>
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Género:</span> ${testigo.identidadAutopercibida? testigo.identidadAutopercibida : `Sin Especificar`}</p>
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Teléfono Móvil:</span> ${testigo.telefonoMovil? testigo.telefonoMovil : "Sin Especificar"}</p>
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Teléfono Fijo:</span> ${testigo.telefonoFijo? testigo.telefonoFijo : "Sin Especificar"}</p>
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Correo Electrónico:</span> ${testigo.email}</p>
+                                                            </div>
+                                                        </div>
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Ubicación:</span> 
+                                                            ${testigo.provincia? testigo.provincia + ", "  : ""} 
+                                                            ${testigo.localidad? (testigo.barrio? testigo.localidad + ", ": testigo.localidad) : ""}
+                                                            ${testigo.barrio? testigo.barrio + ", " : ""} 
+                                                            ${testigo.domicilio? testigo.domicilio : ""}
+                                                        </p>
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Informacion Adicional:</span> ${testigo.informacionAdicional? testigo.informacionAdicional: "Sin Especificar" }</p>
+                                                    </div>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                    `:
+                                    `
+                                    <div class="px-4 mb-4" id="datos4">
+                                        <div class="card border-3 d-flex justify-content-center p-3">
+                                            <h5 class="fw-bold text-center">Los Testigos no fueron reconocidos</h5>
+                                        </div>
+                                        ${
+                                            testigos.map(testigo => `
+                                                <div class="col-12 card p-3">
+                                                <p>
+                                                    <span class="fw-bold">Informacion Adicional:</span> 
+                                                    <span class="">${testigo.informacionAdicional? testigo.informacionAdicional: "Sin Especificar" }</span>
+                                                </p>
+                                                </div>
+                                            `).join('') 
+                                        }
+                                    </div>
+                                `
+                            ):
+                            `
+                                <div class="card border-3 d-flex justify-content-center p-3">
+                                    <h5 class="fw-bold text-center">No Hubo Testigos del Hecho</h5>
+                                </div>
+                            `
+                        }
+                    </div>
+                </div>
+    
+                <div class="p-3" id="item13">
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">CARACTERISTICAS FISICAS</h4>
+                        <div class="card p-4 border">
+                            <p><span class="fw-bold">CARACTERISTICAS GENERALES (preguntar: color de pelo, ojos, tatuajes, rasgos faciales, etc) : </span> <span class="">${denuncia.caracteristicasGenerales? denuncia.caracteristicasGenerales : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">ALTURA: </span> <span class="">${denuncia.altura? denuncia.altura : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">ENFERMEDADES (CONGÉNITAS/PATOLOGÍCAS): </span> <span class="">${denuncia.enfermedades? denuncia.enfermedades : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">FRACTURAS: </span> <span class="">${denuncia.fracturas? denuncia.fracturas : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">RASGOS ODONTOLOGICOS (preguntar: extracciones, protesís, aparatos, tratamientos, etc): </span> <span class="">${denuncia.rasgosOdontologicos? denuncia.rasgosOdontologicos : "No"}</span></p>
+                            <p><span class="fw-bold">OBSERVACIONES / COMENTARIOS: </span> <span class="">${denuncia.observaciones? denuncia.observaciones : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">FICHAS DENTALES: </span> <span class="">${denuncia.fichasDentales? "Si" : "No"}</span></p>     
+                            <p><span class="fw-bold">FICHAS DACTILOSCOPICAS: </span> <span class="">${denuncia.fichasDactiloscopicas? "Si" : "No"}</span></p>       
+                            <p><span class="fw-bold">FOTO: </span> <span class="">${denuncia.fotoCaracteristicas? "Si" : "No"}</span></p>
+                        </div>
+                    </div>
+                </div>
         </body>
     </html>`
 
