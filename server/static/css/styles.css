@@ -1,14 +1,31 @@
+*{
+  font-family: Arial;
+}
 @page {
-    size: A4;
-    margin: 4in;
-    @top-right {
-      content: "Page " counter(pageNumber);
-    }
+  size: A4;
+  margin: .5in;
+  /* @top-right {
+  content: "Page " counter(pageNumber);
+  } */
 }
 @page wide {
-    size: a4 landscape;
+  size: a4 landscape;
+}
+[id^="item"] {
+  page-break-inside: avoid;
+}
+.table,
+.list-group,
+.card,
+[id^="datos"]{
+  page-break-inside: avoid;
+}
+#item14 {
+  page-break-before: always;
 }
 
-body {
-  background-color: red;
+.checked {
+  background-color: #000000; /* Cambia el color de fondo cuando está marcado */
+  border-color: #000000; /* Cambia el color del borde cuando está marcado */
+  color: #000000; /* Cambia el color del texto cuando está marcado */
 }

@@ -63,9 +63,14 @@ const ComprobanteMiddleware = async (req, res, next) => {
             denunciados: intervinientes.filter(int => int.idIntervinienteTipo == 5),
             testigos: intervinientes.filter(int => int.idIntervinienteTipo == 9),
             adjuntos: req.files.map(file => ({ nombre: file.originalname })) || [],
-
             //BUSQUEDA PERSONAS
-            usuario: usuario
+            usuario: {
+                nombre: "ejemplo",
+                apellido: "ejemplo",
+                lugar: "San salvador",
+                fuerza: "Ejemplo"
+            }
+            
         }))
 
         
