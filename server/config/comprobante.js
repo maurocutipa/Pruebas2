@@ -1,16 +1,10 @@
-let denunciantes = []
-let denunciados = []
-let testigos = []
-let victimas = []
-let denuncia = {}
-let adjuntos = []
-
-// const defaultValues = {
-//   denuncia,
-//   denunciantes,
-//   involucrados,
-//   adjuntos
-// }
+const [tiposVehiculos,marcasVehiculos] = require('../data/denunciaIncidentesViales');
+const [perfilesAgresoresGenero,situacionesGenero,tiposViolenciaGenero,vulnerabilidadesGenero] = require('../data/denunciaViolenciaGenero');
+const [situacionesIntrafamiliar,tiposViolenciaIntrafamiliar,perfilesAgresoresIntrafamiliar,victimasIntrafamiliar,caracteristicasIntrafamiliar] = require('../data/denunciaIntrafamiliar');
+const [situacionesRoboHurto, marcasCelulares, tiposBicicletas] = require('../data/denunciaRoboHurto');
+const [hechosDelitosSexuales,accionesDelitosSexuales,situacionesDelitosSexuales] = require('../data/denunciaDelitosSexuales');
+const especies = require('../data/denunciaAbigeato');
+const [danios,consecuenciasDanios] = require('../data/denunciaDanios');
 
 const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,denunciados,victimas,adjuntos,usuario}) => {
 
@@ -47,9 +41,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                             <p><strong>Localidad:</strong> ${denuncia.localidad}</p>
                             ${ denuncia.certezaLugar? 
                                 `
-                                    <p><strong>Barrio:</strong> ${denuncia.barrio}</p>
-                                    <p><strong>Calle:</strong> ${denuncia.calleHecho}</p>
-                                    <p><strong>Numero de Calle:</strong> ${denuncia.numCalle}</p>
+                                    <p><strong>Barrio:</strong> ${denuncia.barrio?denuncia.barrio:`Sin Especificar`}</p>
+                                    <p><strong>Calle:</strong> ${denuncia.calleHecho?denuncia.calleHecho:`Sin Especificar`}</p>
+                                    <p><strong>Numero de Calle:</strong> ${denuncia.numCalle?denuncia.numCalle:`Sin Especificar`}</p>
                                     
                                     <p><strong>Departamento:</strong> ${denuncia.departamentoHecho? denuncia.departamentoHecho : "Sin Especificar" }</p>
                                     <p><strong>Piso:</strong> ${denuncia.pisoHecho? denuncia.pisoHecho : "Sin Especificar" }</p>`
@@ -80,34 +74,6 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                         () => {
                             switch(denuncia.tipoDenuncia){
                                 case "Violencia de Género":
-                                    var situaciones = {
-                                        situacion1: "Separacion reciente o en trámite de separación.",
-                                        situacion2: "Acoso reciente a la victima o quegrante de la orden de alejamiento."
-                                    };
-                                    var tiposViolencia = {
-                                        tipoViolencia1:"Existenvia de violencia físia susceptible de causar lesiones.",
-                                        tipoViolencia2:"Violencia física en presencia de los hijos u otros familiares.",
-                                        tipoViolencia3:"Aumento de la frecuencia y de la gravedad de los incidentes violentos en el último mes",
-                                        tipoViolencia4:"Amenazas graves o de muerte en el último mes.",
-                                        tipoViolencia5:"Amenazas con objetos peligrosos o con armas de cualquier tipo.",
-                                        tipoViolencia6:"Inencion clara de causar lesiones graves o muy graves.",
-                                        tipoViolencia7:"Agresiones sexuales en la relacion de pareja."
-                                    }
-                                    var perfilesAgresores = {
-                                        perfilAgresor1:"Celos muy intensos o conductas controladoras sobre la pareja.",
-                                        perfilAgresor2:"Historial de conductas violentas con una pareja anterior.",
-                                        perfilAgresor3:"Historial de consuctas violentas con otras personas (amigos, companeros de trabajo, etc.).",
-                                        perfilAgresor4:"Consumo abusivo de alcohol y/o drogas.",
-                                        perfilAgresor5:"Antecedentes de enfermedad mentak con abandono de tratamientos psiquiátricos o psicológicos.",
-                                        perfilAgresor6:"Conductas de crueldad, de desprecio a la victima y de falta de arrepentimiento.",
-                                        perfilAgresor7:"Justificacion de las conductas violentas por su propio estado (alcohol, drogas, estrés) o por la provicacion de la victima."
-                                    }
-                                    var vulnerabilidades = {
-                                        vulnerabilidades1:"Percepción de la victima de peligro de muerte en el último mes.",
-                                        vulnerabilidades2:"Intentos de retirar denuncias previas o de echarse atras en la decision de abandonar o denunciar al agresor.",
-                                        vulnerabilidades3:"Vulnerabilidad de la victima por razones de enfermedad, soledad o dependencia.",
-                                        vulnerabilidades4:"Depende económicamente la victima del agresor."
-                                    }
                                     return `
                                         <div class="p-4" id="item4">
                                             <div class="mb-3">
@@ -120,9 +86,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Situaciones</h5>
                                                             <ul class="list-group px-2">
                                                                 ${
-                                                                    Object.keys(situaciones)
+                                                                    Object.keys(situacionesGenero)
                                                                     .filter(sit => denuncia[sit] !== undefined && denuncia[sit] !== 0)
-                                                                    .map(sit => `<li class="list-group-item">${situaciones[sit]}</li>`)
+                                                                    .map(sit => `<li class="list-group-item">${situacionesGenero[sit]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -131,9 +97,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Tipo Violencia</h5>
                                                             <ul class="list-group px-2">
                                                                 ${
-                                                                    Object.keys(tiposViolencia)
+                                                                    Object.keys(tiposViolenciaGenero)
                                                                     .filter(vio => denuncia[vio] !== undefined && denuncia[vio] !== 0)
-                                                                    .map(vio => `<li class="list-group-item">${tiposViolencia[vio]}</li>`)
+                                                                    .map(vio => `<li class="list-group-item">${tiposViolenciaGenero[vio]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -142,9 +108,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Perfil Agresor</h5>
                                                             <ul class="list-group px-2">
                                                                 ${
-                                                                    Object.keys(perfilesAgresores)
+                                                                    Object.keys(perfilesAgresoresGenero)
                                                                     .filter(perfAgresor => denuncia[perfAgresor] !== undefined && denuncia[perfAgresor] !== 0)
-                                                                    .map(perfAgresor => `<li class="list-group-item">${perfilesAgresores[perfAgresor]}</li>`)
+                                                                    .map(perfAgresor => `<li class="list-group-item">${perfilesAgresoresGenero[perfAgresor]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -153,9 +119,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Vulnerabilidades</h5>
                                                             <ul class="list-group px-2">
                                                                 ${
-                                                                    Object.keys(vulnerabilidades)
+                                                                    Object.keys(vulnerabilidadesGenero)
                                                                     .filter(vul => denuncia[vul] !== undefined && denuncia[vul] !== 0)
-                                                                    .map(vul => `<li class="list-group-item">${vulnerabilidades[vul]}</li>`)
+                                                                    .map(vul => `<li class="list-group-item">${vulnerabilidadesGenero[vul]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -166,45 +132,6 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                         </div>
                                     `
                                 case "Violencia Intrafamiliar":
-                                    var situaciones = {
-                                        situacion1:"¿La víctima convive con el agresor?",
-                                        situacion2:"¿Hubieron medidas de restriccion previas o denuncias contra el agresor?",
-                                        situacion3:"¿El agresor posee titulo de propiedad de la vivienda en la que vive la víctima?",
-                                        situacion4:"¿La víctima vive en situacion de hacinamiento?"
-                                    };
-                                    var tiposViolencia = {
-                                        tipoViolencia1:"Existió o existe violencia física susceptible de causar lecinoes.",
-                                        tipoViolencia2:"Aumentó la frecuencia y/o la gravedad de los incidentes violentos en el último mes.",
-                                        tipoViolencia3:"Hay o hubieron amenazas graves o de muerte en el último mes.",
-                                        tipoViolencia4:"Hay o hubieron amenazas con objetos peligrosos o con armas de cualquier tipo.",
-                                        tipoViolencia5:"Se produjeron daños/vandalismos a objetos o a la propiedad.",
-                                        tipoViolencia6:"Se produjeron daños o amenazas de daño a la mascotas."
-                                    }
-                                    var perfilesAgresores = {
-                                        perfilAgresor1:"Tiene o tuvo consuctas violentas con otras personas (amigos, vecinos, companeros de trabajo, pareja, etc.).",
-                                        perfilAgresor2:"Consumo abusivo de alcohol.",
-                                        perfilAgresor3:"Consumo abusivo de droga.",
-                                        perfilAgresor4:"Tiene antecedentes de enfermedad mental.",
-                                        perfilAgresor5:"Esta o estuvo en tratamiento psicológico/psiquiatra.",
-                                        perfilAgresor6:"Posee antecedentes de intentos de suicidio."
-                                    }
-                                    var victimas = {
-                                        victima1:"Niño / Adolescente.",
-                                        victima2:"Tercera edad.",
-                                        victima3:"Mujer.",
-                                        victima4:"Hombre.",
-                                        victima5:"Persona que pertenece a la comunidad LGTBIQ+.",
-                                        victima6:"Persona en condicion de discapacidad.",
-                                        victima7:"Persona gestante."
-                                    }
-                                    var caracteristicas = {
-                                        caracteristicas1:"Tiene alguna enfermedad mental.",
-                                        caracteristicas2:"Presenta patologías físicas crónicas o agudas.",
-                                        caracteristicas3:"Esta o estuvo en tratamiento psicológico o psiquiátrico.",
-                                        caracteristicas4:"Posee vulnerabilidad habitacional/falta de acceso a vivienda.",
-                                        caracteristicas5:"Posee alguna vulnerabilidad económica/laboral.",
-                                        caracteristicas6:"Forma parte de un grupo social/familiar de apoyo."
-                                    }
                                     return `
                                         <div class="p-4" id="item5">
                                             <div class="mb-3">
@@ -217,9 +144,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Situaciones</h5>
                                                             <ul class="list-group px-2">
                                                                 ${
-                                                                    Object.keys(situaciones)
+                                                                    Object.keys(situacionesIntrafamiliar)
                                                                     .filter(sit => denuncia[sit] !== undefined)
-                                                                    .map(sit => `<li class="list-group-item">${situaciones[sit]}: ${(denuncia[sit])?`SI`:`NO`}</li>`)
+                                                                    .map(sit => `<li class="list-group-item">${situacionesIntrafamiliar[sit]}: ${(denuncia[sit])?`SI`:`NO`}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -228,9 +155,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Tipo Violencia</h5>
                                                             <ul class="list-group px-2">
                                                                 ${
-                                                                    Object.keys(tiposViolencia)
+                                                                    Object.keys(tiposViolenciaIntrafamiliar)
                                                                     .filter(vio => denuncia[vio] !== undefined && denuncia[vio] !== 0)
-                                                                    .map(vio => `<li class="list-group-item">${tiposViolencia[vio]}</li>`)
+                                                                    .map(vio => `<li class="list-group-item">${tiposViolenciaIntrafamiliar[vio]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -239,9 +166,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Perfil Agresor</h5>
                                                             <ul class="list-group px-2">
                                                                 ${
-                                                                    Object.keys(perfilesAgresores)
+                                                                    Object.keys(perfilesAgresoresIntrafamiliar)
                                                                     .filter(perfAgresor => denuncia[perfAgresor] !== undefined && denuncia[perfAgresor] !== 0)
-                                                                    .map(perfAgresor => `<li class="list-group-item">${perfilesAgresores[perfAgresor]}</li>`)
+                                                                    .map(perfAgresor => `<li class="list-group-item">${perfilesAgresoresIntrafamiliar[perfAgresor]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -250,9 +177,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Victima</h5>
                                                             <ul class="list-group px-2">
                                                                 ${
-                                                                    Object.keys(victimas)
+                                                                    Object.keys(victimasIntrafamiliar)
                                                                     .filter(vic => denuncia[vic] !== undefined && denuncia[vic] !== 0)
-                                                                    .map(vic => `<li class="list-group-item">${victimas[vic]}</li>`)
+                                                                    .map(vic => `<li class="list-group-item">${victimasIntrafamiliar[vic]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -261,9 +188,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Caracteristicas</h5>
                                                             <ul class="list-group px-2">
                                                                 ${
-                                                                    Object.keys(caracteristicas)
+                                                                    Object.keys(caracteristicasIntrafamiliar)
                                                                     .filter(car => denuncia[car] !== undefined && denuncia[car] !== 0)
-                                                                    .map(car => `<li class="list-group-item">${caracteristicas[car]}</li>`)
+                                                                    .map(car => `<li class="list-group-item">${caracteristicasIntrafamiliar[car]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -274,69 +201,6 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                         </div>
                                     `
                                 case "Robo / Hurto":
-                                
-                                    var situaciones = {
-                                        danoCosas: "se dañaron las propiedades de la victima",
-                                        armas: "se emplearon armas durante el hecho",
-                                        violenciaFisica:"se ejercio violencia fisica durante el hecho",
-                                        amenaza: "se produjeron amenazas durante el hecho",
-                                        arrebato: "se produjo un arrebato durante el hecho",
-                                        otra: "se produjo una circunstancia de caracter complejo durante el hecho"
-                                    }
-
-                                    var marcasCelulares = {
-                                        "1":  "Alcatel",
-                                        "2":  "Apple",
-                                        "3":  "Asus",
-                                        "4":  "BlackBerry",
-                                        "5":  "Coolpad",
-                                        "6":  "Google",
-                                        "7":  "Honor",
-                                        "8":  "HTC",
-                                        "9":  "Huawei",
-                                        "10": "Infinix",
-                                        "11": "Lenovo",
-                                        "12": "LG",
-                                        "13": "Meizu",
-                                        "14": "Micromax",
-                                        "15": "Motorola",
-                                        "16": "Nokia",
-                                        "17": "OnePlus",
-                                        "18": "Oppo",
-                                        "19": "Panasonic",
-                                        "20": "Realme",
-                                        "21": "Samsung",
-                                        "22": "Sony",
-                                        "23": "Tecno",
-                                        "24": "Ulefone",
-                                        "25": "Vivo",
-                                        "26": "Wiko",
-                                        "27": "Xiaomi",
-                                        "28": "Xolo",
-                                        "29": "Yota",
-                                        "30": "ZTE",
-                                    }
-
-                                    var tiposBicicletas = {
-                                        "1": "Adaptada/Reclinada",
-                                        "2": "BMX",
-                                        "3": "Downhill",
-                                        "4": "Electrica",
-                                        "5": "Fat Bike",
-                                        "6": "Mountain Bike",
-                                        "7": "No Recuerda",
-                                        "8": "Otro",
-                                        "9": "Paseo",
-                                        "10": "Pista/Singlespeed",
-                                        "11": "Playera",
-                                        "12": "Plegable",
-                                        "13": "Ruta/Carretera",
-                                        "14": "Tipo Inglesa",
-                                        "15": "Triatlon",
-                                        "16": "Urbana",
-                                        "17": "Utilitaria",
-                                    }
-
                                     return `
                                         <div class="p-4" id="item6">
                                             <div class="mb-3">
@@ -351,9 +215,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Situaciones</h5>
                                                             <ul class="list-group px-2">
                                                                 ${
-                                                                    Object.keys(situaciones)
+                                                                    Object.keys(situacionesRoboHurto)
                                                                     .filter(sit => denuncia[sit] !== undefined && denuncia[sit] !== 0)
-                                                                    .map(sit => `<li class="list-group-item">${situaciones[sit]}</li>`)
+                                                                    .map(sit => `<li class="list-group-item">${situacionesRoboHurto[sit]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -405,7 +269,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th>Dominio</th>
+                                                                                    <th>Marca</th>
                                                                                     <th>Modelo</th>
+                                                                                    <th>Tipo</th>
                                                                                     <th>Titular</th>
                                                                                     <th>GNC</th>
                                                                                     <th>Observaciones</th>
@@ -417,10 +283,12 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                                                 .map(auto => `
                                                                                     <tr>
                                                                                         <td class="col text-wrap">${auto.dominio}</td>
+                                                                                        <td class="col text-wrap">${marcasVehiculos[auto.marca]}</td>
                                                                                         <td class="col text-wrap">${auto.modelo}</td>
+                                                                                        <td class="col text-wrap">${tiposVehiculos[auto.tipo]}</td>
                                                                                         <td class="col text-wrap">${auto.titular}</td>
-                                                                                        <td class="col text-wrap">${ (auto.cng)?`SI`:`NO`}</td>
-                                                                                        <td class="col text-wrap">${ (auto.observaciones=="")?`Sin Especificar`:auto.observaciones}</td>
+                                                                                        <td class="col text-wrap">${(auto.cng)?`SI`:`NO`}</td>
+                                                                                        <td class="col text-wrap">${(auto.observaciones=="")?`Sin Especificar`:auto.observaciones}</td>
                                                                                     </tr>
                                                                                 `)
                                                                                 .join("")
@@ -623,26 +491,6 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                         </div>
                                     `
                                 case "Delitos Sexuales":
-                                    var hechos = {
-                                        hechoAcercamiento: "Se produjo un acercamiento.",
-                                        hechoContactoTecnologico: "Se produjo un hecho de contacto tecnologico.",
-                                        hechoBeso: "Se produjo un beso.",
-                                        hechoTocamiento: "Se produjo un hecho de tocamiento.",
-                                        hechoIntroduccion: "Se produjo un hecho de introduccion de objeto o parte corporal.",
-                                    }; 
-                                    var acciones = {
-                                        accionViolencia: "El autor empleó violencia o amenazas.",
-                                        accionDrogas: "El autor utilizó Drogas.",
-                                        accionVulnerabilidad: "El autor se aprovechó de una situación de vulnerabilidad.",
-                                        accionArma: "El autor utilizó un arma.",
-                                    }; 
-                                    var situaciones = {
-                                        denunciasPrevias: "Se han realizado denuncias previas.",
-                                        solicitudImagenes: "El autor solicitó imagenes con contenido sexual.",
-                                        menorInvolucrado: "Hay un menor Involucrado.",
-                                        mediosElectronicos: "El/los autor/es enviaron a la vitima imagenes con contenido sexual por medios electronicos.",
-                                    };
-
                                     return `
                                         <div class="p-4" id="item7">
                                             <div class="mb-3">
@@ -655,9 +503,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Hechos</h5>
                                                             <ul class="list-group">
                                                                 ${
-                                                                    Object.keys(hechos)
+                                                                    Object.keys(hechosDelitosSexuales)
                                                                     .filter(hec => denuncia[hec] !== undefined && denuncia[hec] !== 0)
-                                                                    .map(hec => `<li class="list-group-item">${hechos[hec]}</li>`)
+                                                                    .map(hec => `<li class="list-group-item">${hechosDelitosSexuales[hec]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -666,9 +514,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Acciones</h5>
                                                             <ul class="list-group">
                                                                 ${
-                                                                    Object.keys(acciones)
+                                                                    Object.keys(accionesDelitosSexuales)
                                                                     .filter(acc => denuncia[acc] !== undefined && denuncia[acc] !== 0)
-                                                                    .map(acc => `<li class="list-group-item">${acciones[acc]}</li>`)
+                                                                    .map(acc => `<li class="list-group-item">${accionesDelitosSexuales[acc]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -677,9 +525,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Situaciones</h5>
                                                             <ul class="list-group">
                                                                 ${
-                                                                    Object.keys(situaciones)
+                                                                    Object.keys(situacionesDelitosSexuales)
                                                                     .filter(sit=> denuncia[sit] !== undefined && denuncia[sit] !== 0)
-                                                                    .map(sit => `<li class="list-group-item">${situaciones[sit]}</li>`)
+                                                                    .map(sit => `<li class="list-group-item">${situacionesDelitosSexuales[sit]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -690,89 +538,6 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                         </div>
                                     `
                                 case "Incidentes Viales":
-                                    var marcasVehiculos = {
-                                        "1" : "Acura",
-                                        "2" : "Alfa Romeo",
-                                        "3" : "Apia",
-                                        "4" : "Audi",
-                                        "5" : "Bajaj",
-                                        "6" : "Beta",
-                                        "7" : "BMW",
-                                        "8" : "Brava",
-                                        "9" : "Cadillac",
-                                        "10" : "Cerro",
-                                        "11" : "Chrysler",
-                                        "12" : "Corven",
-                                        "13" : "Dodge",
-                                        "14" : "Ferrari",
-                                        "15" : "Fiat",
-                                        "16" : "Ford",
-                                        "17" : "General Motors",
-                                        "18" : "Ghiggeri",
-                                        "19" : "Gillera",
-                                        "20" : "Guerrero",
-                                        "21" : "Honda",
-                                        "22" : "Hummer",
-                                        "23" : "Infinity",
-                                        "24" : "Jaguar",
-                                        "25" : "Jeep",
-                                        "26" : "Kawasaki",
-                                        "27" : "Keller",
-                                        "28" : "Kymco",
-                                        "29" : "Land Rover",
-                                        "30" : "Legnano",
-                                        "31" : "Lincoln",
-                                        "32" : "Lotus",
-                                        "33" : "Maserati",
-                                        "34" : "Maverick",
-                                        "35" : "Mazda",
-                                        "36" : "Mercedes Benz",
-                                        "37" : "Mercury",
-                                        "38" : "MG",
-                                        "39" : "Mini Cooper",
-                                        "40" : "Mitsubishi",
-                                        "41" : "Mondial",
-                                        "42" : "Motomel",
-                                        "43" : "Nissan",
-                                        "44" : "Peugeot",
-                                        "45" : "Pontiac",
-                                        "46" : "Porsche",
-                                        "47" : "Puma",
-                                        "48" : "Renault",
-                                        "49" : "Rover",
-                                        "50" : "Saab",
-                                        "51" : "Saleen",
-                                        "52" : "Seat",
-                                        "53" : "Siam",
-                                        "54" : "Smart",
-                                        "55" : "Suzuki",
-                                        "56" : "Tibo",
-                                        "57" : "Toyota",
-                                        "58" : "Volkswagen",
-                                        "59" : "Volvo",
-                                        "60" : "Yamaha",
-                                        "61" : "Zanella",
-                                        "62" : "No Determinado"
-                                    }
-                                    var tiposVehiculos = {
-                                        "1" : "Berlina",
-                                        "2" : "Cabriolet",
-                                        "3" : "Camion",
-                                        "4" : "Ciclomotor",
-                                        "5" : "Convertible",
-                                        "6" : "Coupe",
-                                        "7" : "Familiar",
-                                        "8" : "Limousina",
-                                        "9" : "Minibus",
-                                        "10" : "Monovolumen",
-                                        "11" : "Motocicleta",
-                                        "12" : "Omnibus",
-                                        "13" : "Pick up",
-                                        "14" : "Sedan",
-                                        "15" : "Tanque",
-                                        "16" : "Utilitario",
-                                        "17" : "No Determinado"
-                                    }
                                     return `
                                         <div class="px-4 pb-4" id="item8">
                                             <h3 class="fw-bold">Vehículos</h3>
@@ -823,18 +588,6 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                         </div>
                                     `
                                 case "Abigeato / Cuatrerismo":
-                                    especies = {
-                                        "1" : "Asnal",
-                                        "2" : "Aves",
-                                        "3" : "Bovinos",
-                                        "4" : "Caprinos",
-                                        "5" : "Conejos",
-                                        "6" : "Equinos",
-                                        "7" : "Mular",
-                                        "8" : "Ovinos",
-                                        "9" : "Porcinos",
-                                        "10" : "Otras Especies"
-                                    }
                                     return `
                                         <div class="px-4 pb-4" id="item9">
                                                 <div class="card border-3 d-flex justify-content-center p-3">
@@ -898,17 +651,6 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                         </div>
                                     `
                                 case "Daños":
-                                    danios = {
-                                        "danoAnimal" : "Se ha dañado un animal.",
-                                        "danoCosaMaterial" : "Se ha dañado una cosa material.",
-                                        "danoInmueble" : "Se ha dañado un inmueble.",
-                                        "danoSistemaInformatico" : "Se ha dañado un sistema informático."
-                                    };
-                                    consecuencias = {
-                                        "consecuenciaDestruccion" : "Se produjo como consecuencia una destrucción.",
-                                        "consecuenciaInutilizacion" : "Se produjo como consecuencia una inutilización.",
-                                        "consecuenciaDesaparicion" : "Se produjo como consecuencia una desaparicion"
-                                    };
                                     return `
                                         <div class="px-4 mb-4" id="item11">
                                             <div class="mb-3">
@@ -941,9 +683,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                                             `<li class="list-group-item">${denuncia.consecuenciaDetallesOtro}</li>`
                                                                         :`
                                                                             ${
-                                                                                Object.keys(consecuencias)
+                                                                                Object.keys(consecuenciasDanios)
                                                                                 .filter(con => denuncia[con] !== undefined && denuncia[con] !== 0)
-                                                                                .map(con => `<li class="list-group-item">${consecuencias[con]}</li>`)
+                                                                                .map(con => `<li class="list-group-item">${consecuenciasDanios[con]}</li>`)
                                                                                 .join("")
                                                                             }
                                                                         `}
