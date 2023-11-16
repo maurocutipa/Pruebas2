@@ -15,7 +15,6 @@ export const VerDenuncia = () => {
   const { currentDenuncia } = useAppSelector((state) => state.denuncias);
   const { data } = useAppSelector((state) => state.data);
 
-  console.log(currentDenuncia);
   const { id } = useParams();
 
   useEffect(() => {
@@ -72,7 +71,7 @@ export const VerDenuncia = () => {
           {/* Seccion de Datos del hecho */}
 
           <section className='pl-4'>
-            <DatosDelHecho denuncia={currentDenuncia.denuncia} adjuntos={currentDenuncia.adjuntos} />
+            <DatosDelHecho datosDenuncia={currentDenuncia} />
           </section>
         </div>
       ) : (
