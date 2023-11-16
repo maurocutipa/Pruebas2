@@ -23,3 +23,9 @@
 #item14 {
   page-break-before: always;
 }
+
+.checked {
+  background-color: #000000; /* Cambia el color de fondo cuando está marcado */
+  border-color: #000000; /* Cambia el color del borde cuando está marcado */
+  color: #000000; /* Cambia el color del texto cuando está marcado */
+}

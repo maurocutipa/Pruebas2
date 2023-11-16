@@ -1323,31 +1323,31 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                         <div class="card p-4 border">
                             <ul class="list-group">
                                 <li class="list-group-item">
-                                  <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                  <input class="form-check-input me-1 ${denuncia.fugaHogar? "checked" : ""}" type="checkbox" value="" aria-label="...">
                                     FUGA DEL HOGAR
                                 </li>
                                 <li class="list-group-item">
-                                  <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                  <input class="form-check-input me-1 ${denuncia.trataPersonas? "checked" : ""}" type="checkbox" value="" aria-label="...">
                                     FUGA DE UNA INSTITUCIÓN ( de salud, hogar, asilo, etc. ) 
                                 </li>
                                 <li class="list-group-item">
-                                  <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                  <input class="form-check-input me-1 ${denuncia.fugaInstitucion? "checked" : ""}" type="checkbox" value="" aria-label="...">
                                     DESAPARICIÓN
                                 </li>
                                 <li class="list-group-item">
-                                  <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                  <input class="form-check-input me-1 ${denuncia.averiguacionParadero? "checked" : ""}" type="checkbox" value="" aria-label="...">
                                     TRATA DE PERSONAS
                                 </li>
                                 <li class="list-group-item">
-                                  <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                  <input class="form-check-input me-1 ${denuncia.desaparcicion? "checked" : ""}" type="checkbox" value="" aria-label="...">
                                     AVERIGUACIÓN DE PARADERO
                                 </li>
                                 <li class="list-group-item">
-                                    <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                    <input class="form-check-input me-1 ${denuncia.violenciaInstitucional? "checked" : ""}" type="checkbox" value="" aria-label="...">
                                       VIOLENCIA INSTITUCIONAL
                                 </li>
-                                <li class="list-group-item">
-                                <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                <li class="list-group-item"> 
+                                <input class="form-check-input me-1 ${denuncia.otro? "checked" : ""}" type="checkbox" value="" aria-label="...">
                                     OTRO
                                 </li>
                               </ul>                       
