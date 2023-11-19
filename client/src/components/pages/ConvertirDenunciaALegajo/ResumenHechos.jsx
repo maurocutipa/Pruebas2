@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useEffect } from 'react';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { Column } from 'primereact/column';
@@ -6,12 +7,18 @@ import { DataTable } from 'primereact/datatable';
 import { Divider } from 'primereact/divider';
 import { Dropdown } from 'primereact/dropdown';
 import { InputTextarea } from 'primereact/inputtextarea';
-import { AccionesResumenHechos } from './AccionesResumenHechos';
+import { AccionesTabla } from './AccionesTabla';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { useFormik } from 'formik';
-import { agregarResumenHecho } from '@/store/legajoSlice/legajo.slice';
+import {
+  agregarResumenHecho,
+  modificarResumenHecho,
+  agregarFiscalia,
+} from '@/store/legajoSlice/legajo.slice';
 import * as Yup from 'yup';
+import { generateUUID } from '@/utils/generateUUID';
+import { InvalidFieldMessage } from '@/components/common/InvalidFieldMessage';
 
 const validationSchema = Yup.object().shape({
   fiscalia: Yup.string().required('La fiscalía es necesaria'),
@@ -19,32 +26,43 @@ const validationSchema = Yup.object().shape({
   descripcion: Yup.string().required('La descripción es necesaria'),
 });
 
-const initialValues = { fiscalia: '', denunciado: '', descripcion: '' };
-
-export const ResumenHechos = ({ denunciados, delegacionesFiscales }) => {
+export const ResumenHechos = ({
+  denunciados,
+  delegacionesFiscales,
+  resumenHechos,
+}) => {
   const dispatch = useAppDispatch();
-  const { denunciaALegajoForm } = useAppSelector((state) => state.legajo);
+  const { resumenHechosForm } = useAppSelector((state) => state.legajo);
 
+  const initialValues = { fiscalia: '', ...resumenHechosForm.form };
   const formik = useFormik({
     initialValues,
     initialErrors: initialValues,
     onSubmit: (values, { resetForm }) => {
-      console.log(values);
-      dispatch(agregarResumenHecho(values));
+      if (!resumenHechosForm.estaModificando) {
+        values.id = generateUUID();
+        dispatch(agregarResumenHecho(values));
+      }
+
+      if (resumenHechosForm.estaModificando) {
+        dispatch(modificarResumenHecho(values));
+      }
+
       resetForm({
-        values: { fiscalia: values.fiscalia, denunciado: '', descripcion: '' },
+        values: {
+          fiscalia: values.fiscalia,
+          denunciado: '',
+          descripcion: '',
+          id: '',
+        },
       });
     },
     validationSchema,
   });
 
-  const MessageError = ({ name }) => (
-    <>
-      {formik.touched[name] && formik.errors[name] ? (
-        <small className='p-error'>{formik.errors[name]}</small>
-      ) : null}
-    </>
-  );
+  useEffect(() => {
+    formik.setValues({ ...formik.values, ...resumenHechosForm.form });
+  }, [resumenHechosForm.form]);
 
   return (
     <Card className='shadow-1 px-7 mt-6'>
@@ -67,11 +85,14 @@ export const ResumenHechos = ({ denunciados, delegacionesFiscales }) => {
                     ? 'p-invalid'
                     : null
                 }`}
-                onChange={formik.handleChange}
+                onChange={(ev) => {
+                  formik.handleChange(ev);
+                  dispatch(agregarFiscalia(ev.target.value));
+                }}
                 value={formik.values.fiscalia}
                 onBlur={formik.handleBlur}
               />
-              <MessageError name='fiscalia' />
+              <InvalidFieldMessage name='fiscalia' formik={formik} />
             </div>
           </div>
         </div>
@@ -100,7 +121,7 @@ export const ResumenHechos = ({ denunciados, delegacionesFiscales }) => {
                 value={formik.values.denunciado}
                 onBlur={formik.handleBlur}
               />
-              <MessageError name='denunciado' />
+              <InvalidFieldMessage name='denunciado' formik={formik} />
             </div>
           </div>
 
@@ -121,13 +142,15 @@ export const ResumenHechos = ({ denunciados, delegacionesFiscales }) => {
                 onBlur={formik.handleBlur}
                 value={formik.values.descripcion}
               />
-              <MessageError name='descripcion' />
+              <InvalidFieldMessage name='descripcion' formik={formik} />
             </div>
 
             <div className='col-12 lg:col-6 xl:col-3 mb-4'>
               <Button
                 icon='pi pi-plus'
-                label='Agregar'
+                label={
+                  resumenHechosForm.estaModificando ? 'Modificar' : 'Agregar'
+                }
                 className='btn-blue-mpa w-full px-2'
                 type='submit'
                 disabled={!formik.isValid}
@@ -140,15 +163,15 @@ export const ResumenHechos = ({ denunciados, delegacionesFiscales }) => {
       <ConfirmDialog draggable={false} />
 
       <DataTable
-        value={denunciaALegajoForm.resumenHechos}
+        value={resumenHechos}
         paginator
         rows={5}
-        totalRecords={denunciaALegajoForm.resumenHechos.length}
+        totalRecords={resumenHechos.length}
         lazy
         emptyMessage='No se encontraron denunciados'
         className='mb-4 shadow-1 mt-4'
-        // header={HeaderTable()}
         tableStyle={{ minWidth: '50rem' }}
+        dataKey='id'
       >
         <Column
           field='denunciado'
@@ -172,7 +195,7 @@ export const ResumenHechos = ({ denunciados, delegacionesFiscales }) => {
         <Column
           field='Acciones'
           header='Acciones'
-          body={(resumen) => <AccionesResumenHechos id={resumen.idResumen} />}
+          body={(resumen) => <AccionesTabla data={resumen} action='resumen' />}
         />
       </DataTable>
     </Card>

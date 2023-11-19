@@ -61,8 +61,8 @@ export const RatificarDenuncia = () => {
         <div className='flex justify-content-between mt-6 mb-2'>
           <Button
             icon='pi pi-angle-left'
-            label={'Regresar a la bandeja'}
-            className='btn-blue-mpa mr-4'
+            label={'Cancelar'}
+            className='bg-red-700 hover:bg-red-800 border-red-700'
             size='large'
             onClick={() => {
               navigate('/bandeja-denuncias');
