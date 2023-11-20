@@ -68,7 +68,7 @@ export const ResumenDenuncia = ({ id }) => {
   return (
     <>
       {resumenDenuncia ? (
-        <Card className='shadow-1 px-7 mt-6'>
+        <Card className='shadow-1 px-7'>
           <h2>Resumen de la Denuncia</h2>
 
           <div className='mt-6' id='datos-generales'>
