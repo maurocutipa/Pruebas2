@@ -63,10 +63,10 @@ export const AccionesTabla = ({ id, setVisible, isRatificada }) => {
           label: 'Realizar pase',
           command: () => realizarPase(),
         },
-        {
-          label: 'Convertir denuncia a legajo',
-          command: () => convertirDenuncia(),
-        },
+        // {
+        //   label: 'Convertir denuncia a legajo',
+        //   command: () => convertirDenuncia(),
+        // },
         {
           label: 'Eliminar denuncia',
           command: () => eliminarDenuncia(),

@@ -20,17 +20,27 @@ export const ArchivarDenuncia = () => {
     <div className='px-8 py-4'>
       <h1 className='text-center'>Archivar Denuncia N° {id}</h1>
 
-      <Card className='shadow-1 px-7 mt-6'>
-        <div className='grid'>
-          <div className='col-12'>
-            <Editor text={text} setText={setText} />
-          </div>
+      <div className='mt-6'>
+        <Button
+          icon='pi pi-angle-left'
+          label='Regresar a la bandeja'
+          className='text-lightblue-mpa p-0 mb-4'
+          type='button'
+          link
+          onClick={() => navigate('/bandeja-denuncias')}
+        />
+        <Card className='shadow-1 px-7 '>
+          <div className='grid'>
+            <div className='col-12'>
+              <Editor text={text} setText={setText} />
+            </div>
 
-          <div className='col-12'>
-            <PdfPreviewMemo htmlContent={htmlContent} />
+            <div className='col-12'>
+              <PdfPreviewMemo htmlContent={htmlContent} />
+            </div>
           </div>
-        </div>
-      </Card>
+        </Card>
+      </div>
 
       <div className='flex justify-content-between mt-6 mb-2'>
         <Button
@@ -46,6 +56,7 @@ export const ArchivarDenuncia = () => {
           onClick={handleArchivarDenuncia}
           className='btn-blue-mpa'
           size='large'
+          disabled={htmlContent.length < 100}
         />
       </div>
     </div>

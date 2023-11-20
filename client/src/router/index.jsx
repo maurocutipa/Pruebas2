@@ -41,12 +41,12 @@ export const router = createBrowserRouter([
         element: <ConvertirDenunciaALegajo />,
       },
       {
-        path: '/ratificar-denuncia/:id',
-        element: <RatificarDenuncia />,
-      },
-      {
         path: '/archivar-denuncia/:id',
         element: <ArchivarDenuncia />,
+      },
+      {
+        path: '/ratificar-denuncia/:id',
+        element: <RatificarDenuncia />,
       },
     ],
   },

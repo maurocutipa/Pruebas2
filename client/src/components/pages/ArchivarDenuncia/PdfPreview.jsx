@@ -13,11 +13,67 @@ const styles = StyleSheet.create({
   },
 });
 
+const html = (htmlContent) => `
+<body>
+  <style>
+    .ql-align-center {
+      text-align: center;
+    }
+
+    span.ql-size-huge, strong.ql-size-huge, em.ql-size-huge, u.ql-size-huge {
+      font-size: 24px;
+    }
+
+    span.ql-size-large, strong.ql-size-large, em.ql-size-large, u.ql-size-large {
+      font-size: 18px;
+    }
+
+    span.ql-size-small, strong.ql-size-small, em.ql-size-small, u.ql-size-small {
+      font-size: 10px;
+    }
+
+    .ql-align-right {
+      text-align: right;
+    }
+
+    .ql-align-justify {
+      text-align: justify;
+    }
+
+    .ql-align-left {
+      text-align: left;
+    }
+
+    .ql-align-center {
+      text-align: center;
+    }
+
+    p {
+      font-size: 12px;
+    }
+
+    img {
+      width: 150px;
+      height: 150px;
+    }
+
+    strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+  </style>
+  ${htmlContent ? htmlContent : ''}
+</body>
+`;
+
 const PdfPreview = ({ htmlContent }) => {
   const Pdf = () => (
     <Document>
       <Page size={'A4'} style={styles.body}>
-        <Html>{htmlContent ? htmlContent : ''}</Html>
+        <Html>{html(htmlContent)}</Html>
       </Page>
     </Document>
   );

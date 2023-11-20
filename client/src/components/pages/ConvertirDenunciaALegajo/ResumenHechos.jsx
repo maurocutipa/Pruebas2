@@ -65,7 +65,7 @@ export const ResumenHechos = ({
   }, [resumenHechosForm.form]);
 
   return (
-    <Card className='shadow-1 px-7 mt-6'>
+    <Card className='shadow-1 px-7'>
       <form onSubmit={formik.handleSubmit}>
         <div className=''>
           <h2>Asignar fiscalía al legajo</h2>

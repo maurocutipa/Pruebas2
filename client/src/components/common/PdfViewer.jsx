@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Viewer, ScrollMode } from '@react-pdf-viewer/core';
+import { Viewer, ScrollMode, SpecialZoomLevel } from '@react-pdf-viewer/core';
 import es_ES from '@react-pdf-viewer/locales/lib/es_ES.json';
 
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
@@ -13,7 +13,8 @@ const renderPage = (props) => (
       style={{
         alignItems: 'center',
         display: 'flex',
-        height: '500px',
+        height: '10px',
+        maxHeight: '500px',
         justifyContent: 'center',
         left: 0,
         position: 'absolute',
@@ -32,13 +33,15 @@ export const PdfViewer = ({ url }) => {
   });
 
   return (
-    <Viewer
-      defaultScale={0.5}
-      renderPage={renderPage}
-      scrollMode={ScrollMode.Vertical}
-      fileUrl={url}
-      plugins={[defaultLayoutPluginInstance]}
-      localization={es_ES}
-    />
+    <div style={{ height: '600px' }}>
+      <Viewer
+        defaultScale={SpecialZoomLevel.ActualSize}
+        renderPage={renderPage}
+        scrollMode={ScrollMode.Vertical}
+        fileUrl={url}
+        plugins={[defaultLayoutPluginInstance]}
+        localization={es_ES}
+      />
+    </div>
   );
 };

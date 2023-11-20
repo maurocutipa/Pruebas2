@@ -37,17 +37,28 @@ export const ConvertirDenunciaALegajo = () => {
   return (
     <div className='px-8 py-4'>
       <h1 className='text-center'>Convertir Denuncia N° {id} a Legajo</h1>
-      <ResumenHechos
-        denunciados={legajoData.denunciados}
-        delegacionesFiscales={data.delegacionesFiscales}
-        resumenHechos={denunciaALegajoForm.resumenHechos}
-      />
 
-      <AsignarDelito
-        denunciados={legajoData.denunciados}
-        delitos={data.delitos}
-        delitosAsignados={denunciaALegajoForm.delitos}
-      />
+      <div className='mt-6'>
+        <Button
+          icon='pi pi-angle-left'
+          label='Regresar a la bandeja'
+          className='text-lightblue-mpa p-0 mb-4'
+          type='button'
+          link
+          onClick={() => navigate('/bandeja-denuncias')}
+        />
+        <ResumenHechos
+          denunciados={legajoData.denunciados}
+          delegacionesFiscales={data.delegacionesFiscales}
+          resumenHechos={denunciaALegajoForm.resumenHechos}
+        />
+
+        <AsignarDelito
+          denunciados={legajoData.denunciados}
+          delitos={data.delitos}
+          delitosAsignados={denunciaALegajoForm.delitos}
+        />
+      </div>
 
       <div className='flex justify-content-between mt-8 mb-2'>
         <Button
