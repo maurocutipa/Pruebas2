@@ -32,7 +32,7 @@ export const RealizarPaseDenuncia = ({ visible, setVisible }) => {
     }
 
     if (pase === 3) {
-      navigate(`/archivar-denuncia/${selectedIdDenuncia}`);
+      navigate(`/denuncia-no-penal/${selectedIdDenuncia}`);
     }
   };
 
