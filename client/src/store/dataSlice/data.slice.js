@@ -9,6 +9,8 @@ const competencias = [
   { idCompetencia: 5, competencia: 'Contravención' },
   { idCompetencia: 6, competencia: 'Ambiental' },
   { idCompetencia: 7, competencia: 'Archivo' },
+  { idCompetencia: 8, competencia: 'Familia' },
+  { idCompetencia: 9, competencia: 'Otros' },
 ];
 
 const realizaciones = [
@@ -26,6 +28,11 @@ const estados = [
     idEstado: 2,
     estado: 'Sin generar',
   },
+];
+
+const remisiones = [
+  { idRemision: 1, remision: 'Otra dependencia pública' },
+  { idRemision: 2, remision: 'Dentro del Ministerio Público de la Acusación' },
 ];
 
 const initialState = {
@@ -54,6 +61,7 @@ export const dataSlice = createSlice({
           competencias,
           realizaciones,
           estados,
+          remisiones,
         };
       })
       .addCase(getDelitosThunk.fulfilled, (state, { payload }) => {

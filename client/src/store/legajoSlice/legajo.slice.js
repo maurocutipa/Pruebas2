@@ -89,6 +89,7 @@ export const legajoSlice = createSlice({
     agregarDelito: (state, { payload }) => {
       state.denunciaALegajoForm.delitos.push(payload);
     },
+    resetState: () => initialState,
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -110,6 +111,7 @@ export const {
   agregarResumenHecho,
   agregarDelito,
   agregarFiscalia,
+  resetState,
 } = legajoSlice.actions;
 
 export default legajoSlice.reducer;
