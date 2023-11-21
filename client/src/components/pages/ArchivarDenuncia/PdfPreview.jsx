@@ -85,7 +85,9 @@ const PdfPreview = ({ htmlContent }) => {
   return (
     <BlobProvider document={<Pdf />}>
       {({ blob, url }) => {
-        return <>{url !== null ? <PdfViewer url={url} /> : null}</>;
+        return (
+          <>{url !== null ? <PdfViewer url={url} height={600} /> : null}</>
+        );
       }}
     </BlobProvider>
   );

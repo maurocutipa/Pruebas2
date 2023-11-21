@@ -541,6 +541,16 @@ DenunciasController.getResumenParaRatificar = async (req, res) => {
     WHERE id_denuncia = ?`;
     const intervinientes = await queryHandler(query, [id]);
 
+    query = `
+      SELECT 
+        id_comprobante AS idComprobante,
+        nombre_original AS nombreOriginal,
+        nombre_archivo AS nombreArchivo
+      FROM denuncia_comprobante
+      WHERE id_denuncia = ? AND estado = 1
+      `;
+    const [comprobante] = await queryHandler(query, [id]);
+
     const victimas = intervinientes.filter(
       (interviniente) => interviniente.tipoInterviniente === 'Victima'
     );
@@ -555,7 +565,7 @@ DenunciasController.getResumenParaRatificar = async (req, res) => {
 
     res.status(200).json({
       message: `Resumen de la denuncia #${id}`,
-      data: { resumen, victimas, denunciados, testigos },
+      data: { resumen, victimas, denunciados, testigos, comprobante },
     });
   } catch (error) {
     showError(error);
@@ -566,18 +576,17 @@ DenunciasController.getResumenParaRatificar = async (req, res) => {
 //CREAR DENUNCIAS
 
 DenunciasController.createDenunciaGeneral = async (req, res) => {
-    try {
-
-        const data = matchedData(req)
-        const keys = Object.keys(data).map(key => convertToSnakeCase(key))
-        const values = Object.values(data)
+  try {
+    const data = matchedData(req);
+    const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
+    const values = Object.values(data);
 
     const query = `INSERT INTO denuncia(${keys.join(
       ', '
     )},estado,fecha_denuncia,hora_denuncia,fecha_ratificacion,hora_ratificacion) VALUES (${keys
       .map((key) => '?')
       .join(', ')},1,CURDATE(),CURTIME(),CURDATE(),CURTIME())`;
-        const resQuery = await queryHandler(query, values)
+    const resQuery = await queryHandler(query, values);
 
     res.status(200).json({
       ok: true,
