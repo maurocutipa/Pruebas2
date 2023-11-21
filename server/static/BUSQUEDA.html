@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--<link href="./static/css/bootstrap.min.css" rel="stylesheet">-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        
+        <style>
+        .hojaA4{
+            width: 210mm;
+            height: 300mm;
+            margin: 0 auto;
+        }
+
+        .custom-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .custom-list li::before {
+            content: '\2022'; /* Utiliza el carácter de bala (•) como círculo */
+            color: #007bff; /* Cambia el color según tus preferencias */
+            display: inline-block;
+            width: 1em; /* Ajusta el ancho del círculo según tus preferencias */
+            height: 1em; /* Ajusta la altura del círculo según tus preferencias */
+            margin-right: 0.5em; /* Espaciado entre el círculo y el texto del elemento de la lista */
+            font-size: 1.5em; /* Ajusta el tamaño del círculo según tus preferencias */
+        }
+
+        </style>
+    </head>
+
+    <body>
+        <div id="contenedorBase">
+            <div class="px-3" id="item1">
+                <div class="d-flex justify-content-center align-items-center">
+                    <img src="https://sistema.mpajujuy.gob.ar/images/logompa2.png" alt="Logo MPA" class="img-fluid w-25 h-25">
+                </div>
+                <div class="mb-4 d-grid">
+                    <h3 class="fw-bold col text-center d-flex align-items-center justify-content-center">
+                        DENUNCIA DE DESAPARICION DE PERSONAS
+                    </h3>
+                </div>
+                <div class="mb-3">
+                    <h4 class="fw-bold border py-2 px-1">RECEPTOR DE LA DENUNCIA</h4>
+                    <div class="card p-4 border">
+                        <p><span class="fw-bold">FECHA: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">LUGAR: </span> <span class="">${denuncia.calleHecho}</span></p>
+                        <p><span class="fw-bold">NOMBRE COMPLETO: </span> <span class="">${denuncia.numCalle}</span></p>
+                        <p><span class="fw-bold">FUNCION Y GRADO: </span> <span class="">${denuncia.departamentoHecho? denuncia.departamentoHecho : "Sin Especificar" }</span></p>
+                        <p><span class="fw-bold">FUERZA, INSTITUCIÓN, ORGANIZACIÓN: </span> <span class="">${denuncia.pisoHecho? denuncia.pisoHecho : "Sin Especificar" }</span></p>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="p-3" id="item2">
+                <div class="mb-3">
+                    <h4 class="fw-bold border py-2 px-1">TIPO DE DENUNCIA</h4>
+                    <p class="fw-bold ">Marcar lo que corresponda</p>
+                    <div class="card p-4 border">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                              <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                FUGA DEL HOGAR
+                            </li>
+                            <li class="list-group-item">
+                              <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                FUGA DE UNA INSTITUCIÓN ( de salud, hogar, asilo, etc. ) 
+                            </li>
+                            <li class="list-group-item">
+                              <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                DESAPARICIÓN
+                            </li>
+                            <li class="list-group-item">
+                              <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                TRATA DE PERSONAS
+                            </li>
+                            <li class="list-group-item">
+                              <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                AVERIGUACIÓN DE PARADERO
+                            </li>
+                            <li class="list-group-item">
+                                <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                  VIOLENCIA INSTITUCIONAL
+                            </li>
+                            <li class="list-group-item">
+                            <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+                                OTRO
+                            </li>
+                          </ul>                       
+                    </div>
+                </div>
+            </div>
+            <div class="p-3" id="item3">
+                <div class="mb-3">
+                    <p class="fw-bold ">Fiscal Interviniente: ${DENUNCIA.NOSE}</p>
+                    <h4 class="fw-bold border py-2 px-1">INFORMACION DE LA PERSONA DENUNCIANTE</h4>
+                    <div class="card p-4 border">
+                        <p><span class="fw-bold">NOMBRE COMPLETO: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">DNI N°: </span> <span class="">${denuncia.calleHecho}</span></p>
+                        <p><span class="fw-bold">VINCULO CON LA PERSONA BUSCADA: </span> <span class="">${denuncia.numCalle}</span></p>
+                        <p><span class="fw-bold">DATOS DE CONTACTO DEL DENUNCIANTE: </span> <span class="">${denuncia.departamentoHecho? denuncia.departamentoHecho : "Sin Especificar" }</span></p>
+                        <p><span class="fw-bold">DOMICILIO: </span> <span class="">${denuncia.pisoHecho? denuncia.pisoHecho : "Sin Especificar" }</span></p>
+                        <p><span class="fw-bold">TELEFONO DE LINEA: </span> <span class="">${denuncia.numCalle}</span></p>
+                        <p><span class="fw-bold">CELULAR: </span> <span class="">${denuncia.departamentoHecho? denuncia.departamentoHecho : "Sin Especificar" }</span></p>
+                        <p><span class="fw-bold">CORREO ELECTRONICO: </span> <span class="">${denuncia.pisoHecho? denuncia.pisoHecho : "Sin Especificar" }</span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-3" id="item4">
+                <div class="mb-3">
+                    <h4 class="fw-bold border py-2 px-1">INFORMACION GENERAL DE LA PERSONA BUSCADA</h4>
+                    <div class="card p-4 border">
+                        <p><span class="fw-bold">NOMBRE COMPLETO: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">FECHA DE NACIMIENTO: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">DNI N°: </span> <span class="">${denuncia.calleHecho}</span></p>
+                        <p><span class="fw-bold">DOMICILIO: </span> <span class="">${denuncia.pisoHecho? denuncia.pisoHecho : "Sin Especificar" }</span></p>
+                        <p><span class="fw-bold">EDAD: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">GENERAL: </span> <span class="">${denuncia.calleHecho}</span></p>
+                        <p><span class="fw-bold">TELEFONO DE LINEA: </span> <span class="">${denuncia.numCalle}</span></p>
+                        <p><span class="fw-bold">CELULAR: </span> <span class="">${denuncia.departamentoHecho? denuncia.departamentoHecho : "Sin Especificar" }</span></p>
+                        <p><span class="fw-bold">CORREO ELECTRONICO: </span> <span class="">${denuncia.pisoHecho? denuncia.pisoHecho : "Sin Especificar" }</span></p>
+                        <p><span class="fw-bold">REDES SOCIALES: </span> <span class="">${denuncia.numCalle}</span></p>
+                        <p><span class="fw-bold">ESTADO CIVIL: </span> <span class="">${denuncia.departamentoHecho? denuncia.departamentoHecho : "Sin Especificar" }</span></p>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3" id="item5">
+                <div class="mb-3">
+                    <h4 class="fw-bold border py-2 px-1">EN CASO DE ESTAR EN PAREJA</h4>
+                    <div class="card p-4 border">
+                        <p><span class="fw-bold">NOMBRE DEL CÓNJUGE: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">DATOS DE CONTACTO: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">DOMICILIO: </span> <span class="">${denuncia.calleHecho}</span></p>
+                        <p><span class="fw-bold">TELEFONO DE LINEA: </span> <span class="">${denuncia.pisoHecho? denuncia.pisoHecho : "Sin Especificar" }</span></p>
+                        <p><span class="fw-bold">CELULAR: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">CORREO ELECTRONICO: </span> <span class="">${denuncia.calleHecho}</span></p> 
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3" id="item6">
+                <div class="mb-3">
+                    <h4 class="fw-bold border py-2 px-1">EN CASO DE CORRESPONDER DATOS DE LAS HIJAS/OS</h4>
+
+                    <p class="fw-bold ">DATOS DEL PADRE</p>
+
+                    <div class="card p-4 border">
+                        <p><span class="fw-bold">NOMBRE COMPLETO: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">DNI N°: </span> <span class="">${denuncia.calleHecho}</span></p>
+                        <p><span class="fw-bold">DATOS DE CONTACTO: </span> <span class="">${denuncia.departamentoHecho? denuncia.departamentoHecho : "Sin Especificar" }</span></p>
+                        <p><span class="fw-bold">DOMICILIO: </span> <span class="">${denuncia.pisoHecho? denuncia.pisoHecho : "Sin Especificar" }</span></p>
+                        <p><span class="fw-bold">TELEFONO DE LINEA: </span> <span class="">${denuncia.numCalle}</span></p>
+                        <p><span class="fw-bold">CELULAR: </span> <span class="">${denuncia.departamentoHecho? denuncia.departamentoHecho : "Sin Especificar" }</span></p>
+                        <p><span class="fw-bold">CORREO ELECTRONICO: </span> <span class="">${denuncia.pisoHecho? denuncia.pisoHecho : "Sin Especificar" }</span></p>
+                    
+                    </div>
+
+                    <p class="fw-bold ">DATOS DE LA MADRE</p>
+
+                    <div class="card p-4 border">
+                        <p><span class="fw-bold">NOMBRE COMPLETO: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">DNI N°: </span> <span class="">${denuncia.calleHecho}</span></p>
+                        <p><span class="fw-bold">DATOS DE CONTACTO: </span> <span class="">${denuncia.departamentoHecho? denuncia.departamentoHecho : "Sin Especificar" }</span></p>
+                        <p><span class="fw-bold">DOMICILIO: </span> <span class="">${denuncia.pisoHecho? denuncia.pisoHecho : "Sin Especificar" }</span></p>
+                        <p><span class="fw-bold">TELEFONO DE LINEA: </span> <span class="">${denuncia.numCalle}</span></p>
+                        <p><span class="fw-bold">CELULAR: </span> <span class="">${denuncia.departamentoHecho? denuncia.departamentoHecho : "Sin Especificar" }</span></p>
+                        <p><span class="fw-bold">CORREO ELECTRONICO: </span> <span class="">${denuncia.pisoHecho? denuncia.pisoHecho : "Sin Especificar" }</span></p>
+                     </div>
+                </div>
+            </div>
+
+            <div class="p-3" id="item7">
+                <div class="mb-3">
+                    <h4 class="fw-bold border py-2 px-1">¿LA PERSONA BUSCADA TRABAJABA?</h4>
+                    <div class="card p-4 border">
+                        <p><span class="fw-bold">LUGAR: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">FUNCIÓN QUE DESEMPEÑABA: </span> <span class="">${denuncia.calleHecho}</span></p>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <h4 class="fw-bold border py-2 px-1">DATOS DE COMPAÑERAS/OS</h4>
+                    <div class="card p-4 border">
+                        <p>a</p>
+                    </div>
+                </div>
+                    
+            </div>
+
+            <div class="p-3" id="item8">
+                <div class="mb-3">
+                    <h4 class="fw-bold border py-2 px-1">¿LA PERSONA BUSCADA ESTUDIABA?</h4>
+                    <div class="card p-4 border">
+                        <p><span class="fw-bold">LUGAR: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">DIRECCIÓN: </span> <span class="">${denuncia.barrio}</span></p>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <h4 class="fw-bold border py-2 px-1">DATOS DE COMPAÑERAS/OS</h4>
+                    <div class="card p-4 border">
+                        <p>a</p>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="p-3" id="item9">
+                <div class="mb-3">
+                    <h4 class="fw-bold border py-2 px-1">DATOS DEL HECHO</h4>
+                    <div class="card p-4 border">
+                        <p><span class="fw-bold">FECHA DE DESAPARICIÓN: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">LUGAR DE DESAPARICIÓN: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">VESTIMENTA AL MOMENTO DE DESAPARECER: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">EFECTOS PERSONALES: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">CAMBIOS RECIENTES EN LA PERSONA DESAPARECIDA (habitos, lugares, o personas a las que frecuentaba, etc): </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">PUEDE RECORDAR ALGUNA PERSONA QUE HAYA MOSTRADO RECIENTEMENTE UNA ATENCION O INTERES INUSITADO EN LA PEROSNA DESAPARECIDA: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">¿ESTABA BUSCANDO TRABAJO?: </span> <span class="">${denuncia.barrio}</span></p>                  
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3" id="item10">
+                <div class="mb-3">
+                    <div class="card p-4 border">
+                        <p><span class="fw-bold">CONTEXTO DE DESAPARICIÓN: </span> <span class="">${denuncia.barrio}</span></p>                 
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3" id="item11">
+                <div class="mb-3">
+                    <div class="card p-4 border">
+                        <p><span class="fw-bold">RELATO DEL HECHO: </span> <span class="">${denuncia.barrio}</span></p>                 
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3" id="item12">
+                <div class="mb-3">
+                    <h4 class="fw-bold border py-2 px-1">TESTIGOS O PERSONAS QUE PUDIERAN APORTAR DATOS DEL HECHO</h4>
+                    <!--COPIAR DEL PRINCIPAL-->
+                </div>
+            </div>
+
+            <div class="p-3" id="item13">
+                <div class="mb-3">
+                    <h4 class="fw-bold border py-2 px-1">CARACTERISTICAS FISICAS</h4>
+                    <div class="card p-4 border">
+                        <p><span class="fw-bold">CARACTERISTICAS GENERALES (preguntar: color de pelo, ojos, tatuajes, rasgos faciales, etc) : </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">ALTURA: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">ENFERMEDADES (CONGÉNITAS/PATOLOGÍCAS): </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">FRACTURAS: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">RASGOS ODONTOLOGICOS (preguntar: extracciones, protesís, aparatos, tratamientos, etc): </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">OBSERVACIONES / COMENTARIOS: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">FICHAS DENTALES: </span> <span class="">${denuncia.barrio}</span></p>     
+                        <p><span class="fw-bold">FOTO: </span> <span class="">${denuncia.barrio}</span></p>
+                        <p><span class="fw-bold">FICHAS DACTILOSCOPICAS: </span> <span class="">${denuncia.barrio}</span></p>                  
+                    </div>
+                </div>
+            </div>
+
+            
+            
+        <!--<script src="./static/js/bootstrap.bundle.min.js"></script>-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <script>
+            moverElementos();
+            /*
+                function moverElementos() {
+                    var contenedorBase = document.getElementById('contenedorBase');
+                    var elementos = Array.from(contenedorBase.children);
+                    var alturaMaxima = 290;
+                    var nroPagina = 1;
+                    var alturaActual = 0;
+
+                    var contenedor = crearContenedor(nroPagina);
+
+                    elementos.forEach(function (elemento) {
+                        var alturaElemento = medirAltura(elemento.id);
+
+                        // Verifica si el elemento cabe en la página actual
+                        if (alturaActual + alturaElemento <= alturaMaxima) {
+                            agregarElemento(elemento.id, nroPagina);
+                            alturaActual += alturaElemento;
+                        } else { // El elemento no cabe en la página actual, crea una nueva página
+                            nroPagina++;
+                            contenedor = crearContenedor(nroPagina);
+                            alturaActual = alturaElemento;
+                            agregarElemento(elemento.id, nroPagina);
+                        }
+                    });
+                    contenedorBase.remove();
+                }
+            */
+
+            function moverElementos() {
+                var contenedorBase = document.getElementById('contenedorBase');
+                var elementos = Array.from(contenedorBase.children);
+                var alturaMaxima = 290;
+                var contenedores = [];
+                var nroPagina = 1;
+                
+                var contenedor = crearContenedor(nroPagina);
+                var alturaActual = 0;
+            
+                elementos.forEach(function (elemento) {
+                    var alturaElemento = medirAltura(elemento.id);
+                
+                    if (alturaActual + alturaElemento > alturaMaxima) { // Si el elemento no cabe en el contenedor actual, crea uno nuevo
+                        //agregarElemento(elemento.id, nroPagina);
+                        nroPagina++;
+                        contenedor = crearContenedor(nroPagina);
+                        alturaActual = 0;
+                    }
+                
+                    // Verifica si el elemento ocupa más de un contenedor
+                    if (alturaElemento > alturaMaxima) { // Si el elemento es demasiado grande, divídelo en varios contenedores
+                        var partes = Math.ceil(alturaElemento / alturaMaxima);
+                        for (var i = 1; i <= partes; i++) {
+                        agregarElemento(elemento.id, nroPagina);
+                        alturaActual += alturaMaxima;
+                        if (alturaActual > alturaMaxima) {
+                            nroPagina++;
+                            contenedor = crearContenedor(nroPagina);
+                            alturaActual = 0;
+                        }
+                        }
+                    } else {
+                        agregarElemento(elemento.id, nroPagina);
+                        alturaActual += alturaElemento;
+                    }
+                });
+                contenedorBase.remove();
+            }
+            
+
+            function agregarElemento(idElemento, nroPagina){
+                var contenedor = document.getElementById('contenedor'+nroPagina);
+                var elemento = document.getElementById(idElemento);
+                contenedor.appendChild(elemento);
+            }
+
+            function crearContenedor(id){
+                var nuevo = document.createElement('div');
+                nuevo.classList.add('container-fluid');
+                nuevo.classList.add('hojaA4');
+                nuevo.id = 'contenedor'+id;
+                document.body.appendChild(nuevo);
+                return nuevo;
+            }
+
+            function medirAltura(elementID) {
+                var elemento = document.getElementById(elementID);
+                
+                if (elemento) {
+                    // Obtén la altura en píxeles del elemento
+                    var alturaEnPixeles = elemento.clientHeight;
+                
+                    // Obtén el tamaño de fuente en píxeles
+                    var estilo = window.getComputedStyle(elemento);
+                    var tamañoFuenteEnPixeles = parseFloat(estilo.fontSize);
+                
+                    // Define la relación píxeles/milímetros (ajusta según tus necesidades)
+                    var pixelsPerMillimeter = 25.4583/7.5;
+                
+                    // Calcula la altura en milímetros
+                    var alturaEnMilimetros = alturaEnPixeles / pixelsPerMillimeter;
+                
+                    return alturaEnMilimetros;
+                } else {
+                    return 0; // Otra acción o manejo de error
+                }
+            }
+        </script>
+    </body>
+</html>

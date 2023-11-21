@@ -48,43 +48,54 @@ export const RatificarDenuncia = () => {
   };
 
   return (
-    <div className='px-8 py-4'>
-      <Toast ref={toast} />
-      <ConfirmPopup />
-      <h1 className='text-center'>Ratificar Denuncia N° {id}</h1>
+    <>
+      <div className='px-8 py-4'>
+        <Toast ref={toast} />
+        <ConfirmPopup />
+        <h1 className='text-center'>Ratificar Denuncia N° {id}</h1>
 
-      <ResumenDenuncia />
-
-      <FirmaYTOS />
-
-      <div className='flex justify-content-between mt-6 mb-2'>
-        <Button
-          icon='pi pi-angle-left'
-          label={'Regresar a la bandeja'}
-          className='btn-blue-mpa mr-4'
-          size='large'
-          onClick={() => {
-            navigate('/bandeja-denuncias');
-          }}
-        />
-
-        <div>
+        <div className='mt-6'>
           <Button
-            label={'Firmar'}
-            className='btn-blue-mpa mr-4'
+            icon='pi pi-angle-left'
+            label='Regresar a la bandeja'
+            className='text-lightblue-mpa p-0 mb-4'
+            type='button'
+            link
+            onClick={() => navigate('/bandeja-denuncias')}
+          />
+          <ResumenDenuncia id={id} />
+          <FirmaYTOS />
+        </div>
+
+        <div className='flex justify-content-between mt-6 mb-2'>
+          <Button
+            icon='pi pi-angle-left'
+            label={'Cancelar'}
+            className='bg-red-700 hover:bg-red-800 border-red-700'
             size='large'
-            disabled={isDisabled}
+            onClick={() => {
+              navigate('/bandeja-denuncias');
+            }}
           />
 
-          <Button
-            onClick={handleRatificarDenuncia}
-            label={'Ratificar Denuncia'}
-            className='btn-blue-mpa'
-            size='large'
-            disabled={isDisabled}
-          />
+          <div>
+            <Button
+              label={'Firmar'}
+              className='btn-blue-mpa mr-4'
+              size='large'
+              disabled={isDisabled}
+            />
+
+            <Button
+              onClick={handleRatificarDenuncia}
+              label={'Ratificar Denuncia'}
+              className='btn-blue-mpa'
+              size='large'
+              disabled={isDisabled}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

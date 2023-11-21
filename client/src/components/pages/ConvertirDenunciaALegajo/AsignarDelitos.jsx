@@ -5,38 +5,48 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dropdown } from 'primereact/dropdown';
 import { useFormik } from 'formik';
-import { agregarDelito } from '@/store/legajoSlice/legajo.slice';
+import {
+  agregarDelito,
+  modificarDelitoAsignado,
+} from '@/store/legajoSlice/legajo.slice';
 import * as Yup from 'yup';
-
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { AccionesTabla } from './AccionesTabla';
+import { generateUUID } from '@/utils/generateUUID';
+import { useEffect } from 'react';
+import { InvalidFieldMessage } from '@/components/common/InvalidFieldMessage';
 
 const validationSchema = Yup.object().shape({
   delito: Yup.string().required('El delito es necesario'),
   denunciado: Yup.string().required('El denunciado es necesario'),
 });
 
-const initialValues = { delito: '', denunciado: '' };
-export const AsignarDelito = ({ denunciados, delitos }) => {
-  const { denunciaALegajoForm } = useAppSelector((state) => state.legajo);
+export const AsignarDelito = ({ denunciados, delitos, delitosAsignados }) => {
+  const { delitoAsignadoForm } = useAppSelector((state) => state.legajo);
   const dispatch = useAppDispatch();
 
+  const initialValues = delitoAsignadoForm.form;
   const formik = useFormik({
     initialValues,
     initialErrors: initialValues,
     onSubmit: (values, { resetForm }) => {
-      dispatch(agregarDelito(values));
+      if (!delitoAsignadoForm.estaModificando) {
+        values.id = generateUUID();
+        dispatch(agregarDelito(values));
+      }
+
+      if (delitoAsignadoForm.estaModificando) {
+        dispatch(modificarDelitoAsignado(values));
+      }
+
       resetForm();
     },
     validationSchema,
   });
 
-  const MessageError = ({ name }) => (
-    <>
-      {formik.touched[name] && formik.errors[name] ? (
-        <small className='p-error'>{formik.errors[name]}</small>
-      ) : null}
-    </>
-  );
+  useEffect(() => {
+    formik.setValues({ ...formik.values, ...delitoAsignadoForm.form });
+  }, [delitoAsignadoForm.form]);
 
   return (
     <Card className='shadow-1 px-7 py-3 mt-6'>
@@ -62,7 +72,7 @@ export const AsignarDelito = ({ denunciados, delitos }) => {
               value={formik.values.denunciado}
               onBlur={formik.handleBlur}
             />
-            <MessageError name='denunciado' />
+            <InvalidFieldMessage formik={formik} name='denunciado' />
           </div>
 
           <div className='col-12 md:col-6'>
@@ -84,13 +94,15 @@ export const AsignarDelito = ({ denunciados, delitos }) => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
-            <MessageError name='delito' />
+            <InvalidFieldMessage formik={formik} name='delito' />
           </div>
 
           <div className='col-12 lg:col-6 xl:col-3 mb-4 mt-2'>
             <Button
               icon='pi pi-plus'
-              label='Agregar'
+              label={
+                delitoAsignadoForm.estaModificando ? 'Modificar' : 'Agregar'
+              }
               className='btn-blue-mpa w-full'
               type='submit'
               disabled={!formik.isValid}
@@ -100,16 +112,17 @@ export const AsignarDelito = ({ denunciados, delitos }) => {
       </form>
 
       <DataTable
-        value={denunciaALegajoForm.delitos}
+        value={delitosAsignados}
         paginator
         rows={5}
-        totalRecords={denunciaALegajoForm.delitos.length}
+        totalRecords={delitosAsignados.length}
         lazy
         emptyMessage='No se encontraron delitos'
         className='mb-4 shadow-1 mt-4'
         tableStyle={{ minWidth: '50rem' }}
       >
         <Column
+          pt={{ headerCell: { className: 'w-4' } }}
           field='denunciado'
           header='Denunciados'
           body={(resumen) => {
@@ -122,7 +135,7 @@ export const AsignarDelito = ({ denunciados, delitos }) => {
         />
 
         <Column
-          pt={{ headerCell: { className: 'w-8' } }}
+          pt={{ headerCell: { className: 'w-6' } }}
           field='delito'
           header='Delito'
           body={(resumen) => {
@@ -132,6 +145,12 @@ export const AsignarDelito = ({ denunciados, delitos }) => {
 
             return delito.nombre;
           }}
+        />
+
+        <Column
+          field='Acciones'
+          header='Acciones'
+          body={(delito) => <AccionesTabla data={delito} action='delito' />}
         />
       </DataTable>
     </Card>

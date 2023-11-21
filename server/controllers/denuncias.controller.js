@@ -469,22 +469,115 @@ DenunciasController.getDenuncia = async (req, res) => {
   }
 };
 
+DenunciasController.getResumenParaRatificar = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    let query = `
+      SELECT
+        -- Resumen de la denuncia
+        d.fecha_denuncia AS fechaDenuncia,
+        d.hora_denuncia AS horaDenuncia,
+        dt.nombre as tipoDenuncia,
+        -- Datos del hecho
+        d.certeza_lugar AS certezaLugar,
+        d.fecha_hecho AS fechaHecho,
+        d.hora_hecho AS horaHecho,
+
+        l.nombre as localidad,
+        d.certeza_lugar AS certezaLugar,
+        b.nombre_barrio AS nombreBarrio,
+        d.anonimo,
+        d.calle_hecho AS calleHecho,
+        d.num_calle AS numeroCalle,
+        d.departamento_hecho AS departamentoHecho,
+        d.piso_hecho AS pisoHecho,
+        d.detalle_lugar AS detalleLugar,
+        d.datos_denunciado AS datosDenunciado,
+        d.datos_testigo AS datosTestigo
+
+      FROM denuncia d
+      LEFT JOIN denuncia_tipos dt ON dt.id_tipo_denuncia = d.id_tipo_denuncia
+      LEFT JOIN localidades l ON l.id_localidad = d.id_localidad
+      LEFT JOIN barrios b ON b.id_barrio = d.id_barrio
+      WHERE id_denuncia = ?
+    `;
+    const [resumen] = await queryHandler(query, [id]);
+    if (!resumen) {
+      return res.status(404).json({
+        message: `Denuncia con el id: ${id} no existe`,
+        data: { resumen },
+      });
+    }
+
+    query = `
+    SELECT 
+      i.id,
+      i.tipo_persona AS tipoPersona,
+      i.nombre,
+      i.apellido,
+      i.alias,
+      i.tipo_identificacion AS tipoIdentificacion,
+      i.numero_identificacion AS numeroIdentificacion,
+      i.fecha_nacimiento AS fechaNacimiento,
+      i.identidad_autopercibida AS genero,
+      i.email,
+      i.informacion_adicional AS informacionAdicional,
+      i.telefono_movil AS telefonoMovil,
+      i.telefono_fijo AS telefonoFijo,
+      it.tipo_interviniente AS tipoInterviniente,
+      it.nombre_tipo AS nombreTipo,
+      p.nombre_provincia AS nombreProvincia,
+      l.nombre as localidad,
+      b.nombre_barrio AS nombreBarrio,
+      i.domicilio
+
+    FROM interviniente_denuncia id
+    LEFT JOIN interviniente i ON id.id_interviniente = i.id
+    LEFT JOIN interviniente_tipo it ON i.id_interviniente_tipo = it.id_interviniente_tipo
+    LEFT JOIN localidades l ON l.id_localidad = i.id_localidad
+    LEFT JOIN barrios b ON b.id_barrio = i.id_barrio
+    LEFT JOIN provincias p ON p.id_provincia = i.id_provincia
+    WHERE id_denuncia = ?`;
+    const intervinientes = await queryHandler(query, [id]);
+
+    const victimas = intervinientes.filter(
+      (interviniente) => interviniente.tipoInterviniente === 'Victima'
+    );
+
+    const denunciados = intervinientes.filter(
+      (interviniente) => interviniente.tipoInterviniente === 'Denunciado'
+    );
+
+    const testigos = intervinientes.filter(
+      (interviniente) => interviniente.tipoInterviniente === 'Testigo'
+    );
+
+    res.status(200).json({
+      message: `Resumen de la denuncia #${id}`,
+      data: { resumen, victimas, denunciados, testigos },
+    });
+  } catch (error) {
+    showError(error);
+    httpErrorHandler(res, 500, '500 SERVER ERROR', false, error.message);
+  }
+};
+
 //CREAR DENUNCIAS
 
 DenunciasController.createDenunciaGeneral = async (req, res) => {
-  try {
-    const data = matchedData(req);
+    try {
 
-    const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
-    const values = Object.values(data);
+        const data = matchedData(req)
+        const keys = Object.keys(data).map(key => convertToSnakeCase(key))
+        const values = Object.values(data)
 
     const query = `INSERT INTO denuncia(${keys.join(
       ', '
-    )},estado,fecha_denuncia,hora_denuncia) VALUES (${keys
+    )},estado,fecha_denuncia,hora_denuncia,fecha_ratificacion,hora_ratificacion) VALUES (${keys
       .map((key) => '?')
-      .join(', ')},1,CURDATE(),CURTIME())`;
-
-    const resQuery = await queryHandler(query, values);
+      .join(', ')},1,CURDATE(),CURTIME(),CURDATE(),CURTIME())`;
+        const resQuery = await queryHandler(query, values)
 
     res.status(200).json({
       ok: true,

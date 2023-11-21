@@ -1,65 +1,32 @@
-let denunciantes = []
-let denunciados = []
-let testigos = []
-let victimas = []
-let denuncia = {}
-let adjuntos = []
+const [tiposVehiculos,marcasVehiculos] = require('../data/denunciaIncidentesViales');
+const [perfilesAgresoresGenero,situacionesGenero,tiposViolenciaGenero,vulnerabilidadesGenero] = require('../data/denunciaViolenciaGenero');
+const [situacionesIntrafamiliar,tiposViolenciaIntrafamiliar,perfilesAgresoresIntrafamiliar,victimasIntrafamiliar,caracteristicasIntrafamiliar] = require('../data/denunciaIntrafamiliar');
+const [situacionesRoboHurto, marcasCelulares, tiposBicicletas] = require('../data/denunciaRoboHurto');
+const [hechosDelitosSexuales,accionesDelitosSexuales,situacionesDelitosSexuales] = require('../data/denunciaDelitosSexuales');
+const especies = require('../data/denunciaAbigeato');
+const [danios,consecuenciasDanios] = require('../data/denunciaDanios');
 
-// const defaultValues = {
-//   denuncia,
-//   denunciantes,
-//   involucrados,
-//   adjuntos
-// }
+const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,denunciados,victimas,adjuntos,usuario}) => {
 
-const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,denunciados,victimas,adjuntos}) => {
-
-    const denunciaTipica =  `
+    const denunciaTipica = `
     <!DOCTYPE html>
     <html lang="en">
-    
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <!-- <link href="http://localhost:3000/css/bootstrap.min.css" type="text/css" rel="stylesheet"> -->
-            <!-- <link href="http://localhost:3000/css/styles.css" type="text/css" rel="stylesheet"> -->
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-            <style>
-                @page {
-                    size: A4;
-                    margin: .5in;
-                    /* @top-right {
-                    content: "Page " counter(pageNumber);
-                    } */
-                }
-                @page wide {
-                    size: a4 landscape;
-                }
-                [id^="item"] {
-                    page-break-inside: avoid;
-                }
-                .table,
-                .list-group,
-                [id^="datos"]{
-                    page-break-inside: avoid;
-                }
-                #item14 {
-                    page-break-before: always;
-                }
-            </style>
         </head>
-    
+
         <body>
             <div id="contenedorBase">
                 <div class="px-3" id="item1">
-                    <div class="d-flex justify-content-center align-items-center">
+                    <div class="d-flex mb-5 justify-content-center align-items-center">
                         <img src="https://sistema.mpajujuy.gob.ar/images/logompa2.png" alt="Logo MPA" class="img-fluid w-25 h-25">
                     </div>
-                    <div class="mb-4 d-grid">
+                    <div class="my-4 d-grid">
                         <div class="ps-3 col d-grid d-flex flex-wrap">
-                            <p class="col-6"><span class="fw-medium fs-5">Nro. Denuncia:</span> <span class="fs-5">${denuncia.idDenuncia}</span></p>
-                            <p class="col-6"><span class="fw-medium fs-5">Fecha:</span> <span class="fs-5">${denuncia.fechaDenuncia + " " + denuncia.horaDenuncia }</span></p>
-                            <p class="col-12"><span class="fw-medium fs-5">Tipo:</span> <span class="fs-5">${denuncia.tipoDenuncia}</span></p>
+                            <p class="col-6"><span><strong class="fw-bold fs-5">Nro. Denuncia:</strong></span> <span class="fs-5">${denuncia.idDenuncia}</span></p>
+                            <p class="col-6"><span><strong class="fw-bold fs-5">Fecha:</strong></span> <span class="fs-5">${denuncia.fechaDenuncia + " " + denuncia.horaDenuncia }</span></p>
+                            <p class="col-12"><span><strong class="fw-bold fs-5">Tipo:</strong></span> <span class="fs-5">${denuncia.tipoDenuncia}</span></p>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -74,9 +41,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                             <p><strong>Localidad:</strong> ${denuncia.localidad}</p>
                             ${ denuncia.certezaLugar? 
                                 `
-                                    <p><strong>Barrio:</strong> ${denuncia.barrio}</p>
-                                    <p><strong>Calle:</strong> ${denuncia.calleHecho}</p>
-                                    <p><strong>Numero de Calle:</strong> ${denuncia.numCalle}</p>
+                                    <p><strong>Barrio:</strong> ${denuncia.barrio?denuncia.barrio:`Sin Especificar`}</p>
+                                    <p><strong>Calle:</strong> ${denuncia.calleHecho?denuncia.calleHecho:`Sin Especificar`}</p>
+                                    <p><strong>Numero de Calle:</strong> ${denuncia.numCalle?denuncia.numCalle:`Sin Especificar`}</p>
                                     
                                     <p><strong>Departamento:</strong> ${denuncia.departamentoHecho? denuncia.departamentoHecho : "Sin Especificar" }</p>
                                     <p><strong>Piso:</strong> ${denuncia.pisoHecho? denuncia.pisoHecho : "Sin Especificar" }</p>`
@@ -86,9 +53,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                             }
                             <p><strong>Delitos</strong></p>
                             <ul class="list-group">
-                            <li class="list-group-item">${denuncia.femicidio? "Femicidio": ``}</li> 
-                            <li class="list-group-item">${denuncia.lesiones? "Lesiones contra la persona" : ``}</li>
-                            <li class="list-group-item">${denuncia.homicidio? "Homicidio": ``}</li> 
+                                ${denuncia.femicidio? `<li class="list-group-item">Femicidio</li>` : ``}
+                                ${denuncia.lesiones? `<li class="list-group-item">Lesiones contra la persona</li>` : ``}
+                                ${denuncia.homicidio? `<li class="list-group-item">Homicidio</li>` : ``}
                             </ul>
                         </div>
                     </div>
@@ -101,53 +68,27 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                     <p class="fw-bold fs-4">Como paso:</p>
                     <p class="text-wrap">${denuncia.descripcionComo? denuncia.descripcionComo:'Sin especificar'}</p>
                 </div>
-    
+
                 ${
                     (
                         () => {
                             switch(denuncia.tipoDenuncia){
                                 case "Violencia de Género":
-                                    var situaciones = {
-                                        situacion1: "Separacion reciente o en trámite de separación.",
-                                        situacion2: "Acoso reciente a la victima o quegrante de la orden de alejamiento."
-                                    };
-                                    var tiposViolencia = {
-                                        tipoViolencia1:"Existenvia de violencia físia susceptible de causar lesiones.",
-                                        tipoViolencia2:"Violencia física en presencia de los hijos u otros familiares.",
-                                        tipoViolencia3:"Aumento de la frecuencia y de la gravedad de los incidentes violentos en el último mes",
-                                        tipoViolencia4:"Amenazas graves o de muerte en el último mes.",
-                                        tipoViolencia5:"Amenazas con objetos peligrosos o con armas de cualquier tipo.",
-                                        tipoViolencia6:"Inencion clara de causar lesiones graves o muy graves.",
-                                        tipoViolencia7:"Agresiones sexuales en la relacion de pareja."
-                                    }
-                                    var perfilesAgresores = {
-                                        perfilAgresor1:"Celos muy intensos o conductas controladoras sobre la pareja.",
-                                        perfilAgresor2:"Historial de conductas violentas con una pareja anterior.",
-                                        perfilAgresor3:"Historial de consuctas violentas con otras personas (amigos, companeros de trabajo, etc.).",
-                                        perfilAgresor4:"Consumo abusivo de alcohol y/o drogas.",
-                                        perfilAgresor5:"Antecedentes de enfermedad mentak con abandono de tratamientos psiquiátricos o psicológicos.",
-                                        perfilAgresor6:"Conductas de crueldad, de desprecio a la victima y de falta de arrepentimiento.",
-                                        perfilAgresor7:"Justificacion de las conductas violentas por su propio estado (alcohol, drogas, estrés) o por la provicacion de la victima."
-                                    }
-                                    var vulnerabilidades = {
-                                        vulnerabilidades1:"Percepción de la victima de peligro de muerte en el último mes.",
-                                        vulnerabilidades2:"Intentos de retirar denuncias previas o de echarse atras en la decision de abandonar o denunciar al agresor.",
-                                        vulnerabilidades3:"Vulnerabilidad de la victima por razones de enfermedad, soledad o dependencia.",
-                                        vulnerabilidades4:"Depende económicamente la victima del agresor."
-                                    }
                                     return `
                                         <div class="p-4" id="item4">
                                             <div class="mb-3">
-                                                <h3 class="fw-bold">Formulario de Violencia de Género</h3>
+                                                <div class="card border-3 d-flex justify-content-center p-3">
+                                                    <h3 class="fw-bold text-center">Formulario de Violencia de Género</h3>
+                                                </div>
                                                 <div class="card  p-4">
                                                     <div class="row">
                                                         <div class="p-3 m-0 col-6" id="list-violencia">
                                                             <h5 class="fw-bold">Situaciones</h5>
                                                             <ul class="list-group px-2">
                                                                 ${
-                                                                    Object.keys(situaciones)
+                                                                    Object.keys(situacionesGenero)
                                                                     .filter(sit => denuncia[sit] !== undefined && denuncia[sit] !== 0)
-                                                                    .map(sit => `<li class="list-group-item">${situaciones[sit]}</li>`)
+                                                                    .map(sit => `<li class="list-group-item">${situacionesGenero[sit]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -156,9 +97,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Tipo Violencia</h5>
                                                             <ul class="list-group px-2">
                                                                 ${
-                                                                    Object.keys(tiposViolencia)
+                                                                    Object.keys(tiposViolenciaGenero)
                                                                     .filter(vio => denuncia[vio] !== undefined && denuncia[vio] !== 0)
-                                                                    .map(vio => `<li class="list-group-item">${tiposViolencia[vio]}</li>`)
+                                                                    .map(vio => `<li class="list-group-item">${tiposViolenciaGenero[vio]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -167,9 +108,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Perfil Agresor</h5>
                                                             <ul class="list-group px-2">
                                                                 ${
-                                                                    Object.keys(perfilesAgresores)
+                                                                    Object.keys(perfilesAgresoresGenero)
                                                                     .filter(perfAgresor => denuncia[perfAgresor] !== undefined && denuncia[perfAgresor] !== 0)
-                                                                    .map(perfAgresor => `<li class="list-group-item">${perfilesAgresores[perfAgresor]}</li>`)
+                                                                    .map(perfAgresor => `<li class="list-group-item">${perfilesAgresoresGenero[perfAgresor]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -178,9 +119,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Vulnerabilidades</h5>
                                                             <ul class="list-group px-2">
                                                                 ${
-                                                                    Object.keys(vulnerabilidades)
+                                                                    Object.keys(vulnerabilidadesGenero)
                                                                     .filter(vul => denuncia[vul] !== undefined && denuncia[vul] !== 0)
-                                                                    .map(vul => `<li class="list-group-item">${vulnerabilidades[vul]}</li>`)
+                                                                    .map(vul => `<li class="list-group-item">${vulnerabilidadesGenero[vul]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -191,58 +132,21 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                         </div>
                                     `
                                 case "Violencia Intrafamiliar":
-                                    var situaciones = {
-                                        situacion1:"¿La víctima convive con el agresor?",
-                                        situacion2:"¿Hubieron medidas de restriccion previas o denuncias contra el agresor?",
-                                        situacion3:"¿El agresor posee titulo de propiedad de la vivienda en la que vive la víctima?",
-                                        situacion4:"¿La víctima vive en situacion de hacinamiento?"
-                                    };
-                                    var tiposViolencia = {
-                                        tipoViolencia1:"Existió o existe violencia física susceptible de causar lecinoes.",
-                                        tipoViolencia2:"Aumentó la frecuencia y/o la gravedad de los incidentes violentos en el último mes.",
-                                        tipoViolencia3:"Hay o hubieron amenazas graves o de muerte en el último mes.",
-                                        tipoViolencia4:"Hay o hubieron amenazas con objetos peligrosos o con armas de cualquier tipo.",
-                                        tipoViolencia5:"Se produjeron daños/vandalismos a objetos o a la propiedad.",
-                                        tipoViolencia6:"Se produjeron daños o amenazas de daño a la mascotas."
-                                    }
-                                    var perfilesAgresores = {
-                                        perfilAgresor1:"Tiene o tuvo consuctas violentas con otras personas (amigos, vecinos, companeros de trabajo, pareja, etc.).",
-                                        perfilAgresor2:"Consumo abusivo de alcohol.",
-                                        perfilAgresor3:"Consumo abusivo de droga.",
-                                        perfilAgresor4:"Tiene antecedentes de enfermedad mental.",
-                                        perfilAgresor5:"Esta o estuvo en tratamiento psicológico/psiquiatra.",
-                                        perfilAgresor6:"Posee antecedentes de intentos de suicidio."
-                                    }
-                                    var victimas = {
-                                        victima1:"Niño / Adolescente.",
-                                        victima2:"Tercera edad.",
-                                        victima3:"Mujer.",
-                                        victima4:"Hombre.",
-                                        victima5:"Persona que pertenece a la comunidad LGTBIQ+.",
-                                        victima6:"Persona en condicion de discapacidad.",
-                                        victima7:"Persona gestante."
-                                    }
-                                    var caracteristicas = {
-                                        caracteristicas1:"Tiene alguna enfermedad mental.",
-                                        caracteristicas2:"Presenta patologías físicas crónicas o agudas.",
-                                        caracteristicas3:"Esta o estuvo en tratamiento psicológico o psiquiátrico.",
-                                        caracteristicas4:"Posee vulnerabilidad habitacional/falta de acceso a vivienda.",
-                                        caracteristicas5:"Posee alguna vulnerabilidad económica/laboral.",
-                                        caracteristicas6:"Forma parte de un grupo social/familiar de apoyo."
-                                    }
                                     return `
                                         <div class="p-4" id="item5">
                                             <div class="mb-3">
-                                                <h3 class="fw-bold">Formulario de Violencia Intrafamiliar</h3>
+                                                <div class="card border-3 d-flex justify-content-center p-3">
+                                                    <h3 class="fw-bold text-center">Formulario de Violencia Intrafamiliar</h3>
+                                                </div>
                                                 <div class="card p-4">
                                                     <div class="row justify-content-center">
                                                         <div class=" p-3 m-0 col-6" id="list-violencia">
                                                             <h5 class="fw-bold">Situaciones</h5>
                                                             <ul class="list-group px-2">
                                                                 ${
-                                                                    Object.keys(situaciones)
+                                                                    Object.keys(situacionesIntrafamiliar)
                                                                     .filter(sit => denuncia[sit] !== undefined)
-                                                                    .map(sit => `<li class="list-group-item">${situaciones[sit]}: ${(denuncia[sit])?`SI`:`NO`}</li>`)
+                                                                    .map(sit => `<li class="list-group-item">${situacionesIntrafamiliar[sit]}: ${(denuncia[sit])?`SI`:`NO`}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -251,9 +155,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Tipo Violencia</h5>
                                                             <ul class="list-group px-2">
                                                                 ${
-                                                                    Object.keys(tiposViolencia)
+                                                                    Object.keys(tiposViolenciaIntrafamiliar)
                                                                     .filter(vio => denuncia[vio] !== undefined && denuncia[vio] !== 0)
-                                                                    .map(vio => `<li class="list-group-item">${tiposViolencia[vio]}</li>`)
+                                                                    .map(vio => `<li class="list-group-item">${tiposViolenciaIntrafamiliar[vio]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -262,9 +166,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Perfil Agresor</h5>
                                                             <ul class="list-group px-2">
                                                                 ${
-                                                                    Object.keys(perfilesAgresores)
+                                                                    Object.keys(perfilesAgresoresIntrafamiliar)
                                                                     .filter(perfAgresor => denuncia[perfAgresor] !== undefined && denuncia[perfAgresor] !== 0)
-                                                                    .map(perfAgresor => `<li class="list-group-item">${perfilesAgresores[perfAgresor]}</li>`)
+                                                                    .map(perfAgresor => `<li class="list-group-item">${perfilesAgresoresIntrafamiliar[perfAgresor]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -273,9 +177,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Victima</h5>
                                                             <ul class="list-group px-2">
                                                                 ${
-                                                                    Object.keys(victimas)
+                                                                    Object.keys(victimasIntrafamiliar)
                                                                     .filter(vic => denuncia[vic] !== undefined && denuncia[vic] !== 0)
-                                                                    .map(vic => `<li class="list-group-item">${victimas[vic]}</li>`)
+                                                                    .map(vic => `<li class="list-group-item">${victimasIntrafamiliar[vic]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -284,9 +188,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Caracteristicas</h5>
                                                             <ul class="list-group px-2">
                                                                 ${
-                                                                    Object.keys(caracteristicas)
+                                                                    Object.keys(caracteristicasIntrafamiliar)
                                                                     .filter(car => denuncia[car] !== undefined && denuncia[car] !== 0)
-                                                                    .map(car => `<li class="list-group-item">${caracteristicas[car]}</li>`)
+                                                                    .map(car => `<li class="list-group-item">${caracteristicasIntrafamiliar[car]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -297,20 +201,12 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                         </div>
                                     `
                                 case "Robo / Hurto":
-                                
-                                    var situaciones = {
-                                        danoCosas: "se dañaron las propiedades de la victima",
-                                        armas: "se emplearon armas durante el hecho",
-                                        violenciaFisica:"se ejercio violencia fisica durante el hecho",
-                                        amenaza: "se produjeron amenazas durante el hecho",
-                                        arrebato: "se produjo un arrebato durante el hecho",
-                                        otra: "se produjo una circunstancia de caracter complejo durante el hecho"
-                                    }
-    
                                     return `
                                         <div class="p-4" id="item6">
                                             <div class="mb-3">
-                                                <h3 class="fw-bold">Formulario de Robo y Hurto</h3>
+                                                <div class="card border-3 d-flex justify-content-center p-3">
+                                                    <h3 class="fw-bold text-center">Formulario de Robo y Hurto</h3>
+                                                </div>
                                                 <div class="card p-4">
                                                     <div class="row justify-content-center">
                                                         
@@ -319,9 +215,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                             <h5 class="fw-bold">Situaciones</h5>
                                                             <ul class="list-group px-2">
                                                                 ${
-                                                                    Object.keys(situaciones)
+                                                                    Object.keys(situacionesRoboHurto)
                                                                     .filter(sit => denuncia[sit] !== undefined && denuncia[sit] !== 0)
-                                                                    .map(sit => `<li class="list-group-item">${situaciones[sit]}</li>`)
+                                                                    .map(sit => `<li class="list-group-item">${situacionesRoboHurto[sit]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -353,9 +249,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                                                         <td class="col text-wrap">${ tel.numero }</td>
                                                                                         <td class="col text-wrap">${ tel.empresa }</td>
                                                                                         <td class="col text-wrap">${ tel.imei }</td>
-                                                                                        <td class="col text-wrap">${ tel.idDenunciaCelularesMarca }</td>
+                                                                                        <td class="col text-wrap">${ marcasCelulares[tel.idDenunciaCelularesMarca] }</td>
                                                                                         <td class="col text-wrap">${ tel.modelo }</td>
-                                                                                        <td class="col text-wrap">${ (tel.observaciones =="")?`Sin Especificar`:tel.observaciones}</td>
+                                                                                        <td class="col text-wrap">${ (tel.otro =="")?`Sin Especificar`:tel.otro}</td>
                                                                                     </tr>
                                                                                 `)
                                                                                 .join("")
@@ -373,7 +269,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th>Dominio</th>
+                                                                                    <th>Marca</th>
                                                                                     <th>Modelo</th>
+                                                                                    <th>Tipo</th>
                                                                                     <th>Titular</th>
                                                                                     <th>GNC</th>
                                                                                     <th>Observaciones</th>
@@ -385,10 +283,12 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                                                 .map(auto => `
                                                                                     <tr>
                                                                                         <td class="col text-wrap">${auto.dominio}</td>
+                                                                                        <td class="col text-wrap">${marcasVehiculos[auto.marca]}</td>
                                                                                         <td class="col text-wrap">${auto.modelo}</td>
+                                                                                        <td class="col text-wrap">${tiposVehiculos[auto.tipo]}</td>
                                                                                         <td class="col text-wrap">${auto.titular}</td>
-                                                                                        <td class="col text-wrap">${ (auto.cng)?`SI`:`NO`}</td>
-                                                                                        <td class="col text-wrap">${ (auto.observaciones=="")?`Sin Especificar`:auto.observaciones}</td>
+                                                                                        <td class="col text-wrap">${(auto.cng)?`SI`:`NO`}</td>
+                                                                                        <td class="col text-wrap">${(auto.observaciones=="")?`Sin Especificar`:auto.observaciones}</td>
                                                                                     </tr>
                                                                                 `)
                                                                                 .join("")
@@ -407,6 +307,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                                                     <th>Tipo</th>
                                                                                     <th>Marca</th>
                                                                                     <th>Modelo</th>
+                                                                                    <th>Dominio</th>
+                                                                                    <th>Sustraido</th>
+                                                                                    <th>Dañada</th>
                                                                                     <th>Observaciones</th>
                                                                                 </tr>
                                                                             </thead>
@@ -418,6 +321,9 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                                                         <td class="col text-wrap">${part.tipo}</td>
                                                                                         <td class="col text-wrap">${part.marca}</td>
                                                                                         <td class="col text-wrap">${part.modelo}</td>
+                                                                                        <td class="col text-wrap">${part.dominio}</td>
+                                                                                        <td class="col text-wrap">${part.sustraido?`SI`:`NO`}</td>
+                                                                                        <td class="col text-wrap">${part.danada?`SI`:`NO`}</td>
                                                                                         <td class="col text-wrap">${ (part.observaciones=="")?`Sin Especificar`:part.observaciones}</td>
                                                                                     </tr>
                                                                                 `)
@@ -436,7 +342,10 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                                                 <tr>
                                                                                     <th>Nro. de Serie</th>
                                                                                     <th>Marca</th>
+                                                                                    <th>Tipo</th>
+                                                                                    <th>Color</th>
                                                                                     <th>Rodado</th>
+                                                                                    <th>Seguro</th>
                                                                                     <th>Observaciones</th>
                                                                                 </tr>
                                                                             </thead>
@@ -447,7 +356,10 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                                                     <tr>
                                                                                         <td class="col text-wrap">${bici.numSerie}</td>
                                                                                         <td class="col text-wrap">${bici.marca}</td>
+                                                                                        <td class="col text-wrap">${tiposBicicletas[bici.idDenunciaBicicletasTipo]}</td>
+                                                                                        <td class="col text-wrap">${bici.colorCuadro}</td>
                                                                                         <td class="col text-wrap">${bici.rodado}</td>
+                                                                                        <td class="col text-wrap">${bici.seguro?`SI`:`NO`}</td>
                                                                                         <td class="col text-wrap">${ (bici.observaciones=="")?`Sin Especificar`:bici.observaciones}</td>
                                                                                     </tr>
                                                                                 `)
@@ -579,61 +491,43 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                         </div>
                                     `
                                 case "Delitos Sexuales":
-                                    var hechos = {
-                                        hechoAcercamiento: "Se produjo un acercamiento.",
-                                        hechoContactoTecnologico: "Se produjo un hecho de contacto tecnologico.",
-                                        hechoBeso: "Se produjo un beso.",
-                                        hechoTocamiento: "Se produjo un hecho de tocamiento.",
-                                        hechoIntroduccion: "Se produjo un hecho de introduccion de objeto o parte corporal.",
-                                    }; 
-                                    var acciones = {
-                                        accionViolencia: "El autor empleó violencia o amenazas.",
-                                        accionDrogas: "El autor utilizó Drogas.",
-                                        accionVulnerabilidad: "El autor se aprovechó de una situación de vulnerabilidad.",
-                                        accionArma: "El autor utilizó un arma.",
-                                    }; 
-                                    var situaciones = {
-                                        denunciasPrevias: "Se han realizado denuncias previas.",
-                                        solicitudImagenes: "El autor solicitó imagenes con contenido sexual.",
-                                        menorInvolucrado: "Hay un menor Involucrado.",
-                                        mediosElectronicos: "El/los autor/es enviaron a la vitima imagenes con contenido sexual por medios electronicos.",
-                                    };
-    
                                     return `
                                         <div class="p-4" id="item7">
                                             <div class="mb-3">
-                                                <h3 class="fw-bold">Formulario de Delitos Sexuales</h3>
+                                                <div class="card border-3 d-flex justify-content-center p-3">
+                                                    <h3 class="fw-bold text-center">Formulario de Delitos Sexuales</h3>
+                                                </div>
                                                 <div class="card  p-4">
                                                     <div class="row">
                                                         <div class="p-3 m-0 col-6" id="list-delitos-sexuales">
-                                                            <p><span class="fw-bold">Hechos</span></p>
+                                                            <h5 class="fw-bold">Hechos</h5>
                                                             <ul class="list-group">
                                                                 ${
-                                                                    Object.keys(hechos)
+                                                                    Object.keys(hechosDelitosSexuales)
                                                                     .filter(hec => denuncia[hec] !== undefined && denuncia[hec] !== 0)
-                                                                    .map(hec => `<li class="list-group-item">${hechos[hec]}</li>`)
+                                                                    .map(hec => `<li class="list-group-item">${hechosDelitosSexuales[hec]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
                                                         </div>
                                                         <div class="p-3 m-0 col-6" id="list-delitos-sexuales">
-                                                            <p><span class="fw-bold">Acciones</span></p>
+                                                            <h5 class="fw-bold">Acciones</h5>
                                                             <ul class="list-group">
                                                                 ${
-                                                                    Object.keys(acciones)
+                                                                    Object.keys(accionesDelitosSexuales)
                                                                     .filter(acc => denuncia[acc] !== undefined && denuncia[acc] !== 0)
-                                                                    .map(acc => `<li class="list-group-item">${acciones[acc]}</li>`)
+                                                                    .map(acc => `<li class="list-group-item">${accionesDelitosSexuales[acc]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
                                                         </div>
                                                         <div class="p-3 m-0 col-6" id="list-delitos-sexuales">
-                                                            <p><span class="fw-bold">Situaciones</span></p>
+                                                            <h5 class="fw-bold">Situaciones</h5>
                                                             <ul class="list-group">
                                                                 ${
-                                                                    Object.keys(situaciones)
+                                                                    Object.keys(situacionesDelitosSexuales)
                                                                     .filter(sit=> denuncia[sit] !== undefined && denuncia[sit] !== 0)
-                                                                    .map(sit => `<li class="list-group-item">${situaciones[sit]}</li>`)
+                                                                    .map(sit => `<li class="list-group-item">${situacionesDelitosSexuales[sit]}</li>`)
                                                                     .join("")
                                                                 }
                                                             </ul>
@@ -644,93 +538,10 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                         </div>
                                     `
                                 case "Incidentes Viales":
-                                    var marcas = {
-                                        "1" : "Acura",
-                                        "2" : "Alfa Romeo",
-                                        "3" : "Apia",
-                                        "4" : "Audi",
-                                        "5" : "Bajaj",
-                                        "6" : "Beta",
-                                        "7" : "BMW",
-                                        "8" : "Brava",
-                                        "9" : "Cadillac",
-                                        "10" : "Cerro",
-                                        "11" : "Chrysler",
-                                        "12" : "Corven",
-                                        "13" : "Dodge",
-                                        "14" : "Ferrari",
-                                        "15" : "Fiat",
-                                        "16" : "Ford",
-                                        "17" : "General Motors",
-                                        "18" : "Ghiggeri",
-                                        "19" : "Gillera",
-                                        "20" : "Guerrero",
-                                        "21" : "Honda",
-                                        "22" : "Hummer",
-                                        "23" : "Infinity",
-                                        "24" : "Jaguar",
-                                        "25" : "Jeep",
-                                        "26" : "Kawasaki",
-                                        "27" : "Keller",
-                                        "28" : "Kymco",
-                                        "29" : "Land Rover",
-                                        "30" : "Legnano",
-                                        "31" : "Lincoln",
-                                        "32" : "Lotus",
-                                        "33" : "Maserati",
-                                        "34" : "Maverick",
-                                        "35" : "Mazda",
-                                        "36" : "Mercedes Benz",
-                                        "37" : "Mercury",
-                                        "38" : "MG",
-                                        "39" : "Mini Cooper",
-                                        "40" : "Mitsubishi",
-                                        "41" : "Mondial",
-                                        "42" : "Motomel",
-                                        "43" : "Nissan",
-                                        "44" : "Peugeot",
-                                        "45" : "Pontiac",
-                                        "46" : "Porsche",
-                                        "47" : "Puma",
-                                        "48" : "Renault",
-                                        "49" : "Rover",
-                                        "50" : "Saab",
-                                        "51" : "Saleen",
-                                        "52" : "Seat",
-                                        "53" : "Siam",
-                                        "54" : "Smart",
-                                        "55" : "Suzuki",
-                                        "56" : "Tibo",
-                                        "57" : "Toyota",
-                                        "58" : "Volkswagen",
-                                        "59" : "Volvo",
-                                        "60" : "Yamaha",
-                                        "61" : "Zanella",
-                                        "62" : "No Determinado"
-                                    };
-                                    var tipos = {
-                                        "1" : "Berlina",
-                                        "2" : "Cabriolet",
-                                        "3" : "Camion",
-                                        "4" : "Ciclomotor",
-                                        "5" : "Convertible",
-                                        "6" : "Coupe",
-                                        "7" : "Familiar",
-                                        "8" : "Limousina",
-                                        "9" : "Minibus",
-                                        "10" : "Monovolumen",
-                                        "11" : "Motocicleta",
-                                        "12" : "Omnibus",
-                                        "13" : "Pick up",
-                                        "14" : "Sedan",
-                                        "15" : "Tanque",
-                                        "16" : "Utilitario",
-                                        "17" : "No Determinado"
-                                    }
                                     return `
-                                        <div class="px-3 pb-4">
-                                            <h5 class="fw-bold">Vehículos</h5>
-                                            <div class="row justify-content-around">
+                                        <div class="px-4 pb-4" id="item8">
+                                            <h3 class="fw-bold">Vehículos</h3>
+                                            <div class="row px-3 justify-content-around">
                                                 ${ denuncia.cantVehiculos !== undefined && denuncia.cantVehiculos !== 0? `
                                                     <div class="px-3 py-2 m-0 col-12" id="list-vehiculos-incidentes-viales">
                                                         <table class="table table-bordered table-sm px-2">
@@ -741,6 +552,7 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                                     <th>Marca</th>
                                                                     <th>Modelo</th>
                                                                     <th>Tipo</th>
+                                                                    <th>Color</th>
                                                                     <th>Fabricacion</th>
                                                                     <th>Nro. Notor</th>
                                                                     <th>GNC</th>
@@ -751,17 +563,19 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                                 denuncia.vehiculosIncidentes
                                                                 .map(vehiculo => `
                                                                     <tr>
-                                                                        <td class="col text-wrap" rowspan="2">${vehiculo.dominio}</td>
+                                                                        <td class="col text-wrap" rowspan="1">${vehiculo.dominio}</td>
                                                                         <td class="col text-wrap">${vehiculo.titular}</td>
-                                                                        <td class="col text-wrap">${marcas['vehiculo.marca']}</td>
+                                                                        <td class="col text-wrap">${marcasVehiculos[vehiculo.idDenunciaAutomovilesMarca]}</td>
                                                                         <td class="col text-wrap">${vehiculo.modelo}</td>
-                                                                        <td class="col text-wrap">${tipos['vehiculo.tipo']}</td>
+                                                                        <td class="col text-wrap">${tiposVehiculos[vehiculo.idDenunciaAutomovilesTipo]}</td>
+                                                                        <td class="col text-wrap">${vehiculo.color}</td>
                                                                         <td class="col text-wrap">${vehiculo.anioFabricacion}</td>
                                                                         <td class="col text-wrap">${vehiculo.numMotor}</td>
                                                                         <td class="col text-wrap">${vehiculo.gnc!=undefined? ( vehiculo.gnc? `SI`:`NO` ) : `Sin Especificar`}</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td class="col text-wrap" colspan="7"><strong>Observaciones: </strong> ${vehiculo.observaciones?vehiculo.observaciones:`Sin Especificar`}</td>
+                                                                        <td class="col text-wrap"><strong>Observaciones: </strong></td>
+                                                                        <td class="col text-wrap" colspan="8">${vehiculo.observaciones?vehiculo.observaciones:`Sin Especificar`}</td>
                                                                     </tr>
                                                                 `)
                                                                 .join("")
@@ -773,100 +587,170 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                             </div>
                                         </div>
                                     `
-                                    break;
-                                case "Abigeaeto / Cuatrerismo":
-                                    especies = {
-                                        "1" : "Asnal",
-                                        "2" : "Aves",
-                                        "3" : "Bovinos",
-                                        "4" : "Caprinos",
-                                        "5" : "Conejos",
-                                        "6" : "Equinos",
-                                        "7" : "Mular",
-                                        "8" : "Ovinos",
-                                        "9" : "Porcinos",
-                                        "10" : "Otras Especies"
-                                    }
+                                case "Abigeato / Cuatrerismo":
                                     return `
-                                        <div class="px-3 pb-4">
-                                            <h5 class="fw-bold">Formulario Abigeato / Cuatretismo</h5>
-                                            <p><strong>Hubo violencia? </strong>${denuncia.abigeato?`SI`:`NO`}</p>
-                                            ${ 
-                                                denuncia.cantAnimales !== undefined && denuncia.cantAnimales !== 0? `
-                                                    <div class="px-3 py-2 m-0 col-12" id="list-animales-abigeato">
-                                                        ${
-                                                            denuncia.abigeatoDetalles
-                                                            .map((animal, index) => `
-                                                                <div class="row flex-wrap">
-                                                                    <p class="fs-6 col-6"><strong>Especie </strong>especies[animal.idDenunciaAbigeatoDetallesEspecie]</p>
-                                                                    <p class="fs-6 col-6"><strong>Cantidad </strong>animal.cantidad</p>
-                                                                    <p class="fs-6 col-12"><strong>Detalles </strong>animal.detalle</p>
-                                                                </div>
-                                                                ${index!=denuncia.abigeatoDetalles.length-1?`<div class="table-group-divider"></div>`:``}
-                                                            `).join('')
-                                                        }
-                                                    </div>
-                                                `:``
-                                            }
+                                        <div class="px-4 pb-4" id="item9">
+                                                <div class="card border-3 d-flex justify-content-center p-3">
+                                                    <h3 class="fw-bold text-center">Formulario Abigeato / Cuatretismo</h3>
+                                                </div>
+                                            <div class="card p-3">
+                                                <p><strong>Hubo violencia? </strong>${denuncia.violenciaFisica?`SI`:`NO`}</p>
+                                                <div class="table-group-divider"></div>
+                                                ${ 
+                                                    denuncia.avigeatoDetalles !== undefined ? `
+                                                        <div class="py-2 m-0 col-12" id="list-animales-abigeato">
+                                                            ${
+                                                                denuncia.avigeatoDetalles
+                                                                .map((animal, index) => `
+                                                                    <div class="row flex-wrap">
+                                                                        <p class="fs-6 py-1 col-6"><strong>Especie </strong>${especies[animal.idDenunciaAbigeatoDetallesEspecies]}</p>
+                                                                        <p class="fs-6 py-1 col-6"><strong>Cantidad </strong>${animal.cantidad}</p>
+                                                                        <p class="fs-6 py-1 col-12"><strong>Detalles </strong>${animal.detalle}</p>
+                                                                    </div>
+                                                                    <div class="table-group-divider"></div>
+                                                                `).join('')
+                                                            }
+                                                        </div>
+                                                    `:``
+                                                }
+                                            </div>
                                         </div>
                                     `
-                                    break;
                                 case "Maltrato Animal":
-                                        
-                                    break;
-                                /*
-                                daños
-                                */
+                                    return `
+                                        <div class="px-4 pb-5" id="item10">
+                                                <div class="card border-3 d-flex justify-content-center p-3">
+                                                    <h3 class="card-ti text-centertle fw-bold">Formulario de Maltrato Animal</h3>
+                                                </div>
+                                            <div class="card col-12">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <p class="col-6 card-text"><strong>Tipo de animal:</strong> ${denuncia.tipoAnimal}</p>
+                                                        <p class="col-6 card-text"><strong>Condicion del animal:</strong> ${denuncia.condicionAnimal}</p>
+                                                        <p class="col-6 card-text"><strong>Atencion de veterinaria:</strong> ${denuncia.atencionVeterinaria}</p>
+                                                        <p class="col-6 card-text"><strong>Relacion con el animal:</strong> ${denuncia.relacionAnimal}</p>
+                                                        <p class="col-6 card-text"><strong>Como tomó conocimiento?:</strong> ${denuncia.tomoConocimiento}</p>
+                                                        <p class="col-6 card-text"><strong>Quien ejercio el acto de violencia? </strong> ${denuncia.violenciaCometida}</p>
+                                                        <p class="col-6 card-text"><strong>El animal sufrio abuso sexual?</strong> ${denuncia.abusoAnimal}</p>
+                                                        <p class="col-6 card-text"><strong>El acto de violencia lo cometio un funcionario público? </strong> ${denuncia.abusoFuncionario}</p>
+                                                        <ul class="list-group mx-3">
+                                                            <h6 class="card-text fw-bold">Concivencia:</h6>
+                                                            ${denuncia.convivenciaIndeterminado?
+                                                                `<li class="list-group-item">No se sabe con quien convivia el animal.</li>`
+                                                                :`
+                                                                    ${denuncia.convivenciaAdultosMayores?`<li class="list-group-item">El animal convive con Adultos Mayores.</li>`:``}
+                                                                    ${denuncia.convivenciaNinos?`<li class="list-group-item">El animal convive con Ninos.</li>`:``}
+                                                                    ${denuncia.convivenciaDiscapacidad?`<li class="list-group-item">El animal convive con Personas con Discapacidad.</li>`:``}
+                                                                    ${denuncia.convivenciaOtro?`<li class="list-group-item">El animal convive con otro tipo de personas.</li>`:``}
+                                                                `
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `
+                                case "Daños":
+                                    return `
+                                        <div class="px-4 mb-4" id="item11">
+                                            <div class="mb-3">
+                                                <div class="card border-3 d-flex justify-content-center p-3">
+                                                    <h3 class="fw-bold text-center">Formulario de Daños</h3>
+                                                </div>
+                                                <div class="card  p-4">
+                                                    <div class="row">
+                                                        <div class="p-3 col-12 m-0 d-flex">
+                                                            <h5 class="fw-bold">Pertenencia: </h5>
+                                                            <p>${denuncia.pertenencia}</p>
+                                                        </div>
+                                                        <div class="p-3 m-0 col-6" id="list-danios">
+                                                            <h5 class="fw-bold">Daños</h5>
+                                                            <ul class="list-group px-2">
+                                                                ${
+                                                                    Object.keys(danios)
+                                                                    .filter(dan => denuncia[dan] !== undefined && denuncia[dan] !== 0)
+                                                                    .map(dan => `<li class="list-group-item">${danios[dan]}</li>`)
+                                                                    .join("")
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                        <div class="p-3 m-0 col-6" id="list-consecuencias">
+                                                            ${denuncia.consecuenciaDano?
+                                                                `
+                                                                    <h5 class="fw-bold">Consecuencias</h5>
+                                                                    <ul class="list-group px-2">
+                                                                        ${denuncia.consecuenciaOtro?
+                                                                            `<li class="list-group-item">${denuncia.consecuenciaDetallesOtro}</li>`
+                                                                        :`
+                                                                            ${
+                                                                                Object.keys(consecuenciasDanios)
+                                                                                .filter(con => denuncia[con] !== undefined && denuncia[con] !== 0)
+                                                                                .map(con => `<li class="list-group-item">${consecuenciasDanios[con]}</li>`)
+                                                                                .join("")
+                                                                            }
+                                                                        `}
+                                                                    </ul>
+                                                                `:`
+                                                                    <h5 class="fw-bold">No se produjo una Consecuencia.</h5>
+                                                                `}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `
                                 default: return ``
                             }
                         }
                     )()
                 }
                 
-                <div class="p-3" id="item8">
+                <div class="p-3" id="item12">
                     <!-- Denunciantes -->
                     <div class="d-grid d-flex flex-column">
-                        <div class="mb-4" id="datos1">
+                        <div class="px-3 mb-4" id="datos1">
                             ${denuncia.anonimo? 
-                            `<h3 class="fw-bold">EL DENUNCIANTE ES ANONIMO</h3>`:
+                            `
+                            <div class="card border-3 d-flex justify-content-center p-3">
+                                <h4 class="fw-bold text-center">EL DENUNCIANTE ES ANONIMO</h4>
+                            </div>
+                            `:
                             `<h3 class="fw-bold">Datos del/los denunciante/s</h3>
                                 ${
                                     denunciantes.map((den, index) => `
                                         <div class="row mx-1 justify-content-center">
                                             <div class="col-12">
-                                                <div class="card my-3">
-                                                    <ul class="list-group list-group-flush">
-                                                        <div class="row">
-                                                            <div class="col">
-                                                                <li class="list-group-item"><span class="fw-bold">Tipo Persona:</span> ${den.tipoPersona}</li>
-                                                                <li class="list-group-item"><span class="fw-bold">Apellido:</span> ${den.apellido}</li>
-                                                                <li class="list-group-item"><span class="fw-bold">Nombre:</span> ${den.nombre}</li>
-                                                                <li class="list-group-item"><span class="fw-bold">Alias:</span> ${den.alias? den.alias: "Sin Especificar"}</li>
-                                                                <li class="list-group-item"><span class="fw-bold">Nacionalidad:</span> ${den.nacionalidad? den.nacionalidad : `Sin Especificar`}</li>
-                                                                <li class="list-group-item"><span class="fw-bold">Identificacion:</span> ${den.tipoIdentificacion} ${den.numeroIdentificacion}</li>
-                                                            </div>
-                                                            <div class="col">
-                                                                <li class="list-group-item"><span class="fw-bold">Fecha de Nacimiento:</span> ${den.fechaNacimiento}</li>
-                                                                <li class="list-group-item"><span class="fw-bold">Género:</span> ${den.identidadAutopercibida? den.identidadAutopercibida : `Sin Especificar`}</li>
-                                                                <li class="list-group-item"><span class="fw-bold">Teléfono Móvil:</span> ${den.telefonoMovil? den.telefonoMovil : "Sin Especificar"}</li>
-                                                                <li class="list-group-item"><span class="fw-bold">Teléfono Fijo:</span> ${den.telefonoFijo? den.telefonoFijo : "Sin Especificar"}</li>
-                                                                <li class="list-group-item"><span class="fw-bold">Correo Electrónico:</span> ${den.email}</li>
-                                                                ${victimasRelaciones[index] && victimasRelaciones[index].conocimientoVictima !== 0? 
-                                                                    `
-                                                                        <li class="list-group-item"><span class="fw-bold">Vinculo con la victima:</span> ${victimasRelaciones[index].vinculoVictima !== "Otro"? victimasRelaciones[index].vinculoVictima : victimasRelaciones[index].detalleVinculo }</li>
-                                                                    `:`
-                                                                        <li class="list-group-item"><span class="fw-bold">No conoce a la victima</span></li>
-                                                                    `
-                                                                }
-                                                            </div>
+                                                <div class="card my-3 py-1">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Tipo Persona:</span> ${den.tipoPersona}</p>
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Apellido:</span> ${den.apellido}</p>
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Nombre:</span> ${den.nombre}</p>
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Alias:</span> ${den.alias? den.alias: "Sin Especificar"}</p>
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Nacionalidad:</span> ${den.nacionalidad? den.nacionalidad : `Sin Especificar`}</p>
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Identificacion:</span> ${den.tipoIdentificacion} ${den.numeroIdentificacion}</p>
                                                         </div>
-                                                        <li class="list-group-item"><span class="fw-bold">Ubicación:</span> 
-                                                            ${den.provincia? den.provincia + ", "  : ""} 
-                                                            ${den.localidad? (den.barrio? den.localidad + ", ": den.localidad) : ""}
-                                                            ${den.barrio? den.barrio + ", " : ""} 
-                                                            ${den.domicilio? den.domicilio : ""}
-                                                        </li>
-                                                    </ul>
+                                                        <div class="col">
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Fecha de Nacimiento:</span> ${den.fechaNacimiento}</p>
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Género:</span> ${den.identidadAutopercibida? den.identidadAutopercibida : `Sin Especificar`}</p>
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Teléfono Móvil:</span> ${den.telefonoMovil? den.telefonoMovil : "Sin Especificar"}</p>
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Teléfono Fijo:</span> ${den.telefonoFijo? den.telefonoFijo : "Sin Especificar"}</p>
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Correo Electrónico:</span> ${den.email}</p>
+                                                            ${victimasRelaciones[index] && victimasRelaciones[index].conocimientoVictima !== 0? 
+                                                                `
+                                                                    <p class="mt-2 ms-3"><span class="fw-bold">Vinculo con la victima:</span> ${victimasRelaciones[index].vinculoVictima !== "Otro"? victimasRelaciones[index].vinculoVictima : victimasRelaciones[index].detalleVinculo }</p>
+                                                                `:`
+                                                                    <p class="mt-2 ms-3"><span class="fw-bold">No conoce a la victima</span></p>
+                                                                `
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Ubicación:</span> 
+                                                        ${den.provincia? den.provincia + ", "  : ""} 
+                                                        ${den.localidad? (den.barrio? den.localidad + ", ": den.localidad) : ""}
+                                                        ${den.barrio? den.barrio + ", " : ""} 
+                                                        ${den.domicilio? den.domicilio : ""}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -875,44 +759,45 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                             </div>`}
                     </div>
                 </div>
-    
-                <div class="p-3" id="item9">
+
+                <div class="p-3" id="item13">
+                    <div class="card border-3 d-flex justify-content-center p-3">
+                        <h3 class="px-3 fw-bold text-center">Datos de los involucrados</h3>
+                    </div>
                     <!-- Victimas -->
-                    <h3 class="fw-bold">Datos de los involucrados</h3>
+                    
                     ${victimas.length !== 0?
                         `
-                        <div class="mb-4" id="2">
+                        <div class="px-4 mb-4" id="2">
                             <h5 class="fw-bold">Datos de la/s Víctima/s</h5>
                             <div class="row mx-1 justify-content-center">
                                 ${ 
                                     victimas.map((victima, index) => `
                                     <div class="col-12">
-                                        <div class="card">
-                                            <ul class="list-group list-group-flush">
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <li class="list-group-item"><span class="fw-bold">Tipo Persona:</span> ${victima.tipoPersona}</li>
-                                                        <li class="list-group-item"><span class="fw-bold">Apellido:</span> ${victima.apellido}</li>
-                                                        <li class="list-group-item"><span class="fw-bold">Nombre:</span> ${victima.nombre}</li>
-                                                        <li class="list-group-item"><span class="fw-bold">Alias:</span> ${victima.alias? victima.alias: "Sin Especificar"}</li>
-                                                        <li class="list-group-item"><span class="fw-bold">Nacionalidad:</span> ${victima.nacionalidad? victima.nacionalidad : `Sin Especificar`}</li>
-                                                        <li class="list-group-item"><span class="fw-bold">Identificacion:</span> ${victima.tipoIdentificacion} ${victima.numeroIdentificacion}</li>
-                                                    </div>
-                                                    <div class="col">
-                                                        <li class="list-group-item"><span class="fw-bold">Fecha de Nacimiento:</span> ${victima.fechaNacimiento}</li>
-                                                        <li class="list-group-item"><span class="fw-bold">Género:</span> ${victima.identidadAutopercibida? victima.identidadAutopercibida : `Sin Especificar`}</li>
-                                                        <li class="list-group-item"><span class="fw-bold">Teléfono Móvil:</span> ${victima.telefonoMovil? victima.telefonoMovil : "Sin Especificar"}</li>
-                                                        <li class="list-group-item"><span class="fw-bold">Teléfono Fijo:</span> ${victima.telefonoFijo? victima.telefonoFijo : "Sin Especificar"}</li>
-                                                        <li class="list-group-item"><span class="fw-bold">Correo Electrónico:</span> ${victima.email}</li>
-                                                    </div>
+                                        <div class="card my-3 py-1">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Tipo Persona:</span> ${victima.tipoPersona}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Apellido:</span> ${victima.apellido}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Nombre:</span> ${victima.nombre}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Alias:</span> ${victima.alias? victima.alias: "Sin Especificar"}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Nacionalidad:</span> ${victima.nacionalidad? victima.nacionalidad : `Sin Especificar`}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Identificacion:</span> ${victima.tipoIdentificacion} ${victima.numeroIdentificacion}</p>
                                                 </div>
-                                                <li class="list-group-item"><span class="fw-bold">Ubicación:</span> 
-                                                    ${victima.provincia? victima.provincia + ", "  : ""} 
-                                                    ${victima.localidad? (victima.barrio? victima.localidad + ", ": victima.localidad) : ""}
-                                                    ${victima.barrio? victima.barrio + ", " : ""} 
-                                                    ${victima.domicilio? victima.domicilio : ""}
-                                                </li>
-                                            </ul>
+                                                <div class="col">
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Fecha de Nacimiento:</span> ${victima.fechaNacimiento}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Género:</span> ${victima.identidadAutopercibida? victima.identidadAutopercibida : `Sin Especificar`}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Teléfono Móvil:</span> ${victima.telefonoMovil? victima.telefonoMovil : "Sin Especificar"}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Teléfono Fijo:</span> ${victima.telefonoFijo? victima.telefonoFijo : "Sin Especificar"}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Correo Electrónico:</span> ${victima.email}</p>
+                                                </div>
+                                            </div>
+                                            <p class="mt-2 ms-3"><span class="fw-bold">Ubicación:</span> 
+                                                ${victima.provincia? victima.provincia + ", "  : ""} 
+                                                ${victima.localidad? (victima.barrio? victima.localidad + ", ": victima.localidad) : ""}
+                                                ${victima.barrio? victima.barrio + ", " : ""} 
+                                                ${victima.domicilio? victima.domicilio : ""}
+                                            </p>
                                         </div>
                                     </div>
                                     `).join('')
@@ -923,45 +808,42 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                     }
                     
                 </div>
-    
-                <div class="p-3" id="item10">
+
+                <div class="p-3" id="item14">
                     <!-- Denunciados -->
                     ${  denuncia.datosDenunciado? 
                         `
-
-                        <div class="mb-4" id="datos3">
+                        <div class="px-4 mb-4" id="datos3">
                             <h5 class="fw-bold">Datos de la/s Denunciado/s</h5>
                             <div class="row mx-1 justify-content-center">
                             ${
                                 denunciados.map(denunciado => `
                                     <div class="col-12">
-                                        <div class="card">
-                                            <ul class="list-group list-group-flush">
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <li class="list-group-item"><span class="fw-bold">Tipo Persona:</span> ${denunciado.tipoPersona}</li>
-                                                        <li class="list-group-item"><span class="fw-bold">Apellido:</span> ${denunciado.apellido}</li>
-                                                        <li class="list-group-item"><span class="fw-bold">Nombre:</span> ${denunciado.nombre}</li>
-                                                        <li class="list-group-item"><span class="fw-bold">Alias:</span> ${denunciado.alias? denunciado.alias: "Sin Especificar"}</li>
-                                                        <li class="list-group-item"><span class="fw-bold">Nacionalidad:</span> ${denunciado.nacionalidad? denunciado.nacionalidad : `Sin Especificar`}</li>
-                                                        <li class="list-group-item"><span class="fw-bold">Identificacion:</span> ${denunciado.tipoIdentificacion} ${denunciado.numeroIdentificacion}</li>
-                                                    </div>
-                                                    <div class="col">
-                                                        <li class="list-group-item"><span class="fw-bold">Fecha de Nacimiento:</span> ${denunciado.fechaNacimiento}</li>
-                                                        <li class="list-group-item"><span class="fw-bold">Género:</span> ${denunciado.identidadAutopercibida? denunciado.identidadAutopercibida : `Sin Especificar`}</li>
-                                                        <li class="list-group-item"><span class="fw-bold">Teléfono Móvil:</span> ${denunciado.telefonoMovil? denunciado.telefonoMovil : "Sin Especificar"}</li>
-                                                        <li class="list-group-item"><span class="fw-bold">Teléfono Fijo:</span> ${denunciado.telefonoFijo? denunciado.telefonoFijo : "Sin Especificar"}</li>
-                                                        <li class="list-group-item"><span class="fw-bold">Correo Electrónico:</span> ${denunciado.email}</li>
-                                                    </div>
+                                        <div class="card my-3 py-1">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Tipo Persona:</span> ${denunciado.tipoPersona}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Apellido:</span> ${denunciado.apellido}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Nombre:</span> ${denunciado.nombre}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Alias:</span> ${denunciado.alias? denunciado.alias: "Sin Especificar"}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Nacionalidad:</span> ${denunciado.nacionalidad? denunciado.nacionalidad : `Sin Especificar`}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Identificacion:</span> ${denunciado.tipoIdentificacion} ${denunciado.numeroIdentificacion}</p>
                                                 </div>
-                                                <li class="list-group-item"><span class="fw-bold">Ubicación:</span> 
-                                                    ${denunciado.provincia? denunciado.provincia + ", "  : ""} 
-                                                    ${denunciado.localidad? (denunciado.barrio? denunciado.localidad + ", ": denunciado.localidad) : ""}
-                                                    ${denunciado.barrio? denunciado.barrio + ", " : ""} 
-                                                    ${denunciado.domicilio? denunciado.domicilio : ""}
-                                                </li>
-                                                <li class="list-group-item"><span class="fw-bold">Informacion Adicional:</span> ${denunciado.informacionAdicional? denunciado.informacionAdicional: "Sin Especificar" }</li>
-                                            </ul>
+                                                <div class="col">
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Fecha de Nacimiento:</span> ${denunciado.fechaNacimiento}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Género:</span> ${denunciado.identidadAutopercibida? denunciado.identidadAutopercibida : `Sin Especificar`}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Teléfono Móvil:</span> ${denunciado.telefonoMovil? denunciado.telefonoMovil : "Sin Especificar"}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Teléfono Fijo:</span> ${denunciado.telefonoFijo? denunciado.telefonoFijo : "Sin Especificar"}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Correo Electrónico:</span> ${denunciado.email}</p>
+                                                </div>
+                                            </div>
+                                            <p class="mt-2 ms-3"><span class="fw-bold">Ubicación:</span> 
+                                                ${denunciado.provincia? denunciado.provincia + ", "  : ""} 
+                                                ${denunciado.localidad? (denunciado.barrio? denunciado.localidad + ", ": denunciado.localidad) : ""}
+                                                ${denunciado.barrio? denunciado.barrio + ", " : ""} 
+                                                ${denunciado.domicilio? denunciado.domicilio : ""}
+                                            </p>
+                                            <p class="mt-2 ms-3"><span class="fw-bold">Informacion Adicional:</span> ${denunciado.informacionAdicional? denunciado.informacionAdicional: "Sin Especificar" }</p>
                                         </div>
                                     </div>
                                 `).join('') 
@@ -970,59 +852,57 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                         </div>
                         `:
                         `
-                        <div class="mb-4" id="datos3">
-                            <h5 class="fw-bold">El/Los Denunciado/s no fueron reconocidos</h5>
+                        <div class="py-3 px-4 mb-4" id="datos3">
+                            <div class="card border-3 d-flex justify-content-center p-3">
+                                <h5 class="fw-bold text-center">El/Los Denunciado/s no fueron reconocidos</h5>
+                            </div>
                             ${
                                 denunciados.map(denunciado => `
-                                    <div class="col-12 card p-3">
+                                    <div class="col-12 card py-3 px-3">
                                         <p><span class="fw-bold">Informacion Adicional:</span> <span class="">${denunciado.informacionAdicional? denunciado.informacionAdicional: "Sin Especificar" }</span></p>
                                     </div>
                                 `).join('')
                             }
                         </div>
                         `
-    
                     }
-                    
                 </div>
-    
-                <div class="p-3" id="item11">
+
+                <div class="p-3" id="item15">
                     <!-- Testigos -->
                     ${denuncia.testigo?
                         (denuncia.datosTestigo?
                             `
-                                <div class="mb-4" id="datos4">
+                                <div class="px-4 mb-4" id="datos4">
                                     <h5 class="fw-bold">Datos del/los Testigo/s</h5>
                                     <div class="row mx-1 justify-content-around" id="testigos">
                                         ${testigos.map(testigo =>  `
                                             <div class="col-12">
-                                                <div class="card my-3">
-                                                    <ul class="list-group list-group-flush">
-                                                        <div class="row">
-                                                            <div class="col">
-                                                                <li class="list-group-item"><span class="fw-bold">Tipo Persona:</span> ${testigo.tipoPersona}</li>
-                                                                <li class="list-group-item"><span class="fw-bold">Apellido:</span> ${testigo.apellido}</li>
-                                                                <li class="list-group-item"><span class="fw-bold">Nombre:</span> ${testigo.nombre}</li>
-                                                                <li class="list-group-item"><span class="fw-bold">Alias:</span> ${testigo.alias? testigo.alias: "Sin Especificar"}</li>
-                                                                <li class="list-group-item"><span class="fw-bold">Nacionalidad:</span> ${testigo.nacionalidad? testigo.nacionalidad : `Sin Especificar`}</li>
-                                                                <li class="list-group-item"><span class="fw-bold">Identificacion:</span> ${testigo.tipoIdentificacion} ${testigo.numeroIdentificacion}</li>
-                                                            </div>
-                                                            <div class="col">
-                                                                <li class="list-group-item"><span class="fw-bold">Fecha de Nacimiento:</span> ${testigo.fechaNacimiento}</li>
-                                                                <li class="list-group-item"><span class="fw-bold">Género:</span> ${testigo.identidadAutopercibida? testigo.identidadAutopercibida : `Sin Especificar`}</li>
-                                                                <li class="list-group-item"><span class="fw-bold">Teléfono Móvil:</span> ${testigo.telefonoMovil? testigo.telefonoMovil : "Sin Especificar"}</li>
-                                                                <li class="list-group-item"><span class="fw-bold">Teléfono Fijo:</span> ${testigo.telefonoFijo? testigo.telefonoFijo : "Sin Especificar"}</li>
-                                                                <li class="list-group-item"><span class="fw-bold">Correo Electrónico:</span> ${testigo.email}</li>
-                                                            </div>
+                                                <div class="card my-3 py-1">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Tipo Persona:</span> ${testigo.tipoPersona}</p>
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Apellido:</span> ${testigo.apellido}</p>
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Nombre:</span> ${testigo.nombre}</p>
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Alias:</span> ${testigo.alias? testigo.alias: "Sin Especificar"}</p>
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Nacionalidad:</span> ${testigo.nacionalidad? testigo.nacionalidad : `Sin Especificar`}</p>
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Identificacion:</span> ${testigo.tipoIdentificacion} ${testigo.numeroIdentificacion}</p>
                                                         </div>
-                                                        <li class="list-group-item"><span class="fw-bold">Ubicación:</span> 
-                                                            ${testigo.provincia? testigo.provincia + ", "  : ""} 
-                                                            ${testigo.localidad? (testigo.barrio? testigo.localidad + ", ": testigo.localidad) : ""}
-                                                            ${testigo.barrio? testigo.barrio + ", " : ""} 
-                                                            ${testigo.domicilio? testigo.domicilio : ""}
-                                                        </li>
-                                                        <li class="list-group-item"><span class="fw-bold">Informacion Adicional:</span> ${testigo.informacionAdicional? testigo.informacionAdicional: "Sin Especificar" }</li>
-                                                    </ul>
+                                                        <div class="col">
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Fecha de Nacimiento:</span> ${testigo.fechaNacimiento}</p>
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Género:</span> ${testigo.identidadAutopercibida? testigo.identidadAutopercibida : `Sin Especificar`}</p>
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Teléfono Móvil:</span> ${testigo.telefonoMovil? testigo.telefonoMovil : "Sin Especificar"}</p>
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Teléfono Fijo:</span> ${testigo.telefonoFijo? testigo.telefonoFijo : "Sin Especificar"}</p>
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Correo Electrónico:</span> ${testigo.email}</p>
+                                                        </div>
+                                                    </div>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Ubicación:</span> 
+                                                        ${testigo.provincia? testigo.provincia + ", "  : ""} 
+                                                        ${testigo.localidad? (testigo.barrio? testigo.localidad + ", ": testigo.localidad) : ""}
+                                                        ${testigo.barrio? testigo.barrio + ", " : ""} 
+                                                        ${testigo.domicilio? testigo.domicilio : ""}
+                                                    </p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Informacion Adicional:</span> ${testigo.informacionAdicional? testigo.informacionAdicional: "Sin Especificar" }</p>
                                                 </div>
                                             </div>
                                         `).join('')}
@@ -1030,8 +910,10 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                 </div>
                                 `:
                                 `
-                                <div class="mb-4" id="datos4">
-                                    <h5 class="fw-bold">Los Testigos no fueron reconocidos</h5>
+                                <div class="px-4 mb-4" id="datos4">
+                                    <div class="card border-3 d-flex justify-content-center p-3">
+                                        <h5 class="fw-bold text-center">Los Testigos no fueron reconocidos</h5>
+                                    </div>
                                     ${
                                         testigos.map(testigo => `
                                             <div class="col-12 card p-3">
@@ -1046,16 +928,21 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                             `
                         ):
                         `
-                            <h5 class="fw-bold">No Hubo Testigos del Hecho</h5>
+                            <div class="card border-3 d-flex justify-content-center p-3">
+                                <h5 class="fw-bold text-center">No Hubo Testigos del Hecho</h5>
+                            </div>
                         `
                     }
                 </div>
-    
-                <div class="p-3" id="item12">
+
+                <div class="p-3" id="item16">
                     <div class="mb-4" id="datos5">
-                        <h3 class="fw-bold">Adjunto/Evidencias</h3>
+                        <div class="card border-3 d-flex justify-content-center p-3">
+                            <h3 class="fw-bold text-center">Adjunto/Evidencias</h3>
+                        </div>
+                        
                         ${adjuntos && `
-                            <div class="row row-cols-1 g-4">
+                            <div class="row px-3 row-cols-1 g-4">
                                 <div class="col">
                                     <div class="card">
                                         <div class="card-body">
@@ -1067,7 +954,6 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                                                     <div class="card col-4"><div class="card-body"><p class="fst-italic m-0">${adj.nombre}</p></div></div>
                                                 `).join('')}
                                             </div>
-        
                                         </div>
                                     </div>
                                 </div>
@@ -1075,13 +961,13 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                         }
                     </div>
                 </div>
-    
-                <div class="p-3" id="item13">
+
+                <div class="p-3" id="item17">
                     <p class="fw-bold fs-4">Informacion Adicional:</p>
-                    <p class="text-wrap">${denuncia.informacionAdicional? denuncia.informacionAdicional:'Sin informacion adicional'}</p>
+                    <p class="px-3 text-wrap">${denuncia.informacionAdicional? denuncia.informacionAdicional:'Sin informacion adicional'}</p>
                 </div>
-    
-                <div class="p-4" id="item14">
+
+                <div class="p-4" id="item18">
                     <div class="" style="font-size: xx-small;">
                         <h5 class="text-center fw-bold my-2">Términos y Condiciones</h5>
                         <p class="fw-medium">Por favor, lea atentamente los siguientes términos y condiciones:</p>
@@ -1100,16 +986,16 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                         <p class="mt-3"><strong>Falsa Denuncia: </strong> Al realizar una denuncia, Usted debe saber que si la realiza falsamente (es decir, miente en lo que nos está informando), está cometiendo un delito con penas de prisión de dos meses a un año o multa (artículo 245 del Código Penal).</p>
                     </div>
                 </div>
-    
-                <div class="p-4" id="item15">
+
+                <div class="p-4" id="item19">
                     <div class="" style="font-size: xx-small;">
                         <h5 class="text-center fw-bold my-2">ARTÍCULO 40º</h5>
                         <p class="text-wrap m-0 p-0"">La aplicación de un criterio de oportunidad, será notificada a la víctima al domicilio constituido. Si hubiese mudado de domicilio, tendrá la carga de informarlo al fiscal. Las notificaciones que se practiquen en el domicilio constituido tendrán efectos en el proceso. La imposibilidad de dar con el paradero de la víctima no obstará a la aplicación de los criterios de oportunidad. Al momento de radicar la denuncia deberá hacerse conocer a la víctima el presente artículo.</p>
                         <p class="text-wrap m-0 p-0"">De mediar oposición fundada de la víctima dentro del plazo de tres (3) días, las actuaciones serán remitidas al Fiscal General de la Acusación para que la resuelva. Sin perjuicio de lo anterior el Fiscal General de la Acusación, podrá proceder de oficio a la revisión de la razonabilidad y legalidad del archivo, para lo cual resultará obligatoria su comunicación.</p>
                     </div>
                 </div>
-    
-                <div class="p-4" id="item16">
+
+                <div class="p-4" id="item20">
                     <div class="" style="font-size: xx-small;">
                         <h5 class="text-center fw-bold my-2">Articulo 129°. - DERECHOS DE LA VÍCTIMA</h5>
                         <p class="fw-medium">La víctima tendrá los siguientes derechos:</p>
@@ -1132,123 +1018,12 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
                         <p class="mt-3"><strong>Falsa Denuncia: </strong> Al realizar una denuncia, Usted debe saber que si la realiza falsamente (es decir, miente en lo que nos está informando), está cometiendo un delito con penas de prisión de dos meses a un año o multa (artículo 245 del Código Penal).</p>
                     </div>
                 </div>
-    
             </div>
-    
-            <!--<script src="./static/js/bootstrap.bundle.min.js"></script>-->
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-            <!-- <script>
-                moverElementos();
-                /*
-                    function moverElementos() {
-                        var contenedorBase = document.getElementById('contenedorBase');
-                        var elementos = Array.from(contenedorBase.children);
-                        var alturaMaxima = 290;
-                        var nroPagina = 1;
-                        var alturaActual = 0;
-    
-                        var contenedor = crearContenedor(nroPagina);
-    
-                        elementos.forEach(function (elemento) {
-                            var alturaElemento = medirAltura(elemento.id);
-    
-                            // Verifica si el elemento cabe en la página actual
-                            if (alturaActual + alturaElemento <= alturaMaxima) {
-                                agregarElemento(elemento.id, nroPagina);
-                                alturaActual += alturaElemento;
-                            } else { // El elemento no cabe en la página actual, crea una nueva página
-                                nroPagina++;
-                                contenedor = crearContenedor(nroPagina);
-                                alturaActual = alturaElemento;
-                                agregarElemento(elemento.id, nroPagina);
-                            }
-                        });
-                        contenedorBase.remove();
-                    }
-                */
-    
-                function moverElementos() {
-                    var contenedorBase = document.getElementById('contenedorBase');
-                    var elementos = Array.from(contenedorBase.children);
-                    var alturaMaxima = 290;
-                    var contenedores = [];
-                    var nroPagina = 1;
-                    
-                    var contenedor = crearContenedor(nroPagina);
-                    var alturaActual = 0;
-                
-                    elementos.forEach(function (elemento) {
-                        var alturaElemento = medirAltura(elemento.id);
-                    
-                        if (alturaActual + alturaElemento > alturaMaxima) { // Si el elemento no cabe en el contenedor actual, crea uno nuevo
-                            //agregarElemento(elemento.id, nroPagina);
-                            nroPagina++;
-                            contenedor = crearContenedor(nroPagina);
-                            alturaActual = 0;
-                        }
-                    
-                        // Verifica si el elemento ocupa más de un contenedor
-                        if (alturaElemento > alturaMaxima) { // Si el elemento es demasiado grande, divídelo en varios contenedores
-                            var partes = Math.ceil(alturaElemento / alturaMaxima);
-                            for (var i = 1; i <= partes; i++) {
-                            agregarElemento(elemento.id, nroPagina);
-                            alturaActual += alturaMaxima;
-                            if (alturaActual > alturaMaxima) {
-                                nroPagina++;
-                                contenedor = crearContenedor(nroPagina);
-                                alturaActual = 0;
-                            }
-                            }
-                        } else {
-                            agregarElemento(elemento.id, nroPagina);
-                            alturaActual += alturaElemento;
-                        }
-                    });
-                    contenedorBase.remove();
-                }
-                
-    
-                function agregarElemento(idElemento, nroPagina){
-                    var contenedor = document.getElementById('contenedor'+nroPagina);
-                    var elemento = document.getElementById(idElemento);
-                    contenedor.appendChild(elemento);
-                }
-    
-                function crearContenedor(id){
-                    var nuevo = document.createElement('div');
-                    nuevo.classList.add('container-fluid');
-                    nuevo.classList.add('hojaA4');
-                    nuevo.id = 'contenedor'+id;
-                    document.body.appendChild(nuevo);
-                    return nuevo;
-                }
-    
-                function medirAltura(elementID) {
-                    var elemento = document.getElementById(elementID);
-                    
-                    if (elemento) {
-                        // Obtén la altura en píxeles del elemento
-                        var alturaEnPixeles = elemento.clientHeight;
-                    
-                        // Obtén el tamaño de fuente en píxeles
-                        var estilo = window.getComputedStyle(elemento);
-                        var tamañoFuenteEnPixeles = parseFloat(estilo.fontSize);
-                    
-                        // Define la relación píxeles/milímetros (ajusta según tus necesidades)
-                        var pixelsPerMillimeter = 25.4583/7.5;
-                    
-                        // Calcula la altura en milímetros
-                        var alturaEnMilimetros = alturaEnPixeles / pixelsPerMillimeter;
-                    
-                        return alturaEnMilimetros;
-                    } else {
-                        return 0; // Otra acción o manejo de error
-                    }
-                }
-            </script> -->
         </body>
     </html>
     `
+
+    //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
     const denunciaBusqueda = `<!DOCTYPE html>
     <html lang="en">
@@ -1256,36 +1031,356 @@ const getComprobanteHtml = ({denuncia,denunciantes,victimasRelaciones,testigos,d
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <!-- <link href="http://localhost:3000/css/bootstrap.min.css" type="text/css" rel="stylesheet"> -->
-            <!-- <link href="http://localhost:3000/css/styles.css" type="text/css" rel="stylesheet"> -->
+            <!--<link href="./static/css/bootstrap.min.css" rel="stylesheet">-->
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-            <style>
-                @page {
-                    size: A4;
-                    margin: .5in;
-                    /* @top-right {
-                    content: "Page " counter(pageNumber);
-                    } */
-                }
-                @page wide {
-                    size: a4 landscape;
-                }
-                [id^="item"] {
-                    page-break-inside: avoid;
-                }
-                .table,
-                .list-group,
-                [id^="datos"]{
-                    page-break-inside: avoid;
-                }
-                #item14 {
-                    page-break-before: always;
-                }
-            </style>
         </head>
     
         <body>
-            <h1>suuuu</h1>
+            <div id="contenedorBase">
+                <div class="px-3" id="item1">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <img src="https://sistema.mpajujuy.gob.ar/images/logompa2.png" alt="Logo MPA" class="img-fluid w-25 h-25">
+                    </div>
+                    <div class="mb-4 d-grid">
+                        <h3 class="fw-bold col text-center d-flex align-items-center justify-content-center">
+                            DENUNCIA DE DESAPARICION DE PERSONAS
+                        </h3>
+                    </div>
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">RECEPTOR DE LA DENUNCIA</h4>
+                        <div class="card p-4 border">
+                            <p><span class="fw-bold">FECHA: </span> <span class="">${denuncia.fechaDenuncia + " " + denuncia.horaDenuncia }</span></p>
+                            <p><span class="fw-bold">LUGAR: </span> <span class="">${usuario.lugar}</span></p>
+                            <p><span class="fw-bold">NOMBRE COMPLETO: </span> <span class="">${usuario.nombre +" "+ usuario.apellido}</span></p>
+                            <p><span class="fw-bold">FUNCION Y GRADO: </span> <span class="">${denuncia.funcionGrado? denuncia.funcionGrado : "Sin Especificar" }</span></p>
+                            <p><span class="fw-bold">FUERZA, INSTITUCIÓN, ORGANIZACIÓN: </span> <span class="">${usuario.fuerza}</span></p>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="p-3" id="item2">
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">TIPO DE DENUNCIA</h4>
+                        <p class="fw-bold ">Marcar lo que corresponda</p>
+                        <div class="card p-4 border">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                  <input class="form-check-input me-1 ${denuncia.fugaHogar? "checked" : ""}" type="checkbox" value="" aria-label="...">
+                                    FUGA DEL HOGAR
+                                </li>
+                                <li class="list-group-item">
+                                  <input class="form-check-input me-1 ${denuncia.trataPersonas? "checked" : ""}" type="checkbox" value="" aria-label="...">
+                                    FUGA DE UNA INSTITUCIÓN ( de salud, hogar, asilo, etc. ) 
+                                </li>
+                                <li class="list-group-item">
+                                  <input class="form-check-input me-1 ${denuncia.fugaInstitucion? "checked" : ""}" type="checkbox" value="" aria-label="...">
+                                    DESAPARICIÓN
+                                </li>
+                                <li class="list-group-item">
+                                  <input class="form-check-input me-1 ${denuncia.averiguacionParadero? "checked" : ""}" type="checkbox" value="" aria-label="...">
+                                    TRATA DE PERSONAS
+                                </li>
+                                <li class="list-group-item">
+                                  <input class="form-check-input me-1 ${denuncia.desaparcicion? "checked" : ""}" type="checkbox" value="" aria-label="...">
+                                    AVERIGUACIÓN DE PARADERO
+                                </li>
+                                <li class="list-group-item">
+                                    <input class="form-check-input me-1 ${denuncia.violenciaInstitucional? "checked" : ""}" type="checkbox" value="" aria-label="...">
+                                      VIOLENCIA INSTITUCIONAL
+                                </li>
+                                <li class="list-group-item"> 
+                                <input class="form-check-input me-1 ${denuncia.otro? "checked" : ""}" type="checkbox" value="" aria-label="...">
+                                    OTRO
+                                </li>
+                              </ul>                       
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3" id="item3">
+                    <div class="mb-3">
+                        <p class="fw-bold ">Fiscal Interviniente: NOSEEEEEEEEEEEE</p>
+                        <h4 class="fw-bold border py-2 px-1">INFORMACION DE LA PERSONA DENUNCIANTE</h4>
+                        ${
+                            denunciantes.map((den, index) => `
+                                <div class="row mx-1 justify-content-center">
+                                    <div class="col-12">
+                                        <div class="card my-3 py-1">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Apellido:</span> ${den.apellido}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Nombre:</span> ${den.nombre}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Alias:</span> ${den.alias? den.alias: "Sin Especificar"}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Nacionalidad:</span> ${den.nacionalidad? den.nacionalidad : `Sin Especificar`}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Identificacion:</span> ${den.tipoIdentificacion} ${den.numeroIdentificacion}</p>
+                                                </div>
+                                                <div class="col">
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Fecha de Nacimiento:</span> ${den.fechaNacimiento}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Género:</span> ${den.identidadAutopercibida? den.identidadAutopercibida : `Sin Especificar`}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Teléfono Móvil:</span> ${den.telefonoMovil? den.telefonoMovil : "Sin Especificar"}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Teléfono Fijo:</span> ${den.telefonoFijo? den.telefonoFijo : "Sin Especificar"}</p>
+                                                    <p class="mt-2 ms-3"><span class="fw-bold">Correo Electrónico:</span> ${den.email}</p>
+                                                    ${victimasRelaciones[index] && victimasRelaciones[index].conocimientoVictima !== 0? 
+                                                        `
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">Vinculo con la persona buscada:</span> ${victimasRelaciones[index].vinculoVictima !== "Otro"? victimasRelaciones[index].vinculoVictima : victimasRelaciones[index].detalleVinculo }</p>
+                                                        `:`
+                                                            <p class="mt-2 ms-3"><span class="fw-bold">No conoce a la victima</span></p>
+                                                        `
+                                                    }
+                                                </div>
+                                            </div>
+                                            <p class="mt-2 ms-3"><span class="fw-bold">Ubicación:</span> 
+                                                ${den.provincia? den.provincia + ", "  : ""} 
+                                                ${den.localidad? (den.barrio? den.localidad + ", ": den.localidad) : ""}
+                                                ${den.barrio? den.barrio + ", " : ""} 
+                                                ${den.domicilio? den.domicilio : ""}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')
+                        }
+                    </div>
+                </div>
+                <div class="p-3" id="item4">
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">INFORMACION GENERAL DE LA PERSONA BUSCADA</h4>
+                        ${victimas.length !== 0?
+                            `
+                            <div class="px-4 mb-4" id="2">
+                                <div class="row mx-1 justify-content-center">
+                                    ${ 
+                                        victimas.map((victima) => `
+                                        <div class="col-12">
+                                            <div class="card my-3 py-1">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Apellido:</span> ${victima.apellido}</p>
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Nombre:</span> ${victima.nombre}</p>
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Alias:</span> ${victima.alias? victima.alias: "Sin Especificar"}</p>
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Nacionalidad:</span> ${victima.nacionalidad? victima.nacionalidad : `Sin Especificar`}</p>
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Identificacion:</span> ${victima.tipoIdentificacion} ${victima.numeroIdentificacion}</p>
+                                                    </div>
+                                                    <div class="col">
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Fecha de Nacimiento:</span> ${victima.fechaNacimiento}</p>
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Género:</span> ${victima.identidadAutopercibida? victima.identidadAutopercibida : `Sin Especificar`}</p>
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Teléfono Móvil:</span> ${victima.telefonoMovil? victima.telefonoMovil : "Sin Especificar"}</p>
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Teléfono Fijo:</span> ${victima.telefonoFijo? victima.telefonoFijo : "Sin Especificar"}</p>
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Correo Electrónico:</span> ${victima.email}</p>
+                                                    </div>
+                                                </div>
+                                                <p class="mt-2 ms-3"><span class="fw-bold">Ubicación:</span> 
+                                                    ${victima.provincia? victima.provincia + ", "  : ""} 
+                                                    ${victima.localidad? (victima.barrio? victima.localidad + ", ": victima.localidad) : ""}
+                                                    ${victima.barrio? victima.barrio + ", " : ""} 
+                                                    ${victima.domicilio? victima.domicilio : ""}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        `).join('')
+                                    }
+                                </div>
+                            </div>
+                            `:``
+                        }
+                    </div>
+                </div>
+    
+                <div class="p-3" id="item5">
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">EN CASO DE ESTAR EN PAREJA</h4>
+                        <div class="card p-4 border">
+                            <p><span class="fw-bold">NOMBRE DEL CÓNJUGE: </span> <span class="">${denuncia.nombreConyugue? denuncia.nombreConyugue : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">DATOS DE CONTACTO: </span> <span class="">${denuncia.datosContactoConyugue? denuncia.datosContactoConyugue : "Sin especificar"}</span></p>
+                            <p><span class="fw-bold">DOMICILIO: </span> <span class="">${denuncia.domicilioConyugue? denuncia.domicilioConyugue : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">TELEFONO DE LINEA: </span> <span class="">${denuncia.telefonoLineaConyugue? denuncia.telefonoLineaConyugue : "Sin especificar" }</span></p>
+                            <p><span class="fw-bold">CELULAR: </span> <span class="">${denuncia.celularConyugue? denuncia.celularConyugue : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">CORREO ELECTRONICO: </span> <span class="">${denuncia.emailConyugue? denuncia.emailConyugue : "Sin Especificar"}</span></p> 
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="p-3" id="item6">
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">EN CASO DE CORRESPONDER DATOS DE LAS HIJAS/OS</h4>
+    
+                        <p class="fw-bold ">DATOS DEL PADRE</p>
+    
+                        <div class="card p-4 border">
+                            <p><span class="fw-bold">NOMBRE COMPLETO: </span> <span class="">${denuncia.nombrePadre? denuncia.nombrePadre : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">DNI N°: </span> <span class="">${denuncia.dniPadre? denuncia.dniPadre : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">DATOS DE CONTACTO: </span> <span class="">${denuncia.datosContactoPadre? denuncia.datosContactoPadre : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">DOMICILIO: </span> <span class="">${denuncia.domicilioPadre? denuncia.domicilioPadre : "Sin Especificar" }</span></p>
+                            <p><span class="fw-bold">TELEFONO DE LINEA: </span> <span class="">${denuncia.telefonoLineaPadre? denuncia.telefonoLineaPadre : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">CELULAR: </span> <span class="">${denuncia.celularPadre? denuncia.celularPadre : "Sin Especificar" }</span></p>
+                            <p><span class="fw-bold">CORREO ELECTRONICO: </span> <span class="">${denuncia.emailPadre? denuncia.emailPadre : "Sin Especificar"}</span></p>
+                        
+                        </div>
+    
+                        <p class="fw-bold ">DATOS DE LA MADRE</p>
+    
+                        <div class="card p-4 border">
+                            <p><span class="fw-bold">NOMBRE COMPLETO: </span> <span class="">${denuncia.nombreMadre? denuncia.nombreMadre : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">DNI N°: </span> <span class="">${denuncia.dniMadre? denuncia.dniMadre : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">DATOS DE CONTACTO: </span> <span class="">${denuncia.datosContactoMadre? denuncia.datosContactoMadre : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">DOMICILIO: </span> <span class="">${denuncia.domicilioMadre? denuncia.domicilioMadre : "Sin Especificar" }</span></p>
+                            <p><span class="fw-bold">TELEFONO DE LINEA: </span> <span class="">${denuncia.telefonoLineaMadre? denuncia.telefonoLineaMadre : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">CELULAR: </span> <span class="">${denuncia.celularMadre? denuncia.celularMadre : "Sin Especificar" }</span></p>
+                            <p><span class="fw-bold">CORREO ELECTRONICO: </span> <span class="">${denuncia.emailMadre? denuncia.emailMadre : "Sin Especificar"}</span></p>
+                        
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="p-3" id="item7">
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">¿LA PERSONA BUSCADA TRABAJABA?</h4>
+                        <div class="card p-4 border">
+                            <p><span class="fw-bold">LUGAR: </span> <span class="">${denuncia.lugarTrabajo? denuncia.lugarTrabajo : "No"}</span></p>
+                            <p><span class="fw-bold">FUNCIÓN QUE DESEMPEÑABA: </span> <span class="">${denuncia.funcionTrabajo? denuncia.funcionTrabajo : "No"}</span></p>
+                        </div>
+                    </div>
+    
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">DATOS DE COMPAÑERAS/OS</h4>
+                        <div class="card p-4 border">
+                            <p>${denuncia.datosCompañerosTrabajo? denuncia.datosCompañerosTrabajo : "No"}</p>
+                        </div>
+                    </div>
+                        
+                </div>
+    
+                <div class="p-3" id="item8">
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">¿LA PERSONA BUSCADA ESTUDIABA?</h4>
+                        <div class="card p-4 border">
+                            <p><span class="fw-bold">LUGAR: </span> <span class="">${denuncia.lugarEstudio? denuncia.lugarEstudio : "No"}</span></p>
+                            <p><span class="fw-bold">DIRECCIÓN: </span> <span class="">${denuncia.direccionEstudio? denuncia.direccionEstudio : "No"}</span></p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">DATOS DE COMPAÑERAS/OS</h4>
+                        <div class="card p-4 border">
+                            <p>${denuncia.datosCompañerosEstudio? denuncia.datosCompañerosEstudio : "No"}</p>
+                        </div>
+                    </div>
+                    
+                </div>
+    
+                <div class="p-3" id="item9">
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">DATOS DEL HECHO</h4>
+                        <div class="card p-4 border">
+                            <p><span class="fw-bold">FECHA DE DESAPARICIÓN: </span> <span class="">${denuncia.fechaDesaparicion? denuncia.fechaDesaparicion : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">LUGAR DE DESAPARICIÓN: </span> <span class="">${denuncia.lugarDesaparicion? denuncia.lugarDesaparicion : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">VESTIMENTA AL MOMENTO DE DESAPARECER: </span> <span class="">${denuncia.vestimentaDesaparicion? denuncia.vestimentaDesaparicion : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">EFECTOS PERSONALES: </span> <span class="">${denuncia.efectosPersonales? denuncia.efectosPersonales : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">CAMBIOS RECIENTES EN LA PERSONA DESAPARECIDA (habitos, lugares, o personas a las que frecuentaba, etc): </span> <span class="">${denuncia.cambiosRecientes? denuncia.cambiosRecientes : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">PUEDE RECORDAR ALGUNA PERSONA QUE HAYA MOSTRADO RECIENTEMENTE UNA ATENCION O INTERES INUSITADO EN LA PEROSNA DESAPARECIDA: </span> <span class="">${denuncia.personaInteres? denuncia.personaInteres : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">¿ESTABA BUSCANDO TRABAJO?: </span> <span class="">${denuncia.busquedaTrabajo? "Si" : "No"}</span></p>                  
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="p-3" id="item10">
+                    <div class="mb-3">
+                        <div class="card p-4 border">
+                            <p><span class="fw-bold">CONTEXTO DE DESAPARICIÓN: </span> <span class="">${denuncia.contextoDesaparicion? denuncia.contextoDesaparicion : "Sin Especificar"}</span></p>                 
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="p-3" id="item11">
+                    <div class="mb-3">
+                        <div class="card p-4 border">
+                            <p><span class="fw-bold">RELATO DEL HECHO: </span> <span class="">${denuncia.relatoHecho? denuncia.relatoHecho : "Sin Especificar"}</span></p>                 
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="p-3" id="item12">
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">TESTIGOS O PERSONAS QUE PUDIERAN APORTAR DATOS DEL HECHO</h4>
+                        ${denuncia.testigo?
+                            (denuncia.datosTestigo?
+                                `
+                                    <div class="px-4 mb-4" id="datos4">    
+                                        <div class="row mx-1 justify-content-around" id="testigos">
+                                            ${testigos.map(testigo =>  `
+                                                <div class="col-12">
+                                                    <div class="card my-3 py-1">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Tipo Persona:</span> ${testigo.tipoPersona}</p>
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Apellido:</span> ${testigo.apellido}</p>
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Nombre:</span> ${testigo.nombre}</p>
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Alias:</span> ${testigo.alias? testigo.alias: "Sin Especificar"}</p>
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Nacionalidad:</span> ${testigo.nacionalidad? testigo.nacionalidad : `Sin Especificar`}</p>
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Identificacion:</span> ${testigo.tipoIdentificacion} ${testigo.numeroIdentificacion}</p>
+                                                            </div>
+                                                            <div class="col">
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Fecha de Nacimiento:</span> ${testigo.fechaNacimiento}</p>
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Género:</span> ${testigo.identidadAutopercibida? testigo.identidadAutopercibida : `Sin Especificar`}</p>
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Teléfono Móvil:</span> ${testigo.telefonoMovil? testigo.telefonoMovil : "Sin Especificar"}</p>
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Teléfono Fijo:</span> ${testigo.telefonoFijo? testigo.telefonoFijo : "Sin Especificar"}</p>
+                                                                <p class="mt-2 ms-3"><span class="fw-bold">Correo Electrónico:</span> ${testigo.email}</p>
+                                                            </div>
+                                                        </div>
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Ubicación:</span> 
+                                                            ${testigo.provincia? testigo.provincia + ", "  : ""} 
+                                                            ${testigo.localidad? (testigo.barrio? testigo.localidad + ", ": testigo.localidad) : ""}
+                                                            ${testigo.barrio? testigo.barrio + ", " : ""} 
+                                                            ${testigo.domicilio? testigo.domicilio : ""}
+                                                        </p>
+                                                        <p class="mt-2 ms-3"><span class="fw-bold">Informacion Adicional:</span> ${testigo.informacionAdicional? testigo.informacionAdicional: "Sin Especificar" }</p>
+                                                    </div>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                    `:
+                                    `
+                                    <div class="px-4 mb-4" id="datos4">
+                                        <div class="card border-3 d-flex justify-content-center p-3">
+                                            <h5 class="fw-bold text-center">Los Testigos no fueron reconocidos</h5>
+                                        </div>
+                                        ${
+                                            testigos.map(testigo => `
+                                                <div class="col-12 card p-3">
+                                                <p>
+                                                    <span class="fw-bold">Informacion Adicional:</span> 
+                                                    <span class="">${testigo.informacionAdicional? testigo.informacionAdicional: "Sin Especificar" }</span>
+                                                </p>
+                                                </div>
+                                            `).join('') 
+                                        }
+                                    </div>
+                                `
+                            ):
+                            `
+                                <div class="card border-3 d-flex justify-content-center p-3">
+                                    <h5 class="fw-bold text-center">No Hubo Testigos del Hecho</h5>
+                                </div>
+                            `
+                        }
+                    </div>
+                </div>
+    
+                <div class="p-3" id="item13">
+                    <div class="mb-3">
+                        <h4 class="fw-bold border py-2 px-1">CARACTERISTICAS FISICAS</h4>
+                        <div class="card p-4 border">
+                            <p><span class="fw-bold">CARACTERISTICAS GENERALES (preguntar: color de pelo, ojos, tatuajes, rasgos faciales, etc) : </span> <span class="">${denuncia.caracteristicasGenerales? denuncia.caracteristicasGenerales : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">ALTURA: </span> <span class="">${denuncia.altura? denuncia.altura : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">ENFERMEDADES (CONGÉNITAS/PATOLOGÍCAS): </span> <span class="">${denuncia.enfermedades? denuncia.enfermedades : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">FRACTURAS: </span> <span class="">${denuncia.fracturas? denuncia.fracturas : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">RASGOS ODONTOLOGICOS (preguntar: extracciones, protesís, aparatos, tratamientos, etc): </span> <span class="">${denuncia.rasgosOdontologicos? denuncia.rasgosOdontologicos : "No"}</span></p>
+                            <p><span class="fw-bold">OBSERVACIONES / COMENTARIOS: </span> <span class="">${denuncia.observaciones? denuncia.observaciones : "Sin Especificar"}</span></p>
+                            <p><span class="fw-bold">FICHAS DENTALES: </span> <span class="">${denuncia.fichasDentales? "Si" : "No"}</span></p>     
+                            <p><span class="fw-bold">FICHAS DACTILOSCOPICAS: </span> <span class="">${denuncia.fichasDactiloscopicas? "Si" : "No"}</span></p>       
+                            <p><span class="fw-bold">FOTO: </span> <span class="">${denuncia.fotoCaracteristicas? "Si" : "No"}</span></p>
+                        </div>
+                    </div>
+                </div>
         </body>
     </html>`
 
