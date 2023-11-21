@@ -3,8 +3,10 @@ import { Divider } from 'primereact/divider';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import { MultiSelect } from 'primereact/multiselect';
-import { VehiculosInvolucradosTable } from './TablasVerDenuncia/VehiculosInvolucradosTable';
+import { VehiculosInvolucradosTable } from './TablasVerDenuncia/ObjetosSustraidos/VehiculosInvolucradosTable';
 import { ObjetosSustraidosTable } from './TablasVerDenuncia/ObjetosSustraidos/ObjetosSustraidosTable';
+import { PdfViewer } from '../../common/PdfViewer';
+import { GET_COMPROBANTE_PDF } from '../../../constants';
 
 export const DatosDelHecho = ({ datosDenuncia }) => {
   console.log(datosDenuncia);
@@ -75,7 +77,7 @@ export const DatosDelHecho = ({ datosDenuncia }) => {
       <h4>Adjuntos: </h4>
       <ul>
         {Object.values(adjuntosDenuncia).map((elemento, indice) => (
-          <li key={indice}>{elemento.nombreOriginal}</li>
+          <PdfViewer key={indice} url={`${GET_COMPROBANTE_PDF}/${elemento.nombreArchivo}`} />
         ))}
       </ul>
 
