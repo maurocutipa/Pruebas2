@@ -181,7 +181,14 @@ DenunciasController.getDenunciaById = async (req, res) => {
 
     // ============================== Querys para denuncias de propiedad. ======================================
 
-    let automoviles, autopartes, bicicletas, cheques, documentacion, otro, tarjetas, telefonos;
+    let automoviles,
+      autopartes,
+      bicicletas,
+      cheques,
+      documentacion,
+      otro,
+      tarjetas,
+      telefonos;
 
     query = ` 
     SELECT 
@@ -206,85 +213,85 @@ DenunciasController.getDenunciaById = async (req, res) => {
   `;
     [datosGeneralesDenunciaPropiedad] = await queryHandler(query, [id]);
 
-    if (datosGeneralesDenunciaPropiedad !== undefined){
+    if (datosGeneralesDenunciaPropiedad !== undefined) {
       query = `
       SELECT 
       *
       FROM denuncia_propiedad_automoviles WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
       `;
-    automoviles = await queryHandler(query, [id]);
+      automoviles = await queryHandler(query, [id]);
 
-    query = `
+      query = `
       SELECT
       *
       FROM denuncia_propiedad_autopartes WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
       `;
-    autopartes = await queryHandler(query, [id]);
+      autopartes = await queryHandler(query, [id]);
 
-    query = `
+      query = `
       SELECT
       *
       FROM denuncia_propiedad_bicicletas WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
       `;
-    bicicletas = await queryHandler(query, [id]);
+      bicicletas = await queryHandler(query, [id]);
 
-    query = `
+      query = `
       SELECT
       *
       FROM denuncia_propiedad_cheques WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
       `;
-    cheques = await queryHandler(query, [id]);
+      cheques = await queryHandler(query, [id]);
 
-    query = `
+      query = `
       SELECT
       *
       FROM denuncia_propiedad_documentacion WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
       `;
-    documentacion = await queryHandler(query, [id]);
+      documentacion = await queryHandler(query, [id]);
 
-    query = `
+      query = `
       SELECT
       *
       FROM denuncia_propiedad_otro WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
       `;
-    otro = await queryHandler(query, [id]);
+      otro = await queryHandler(query, [id]);
 
-    query = `
+      query = `
       SELECT
       *
       FROM denuncia_propiedad_tarjetas WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
       `;
-    tarjetas = await queryHandler(query, [id]);
+      tarjetas = await queryHandler(query, [id]);
 
-    query = `
+      query = `
       SELECT
       *
       FROM denuncia_propiedad_telefonos WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
       `;
-    telefonos = await queryHandler(query, [id]);
+      telefonos = await queryHandler(query, [id]);
     }
 
     // ============================ Fin querys denuncia propiedad ==============================
 
     // ============================ Querys para incidentes viales ==============================
-    let vehiculos
+    let vehiculos;
     query = `
       SELECT 
         incidentes.id_denuncia_incidentes_viales as idDenunciaIncidentesViales, 
         incidentes.id_denuncia as idDenuncia, 
         incidentes.cant_vehiculos as cantVehiculos
       FROM denuncia_incidentes_viales incidentes
-      WHERE id_denuncia = ?`; 
+      WHERE id_denuncia = ?`;
     const [datosGeneralesIncidentesViales] = await queryHandler(query, [id]);
-    
-    if (datosGeneralesIncidentesViales !== undefined){
+
+    if (datosGeneralesIncidentesViales !== undefined) {
       query = `
       SELECT * FROM denuncia_incidentes_viales_vehiculos 
-      WHERE id_denuncia_incidentes_viales = ${datosGeneralesIncidentesViales.idDenunciaIncidentesViales}`
-      vehiculos = await queryHandler(query, [id]); 
+      WHERE id_denuncia_incidentes_viales = ${datosGeneralesIncidentesViales.idDenunciaIncidentesViales}`;
+      vehiculos = await queryHandler(query, [id]);
     }
     //============================= Fin de querys incidentes viales ============================
-    
+
     // ============================ Querys Violencia de Genero =================================
     query = ` 
       SELECT 
@@ -322,9 +329,19 @@ DenunciasController.getDenunciaById = async (req, res) => {
         denuncia: denuncia[0],
         intervinientes: { victimas, denunciados, testigos },
         adjuntos: adjuntos,
-        datosDenunciaPropiedad: {datosGeneralesDenunciaPropiedad, automoviles, autopartes, bicicletas, cheques, documentacion, otro, tarjetas, telefonos}, 
-        datosIncidentesViales: {datosGeneralesIncidentesViales, vehiculos}, 
-        datosViolenciaDeGenero: datosViolenciaDeGenero
+        datosDenunciaPropiedad: {
+          datosGeneralesDenunciaPropiedad,
+          automoviles,
+          autopartes,
+          bicicletas,
+          cheques,
+          documentacion,
+          otro,
+          tarjetas,
+          telefonos,
+        },
+        datosIncidentesViales: { datosGeneralesIncidentesViales, vehiculos },
+        datosViolenciaDeGenero: datosViolenciaDeGenero,
       },
     });
   } catch (error) {
@@ -486,10 +503,7 @@ DenunciasController.getResumenParaRatificar = async (req, res) => {
 
         l.nombre as localidad,
         d.certeza_lugar AS certezaLugar,
-        b.nombre_barrio AS nombreBarrio,
         d.anonimo,
-        d.calle_hecho AS calleHecho,
-        d.num_calle AS numeroCalle,
         d.departamento_hecho AS departamentoHecho,
         d.piso_hecho AS pisoHecho,
         d.detalle_lugar AS detalleLugar,
@@ -499,7 +513,6 @@ DenunciasController.getResumenParaRatificar = async (req, res) => {
       FROM denuncia d
       LEFT JOIN denuncia_tipos dt ON dt.id_tipo_denuncia = d.id_tipo_denuncia
       LEFT JOIN localidades l ON l.id_localidad = d.id_localidad
-      LEFT JOIN barrios b ON b.id_barrio = d.id_barrio
       WHERE id_denuncia = ?
     `;
     const [resumen] = await queryHandler(query, [id]);
@@ -516,11 +529,8 @@ DenunciasController.getResumenParaRatificar = async (req, res) => {
       i.tipo_persona AS tipoPersona,
       i.nombre,
       i.apellido,
-      i.alias,
       i.tipo_identificacion AS tipoIdentificacion,
       i.numero_identificacion AS numeroIdentificacion,
-      i.fecha_nacimiento AS fechaNacimiento,
-      i.identidad_autopercibida AS genero,
       i.email,
       i.informacion_adicional AS informacionAdicional,
       i.telefono_movil AS telefonoMovil,
@@ -529,14 +539,12 @@ DenunciasController.getResumenParaRatificar = async (req, res) => {
       it.nombre_tipo AS nombreTipo,
       p.nombre_provincia AS nombreProvincia,
       l.nombre as localidad,
-      b.nombre_barrio AS nombreBarrio,
       i.domicilio
 
     FROM interviniente_denuncia id
     LEFT JOIN interviniente i ON id.id_interviniente = i.id
     LEFT JOIN interviniente_tipo it ON i.id_interviniente_tipo = it.id_interviniente_tipo
     LEFT JOIN localidades l ON l.id_localidad = i.id_localidad
-    LEFT JOIN barrios b ON b.id_barrio = i.id_barrio
     LEFT JOIN provincias p ON p.id_provincia = i.id_provincia
     WHERE id_denuncia = ?`;
     const intervinientes = await queryHandler(query, [id]);
