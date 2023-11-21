@@ -1,11 +1,12 @@
 import { TabView, TabPanel } from 'primereact/tabview';
+import { AutomovilesTable } from './AutomovilesTable';
 
-export const ObjetosSustraidosTable = () => {
+export const ObjetosSustraidosTable = ({datosDenunciaPropiedad}) => {
   return (
     <>
         <TabView>
             <TabPanel header="telefonos"></TabPanel>
-            <TabPanel header="automoviles"></TabPanel>
+            <TabPanel header="automoviles"> <AutomovilesTable automoviles = {datosDenunciaPropiedad.automoviles}/> </TabPanel>
             <TabPanel header="bicicletas"></TabPanel>
             <TabPanel header="autopartes"></TabPanel>
             <TabPanel header="documentacion"></TabPanel>

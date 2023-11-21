@@ -3,18 +3,17 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 
-export const VehiculosInvolucradosTable = ({datosIncidentesViales}) => {
-    const vehiculos = datosIncidentesViales.vehiculos; 
-
+export const AutomovilesTable = ({ automoviles }) => {
+    console.log(automoviles)
     return (
         <>
             <ConfirmDialog draggable={false} />
 
             <DataTable
-                value={vehiculos}
+                value={automoviles}
                 paginator
                 rows={5}
-                totalRecords={vehiculos.length} // Actualiza con el total de registros
+                totalRecords={automoviles.length} // Actualiza con el total de registros
                 loading={false} // Cambia a `true` cuando se está cargando
                 emptyMessage='No se encontraron vehículos involucrados'
                 className='mb-4 shadow-3'
@@ -29,6 +28,5 @@ export const VehiculosInvolucradosTable = ({datosIncidentesViales}) => {
 
             <Button className="btn-blue-mpa" label='Agregar Vehículo Involucrado' />
         </>
-    );
-};
-
+    )
+}

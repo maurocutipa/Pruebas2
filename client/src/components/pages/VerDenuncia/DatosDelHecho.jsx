@@ -4,11 +4,13 @@ import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import { MultiSelect } from 'primereact/multiselect';
 import { VehiculosInvolucradosTable } from './TablasVerDenuncia/VehiculosInvolucradosTable';
-import { ObjetosSustraidosTable } from './TablasVerDenuncia/ObjetosSustraidosTable';
+import { ObjetosSustraidosTable } from './TablasVerDenuncia/ObjetosSustraidos/ObjetosSustraidosTable';
 
-export const DatosDelHecho = ({ denuncia, adjuntos }) => {
-  const tipoDenuncia = denuncia.tipoDenuncia;
-  const adjuntosDenuncia = adjuntos; 
+export const DatosDelHecho = ({ datosDenuncia }) => {
+  console.log(datosDenuncia);
+  const denuncia = datosDenuncia.denuncia;
+  const tipoDenuncia = datosDenuncia.denuncia.tipoDenuncia;
+  const adjuntosDenuncia = datosDenuncia.adjuntos;
 
   return (
     <>
@@ -83,9 +85,12 @@ export const DatosDelHecho = ({ denuncia, adjuntos }) => {
       {tipoDenuncia === 7 ? (
         <h3>Anexo de Violencia de Genero</h3>
       ) : tipoDenuncia === 6 ? (
-        <VehiculosInvolucradosTable />
+        <>
+          <h3>Vehiculos involucrados:</h3>
+          <VehiculosInvolucradosTable datosIncidentesViales={datosDenuncia.datosIncidentesViales} />
+        </>
       ) : tipoDenuncia === 3 ? (
-        <ObjetosSustraidosTable />
+        <ObjetosSustraidosTable datosDenunciaPropiedad = {datosDenuncia.datosDenunciaPropiedad} />
       ) : null}
 
       <Divider />
