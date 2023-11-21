@@ -13,62 +13,62 @@ const styles = StyleSheet.create({
   },
 });
 
+const stylesHtml = {
+  ['.ql-align-center']: {
+    textAlign: 'center',
+  },
+
+  ['.ql-size-huge']: {
+    fontSize: '24px',
+  },
+
+  ['.ql-size-large']: {
+    fontSize: '18px',
+  },
+
+  ['.ql-size-small']: {
+    fontSize: '10px',
+  },
+
+  ['.ql-align-right']: {
+    textAlign: 'right',
+  },
+
+  ['.ql-align-justify']: {
+    textAlign: 'justify',
+  },
+
+  ['.ql-align-left']: {
+    textAlign: 'left',
+  },
+
+  p: {
+    fontSize: '14px',
+  },
+
+  li: {
+    fontSize: '14px',
+  },
+
+  img: {
+    width: '150px',
+    height: '150px',
+  },
+
+  strong: {
+    fontWeight: 'bold',
+  },
+
+  em: {
+    fontStyle: 'italic',
+  },
+};
+
 const html = (htmlContent) => `
   <body>
-    <style>
-      .ql-align-center {
-        text-align: center;
-      }
-
-      span.ql-size-huge, strong.ql-size-huge, em.ql-size-huge, u.ql-size-huge {
-        font-size: 24px;
-      }
-
-      span.ql-size-large, strong.ql-size-large, em.ql-size-large, u.ql-size-large {
-        font-size: 18px;
-      }
-
-      span.ql-size-small, strong.ql-size-small, em.ql-size-small, u.ql-size-small {
-        font-size: 10px;
-      }
-
-      .ql-align-right {
-        text-align: right;
-      }
-
-      .ql-align-justify {
-        text-align: justify;
-      }
-
-      .ql-align-left {
-        text-align: left;
-      }
-
-      .ql-align-center {
-        text-align: center;
-      }
-
-      p {
-        font-size: 14px;
-      }
-
-      li {
-        font-size: 14px;
-      }
-
-      img {
-        width: 150px;
-        height: 150px;
-      }
-
-      strong {
-        font-weight: bold;
-      }
-
-      em {
-        font-style: italic;
-      }
-    </style>
+    <strong>
+      <p style="font-weight: bold;">hola</p>
+    </strong>
     ${htmlContent ? htmlContent : ''}
   </body>
 `;
@@ -77,7 +77,7 @@ const PdfPreview = ({ htmlContent }) => {
   const Pdf = () => (
     <Document>
       <Page size={'A4'} style={styles.body}>
-        <Html>{html(htmlContent)}</Html>
+        <Html stylesheet={stylesHtml}>{html(htmlContent)}</Html>
       </Page>
     </Document>
   );
