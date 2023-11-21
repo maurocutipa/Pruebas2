@@ -1,11 +1,13 @@
-const CreateController = require('./create')
-const GetController = require('./get')
-const DeleteController = require('./delete')
+const CreateController = require('./create');
+const GetController = require('./get');
+const DeleteController = require('./delete');
+const UpdateController = require('./update');
 
 const DenunciasController = {
   ...CreateController,
   ...GetController,
-  ...DeleteController
+  ...DeleteController,
+  ...UpdateController,
 };
 
 module.exports = DenunciasController;
