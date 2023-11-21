@@ -153,20 +153,6 @@ DenunciasController.getDenunciaById = async (req, res) => {
       WHERE id_denuncia = ?`;
     const intervinientes = await queryHandler(query, [id]);
 
-    query = ` 
-      SELECT 
-        s.id_denuncia_adjuntos as idDenunciaAdjuntos,
-        s.id_denuncia as idDenuncia,
-        s.nombre_original as nombreOriginal,
-        s.nombre_archivo as nombreArchivo,
-        s.fecha,
-        s.estado
-      FROM denuncia_adjuntos s
-      WHERE id_denuncia = ?`;
-    const adjuntos = await queryHandler(query, [id]);
-
-    console.log(adjuntos);
-
     const victimas = intervinientes.filter(
       (interviniente) => interviniente.tipoInterviniente === 'Victima'
     );
@@ -179,12 +165,166 @@ DenunciasController.getDenunciaById = async (req, res) => {
       (interviniente) => interviniente.tipoInterviniente === 'Testigo'
     );
 
+    // ============================= Querys Adjuntos =====================================
+
+    query = ` 
+      SELECT 
+        s.id_denuncia_adjuntos as idDenunciaAdjuntos,
+        s.id_denuncia as idDenuncia,
+        s.nombre_original as nombreOriginal,
+        s.nombre_archivo as nombreArchivo,
+        s.fecha,
+        s.estado
+      FROM denuncia_adjuntos s
+      WHERE id_denuncia = ?`;
+    const adjuntos = await queryHandler(query, [id]);
+
+    // ============================== Querys para denuncias de propiedad. ======================================
+
+    let automoviles, autopartes, bicicletas, cheques, documentacion, otro, tarjetas, telefonos;
+
+    query = ` 
+    SELECT 
+      p.id_denuncia_propiedad as idDenunciaPropiedad,
+      p.id_denuncia as idDenuncia,
+      p.dano_cosas as danoCosas,
+      p.armas,
+      p.violencia_fisica as violenciaFisica,
+      p.amenaza, 
+      p.arrebato, 
+      p.otra, 
+      p.cant_telefonos as cantTelefonos, 
+      p.cant_automoviles as cantAutomoviles, 
+      p.cant_bicicletas as cantBicicletas, 
+      p.cant_autopartes as cantAutopartes, 
+      p.cant_documentacion as cantDocumentacion, 
+      p.cant_tarjetas as cantTarjetas, 
+      p.cant_cheques as cantCheques, 
+      p.cant_otros as cantOtros
+    FROM denuncia_propiedad p
+    WHERE id_denuncia = ?;
+  `;
+    [datosGeneralesDenunciaPropiedad] = await queryHandler(query, [id]);
+
+    if (datosGeneralesDenunciaPropiedad !== undefined){
+      query = `
+      SELECT 
+      *
+      FROM denuncia_propiedad_automoviles WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
+      `;
+    automoviles = await queryHandler(query, [id]);
+
+    query = `
+      SELECT
+      *
+      FROM denuncia_propiedad_autopartes WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
+      `;
+    autopartes = await queryHandler(query, [id]);
+
+    query = `
+      SELECT
+      *
+      FROM denuncia_propiedad_bicicletas WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
+      `;
+    bicicletas = await queryHandler(query, [id]);
+
+    query = `
+      SELECT
+      *
+      FROM denuncia_propiedad_cheques WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
+      `;
+    cheques = await queryHandler(query, [id]);
+
+    query = `
+      SELECT
+      *
+      FROM denuncia_propiedad_documentacion WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
+      `;
+    documentacion = await queryHandler(query, [id]);
+
+    query = `
+      SELECT
+      *
+      FROM denuncia_propiedad_otro WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
+      `;
+    otro = await queryHandler(query, [id]);
+
+    query = `
+      SELECT
+      *
+      FROM denuncia_propiedad_tarjetas WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
+      `;
+    tarjetas = await queryHandler(query, [id]);
+
+    query = `
+      SELECT
+      *
+      FROM denuncia_propiedad_telefonos WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
+      `;
+    telefonos = await queryHandler(query, [id]);
+    }
+
+    // ============================ Fin querys denuncia propiedad ==============================
+
+    // ============================ Querys para incidentes viales ==============================
+    let vehiculos
+    query = `
+      SELECT 
+        incidentes.id_denuncia_incidentes_viales as idDenunciaIncidentesViales, 
+        incidentes.id_denuncia as idDenuncia, 
+        incidentes.cant_vehiculos as cantVehiculos
+      FROM denuncia_incidentes_viales incidentes
+      WHERE id_denuncia = ?`; 
+    const [datosGeneralesIncidentesViales] = await queryHandler(query, [id]);
+    
+    if (datosGeneralesIncidentesViales !== undefined){
+      query = `
+      SELECT * FROM denuncia_incidentes_viales_vehiculos 
+      WHERE id_denuncia_incidentes_viales = ${datosGeneralesIncidentesViales.idDenunciaIncidentesViales}`
+      vehiculos = await queryHandler(query, [id]); 
+    }
+    //============================= Fin de querys incidentes viales ============================
+    
+    // ============================ Querys Violencia de Genero =================================
+    query = ` 
+      SELECT 
+        v.id_denuncia_violencia_genero as idDenunciaViolenciaGenero,
+        v.id_denuncia as idDenuncia,
+        v.situacion_1 as situacion1,
+        v.situacion_2 as situacion2,
+        v.tipo_violencia_1 as tipoViolencia1, 
+        v.tipo_violencia_2 as tipoViolencia2, 
+        v.tipo_violencia_3 as tipoViolencia3, 
+        v.tipo_violencia_4 as tipoViolencia4, 
+        v.tipo_violencia_5 as tipoViolencia5, 
+        v.tipo_violencia_6 as tipoViolencia6, 
+        v.tipo_violencia_7 as tipoViolencia7,
+        v.perfil_agresor_1 as perfilAgresor1,  
+        v.perfil_agresor_2 as perfilAgresor2,  
+        v.perfil_agresor_3 as perfilAgresor3,  
+        v.perfil_agresor_4 as perfilAgresor4,  
+        v.perfil_agresor_5 as perfilAgresor5,  
+        v.perfil_agresor_6 as perfilAgresor6,  
+        v.perfil_agresor_7 as perfilAgresor7,  
+        v.vulnerabilidades_1 as vulnerabilidades1,
+        v.vulnerabilidades_2 as vulnerabilidades2,
+        v.vulnerabilidades_3 as vulnerabilidades3,
+        v.vulnerabilidades_4 as vulnerabilidades4,
+        v.valoracion
+      FROM denuncia_violencia_genero v
+      WHERE id_denuncia = ?`;
+    const [datosViolenciaDeGenero] = await queryHandler(query, [id]);
+    //========================== Fin Querys Violencia de Genero =================================
+
     res.status(200).json({
       message: `Denuncia con el id: ${id}`,
       data: {
         denuncia: denuncia[0],
         intervinientes: { victimas, denunciados, testigos },
         adjuntos: adjuntos,
+        datosDenunciaPropiedad: {datosGeneralesDenunciaPropiedad, automoviles, autopartes, bicicletas, cheques, documentacion, otro, tarjetas, telefonos}, 
+        datosIncidentesViales: {datosGeneralesIncidentesViales, vehiculos}, 
+        datosViolenciaDeGenero: datosViolenciaDeGenero
       },
     });
   } catch (error) {
