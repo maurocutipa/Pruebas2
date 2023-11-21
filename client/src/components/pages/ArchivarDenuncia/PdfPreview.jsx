@@ -14,59 +14,63 @@ const styles = StyleSheet.create({
 });
 
 const html = (htmlContent) => `
-<body>
-  <style>
-    .ql-align-center {
-      text-align: center;
-    }
+  <body>
+    <style>
+      .ql-align-center {
+        text-align: center;
+      }
 
-    span.ql-size-huge, strong.ql-size-huge, em.ql-size-huge, u.ql-size-huge {
-      font-size: 24px;
-    }
+      span.ql-size-huge, strong.ql-size-huge, em.ql-size-huge, u.ql-size-huge {
+        font-size: 24px;
+      }
 
-    span.ql-size-large, strong.ql-size-large, em.ql-size-large, u.ql-size-large {
-      font-size: 18px;
-    }
+      span.ql-size-large, strong.ql-size-large, em.ql-size-large, u.ql-size-large {
+        font-size: 18px;
+      }
 
-    span.ql-size-small, strong.ql-size-small, em.ql-size-small, u.ql-size-small {
-      font-size: 10px;
-    }
+      span.ql-size-small, strong.ql-size-small, em.ql-size-small, u.ql-size-small {
+        font-size: 10px;
+      }
 
-    .ql-align-right {
-      text-align: right;
-    }
+      .ql-align-right {
+        text-align: right;
+      }
 
-    .ql-align-justify {
-      text-align: justify;
-    }
+      .ql-align-justify {
+        text-align: justify;
+      }
 
-    .ql-align-left {
-      text-align: left;
-    }
+      .ql-align-left {
+        text-align: left;
+      }
 
-    .ql-align-center {
-      text-align: center;
-    }
+      .ql-align-center {
+        text-align: center;
+      }
 
-    p {
-      font-size: 12px;
-    }
+      p {
+        font-size: 14px;
+      }
 
-    img {
-      width: 150px;
-      height: 150px;
-    }
+      li {
+        font-size: 14px;
+      }
 
-    strong {
-      font-weight: bold;
-    }
+      img {
+        width: 150px;
+        height: 150px;
+      }
 
-    em {
-      font-style: italic;
-    }
-  </style>
-  ${htmlContent ? htmlContent : ''}
-</body>
+      strong {
+        font-weight: bold;
+      }
+
+      em {
+        font-style: italic;
+      }
+    </style>
+    ${htmlContent ? htmlContent : ''}
+  </body>
 `;
 
 const PdfPreview = ({ htmlContent }) => {
