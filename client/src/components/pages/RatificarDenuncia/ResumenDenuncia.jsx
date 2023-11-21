@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { getResumenDenunciaThunk } from '@/store/denunciasSlice/denuncias.thunks';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { parseDDMMYYYY } from '../../../utils/parseDate';
+import { Button } from 'primereact/button';
 
 export const ResumenDenuncia = ({ id }) => {
   const dispatch = useAppDispatch();
@@ -164,6 +165,13 @@ export const ResumenDenuncia = ({ id }) => {
 
             <p className=''>Descripción de la evidencia</p>
             <p className=''>Archivos cargados</p>
+          </div>
+
+          <div className='mt-6'>
+            <Button
+              className='btn-blue-mpa'
+              label='Mostrar comprobante completo'
+            />
           </div>
         </Card>
       ) : (

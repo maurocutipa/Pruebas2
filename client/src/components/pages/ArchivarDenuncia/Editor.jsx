@@ -35,30 +35,12 @@ export const Editor = ({ text, setText }) => {
 const modules = {
   toolbar: [
     [{ header: [1, 2, 3, 4, false] }],
-    // [{ size: [] }],
     ['bold', 'italic', 'underline'],
     [{ color: [] }],
     [{ list: 'ordered' }, { list: 'bullet' }],
-    ['link', 'image'],
+    ['link'],
     [{ align: [] }],
   ],
-  // toolbar: {
-  //   handlers: {
-  //     link: function (value) {
-  //       console.log(value);
-  //       if (value) {
-  //         var href = prompt('Enter the URL');
-  //         this.quill.format('link', href);
-  //       } else {
-  //         this.quill.format('link', false);
-  //       }
-  //     },
-  //     image: (value) => {
-  //       console.log(value);
-  //     },
-  //   },
-  // },
-
   clipboard: {
     matchVisual: false,
   },
