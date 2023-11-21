@@ -9,7 +9,7 @@ import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/toolbar/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
-export const PdfViewer = ({ url }) => {
+export const PdfViewer = ({ url, height = 600 }) => {
   const toolbarPluginInstance = toolbarPlugin();
   const { renderDefaultToolbar } = toolbarPluginInstance;
 
@@ -32,7 +32,7 @@ export const PdfViewer = ({ url }) => {
   });
 
   return (
-    <div style={{ height: '600px' }}>
+    <div style={{ height: `${height}px` }}>
       <Viewer
         defaultScale={SpecialZoomLevel.ActualSize}
         scrollMode={ScrollMode.Vertical}
