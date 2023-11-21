@@ -8,7 +8,6 @@ import { useAppDispatch } from '@/store/hooks';
 import { ratificarDenunciaThunk } from '@/store/denunciasSlice/denuncias.thunks';
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 
-// 192.200.0.53:3000/comprobantes/nombre_archivo
 export const RatificarDenuncia = () => {
   const toast = useRef(null);
   const dispatch = useAppDispatch();
@@ -53,7 +52,7 @@ export const RatificarDenuncia = () => {
       <div className='px-8 py-4'>
         <Toast ref={toast} />
         <ConfirmPopup />
-        <h1 className='text-center'>Ratificar Denuncia N° {id}</h1>
+        <h1 className='text-center'>Ratificar Denuncia Nro: {id}</h1>
 
         <div className='mt-6'>
           <Button
