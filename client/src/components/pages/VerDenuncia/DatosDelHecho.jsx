@@ -3,7 +3,7 @@ import { Divider } from 'primereact/divider';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import { MultiSelect } from 'primereact/multiselect';
-import { VehiculosInvolucradosTable } from './TablasVerDenuncia/VehiculosInvolucradosTable';
+import { VehiculosInvolucradosTable } from './TablasVerDenuncia/ObjetosSustraidos/VehiculosInvolucradosTable';
 import { ObjetosSustraidosTable } from './TablasVerDenuncia/ObjetosSustraidos/ObjetosSustraidosTable';
 
 export const DatosDelHecho = ({ datosDenuncia }) => {

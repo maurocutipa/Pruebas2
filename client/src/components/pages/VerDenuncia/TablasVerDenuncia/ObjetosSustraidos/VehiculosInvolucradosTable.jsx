@@ -6,6 +6,16 @@ import { ConfirmDialog } from 'primereact/confirmdialog';
 export const VehiculosInvolucradosTable = ({datosIncidentesViales}) => {
     const vehiculos = datosIncidentesViales.vehiculos; 
 
+    const accionesTemplate = (rowData) => {
+        return (
+            <Button
+                type="button"
+                icon="pi pi-trash"
+                className="p-button-danger"
+            />
+        );
+    };
+
     return (
         <>
             <ConfirmDialog draggable={false} />
@@ -24,7 +34,7 @@ export const VehiculosInvolucradosTable = ({datosIncidentesViales}) => {
                 <Column field='id_denuncia_automoviles_tipo' header='Marca' />
                 <Column field='modelo' header='Modelo' />
                 <Column field='dominio' header='Dominio' />
-                <Column field='acciones' header='Acciones' />
+                <Column body={accionesTemplate} header='Acciones' />
             </DataTable>
 
             <Button className="btn-blue-mpa" label='Agregar Vehículo Involucrado' />

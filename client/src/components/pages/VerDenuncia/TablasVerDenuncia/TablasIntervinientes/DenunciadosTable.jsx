@@ -16,6 +16,16 @@ export const DenunciadosTable = ({ denunciados }) => {
     setGlobalFilterValue('');
   };
 
+  const accionesTemplate = (rowData) => {
+    return (
+      <Button
+        type="button"
+        icon="pi pi-trash"
+        className="p-button-danger"
+      />
+    );
+  };
+
   const HeaderTable = () => {
     return (
       <div className='flex justify-content-between md:flex-row flex-column'>
@@ -68,7 +78,7 @@ export const DenunciadosTable = ({ denunciados }) => {
         <Column field='numeroIdentificacion' header='Número' />
         <Column field='apellido' header='Apellido' />
         <Column field='nombre' header='Nombre' />
-        <Column field='acciones' header='Acciones' />
+        <Column body={accionesTemplate} header='Acciones' />
       </DataTable>
 
       <Button className='btn-blue-mpa' label='Agregar Denunciado' />
