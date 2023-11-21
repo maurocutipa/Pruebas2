@@ -3,6 +3,7 @@ import { PrimeReactProvider } from 'primereact/api';
 import { Provider } from 'react-redux';
 import { locale, addLocale } from 'primereact/api';
 import { RouterProvider } from 'react-router-dom';
+import { Worker } from '@react-pdf-viewer/core';
 
 import { store } from './store/index.js';
 import { router } from './router/index.jsx';
@@ -160,14 +161,28 @@ const value = {
     steps: {
       action: { className: 'hover:bg-white' },
     },
+    confirmDialog: {
+      rejectButton: { label: 'text-blue-mpa' },
+    },
+    confirmPopup: {
+      root: { className: 'surface-100' },
+      acceptButton: { root: { className: 'btn-blue-mpa' } },
+      rejectButton: { root: { className: 'text-blue-mpa' } },
+    },
+    menu: {
+      label: { className: 'text-gray-800 font-medium' },
+      action: { className: 'hover:bg-gray-300' },
+    },
   },
 };
 
 locale('es');
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <PrimeReactProvider value={value}>
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
-  </PrimeReactProvider>
+  <Worker workerUrl='https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js'>
+    <PrimeReactProvider value={value}>
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
+    </PrimeReactProvider>
+  </Worker>
 );

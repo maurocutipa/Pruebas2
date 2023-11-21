@@ -82,6 +82,7 @@ app.use((err, req, res, next) => {
 
 //MAIN ROUTES
 app.use('/api', require('./routes'))
+app.use(express.static('static'))
 
 //csrf route
 app.get("/api/csrf-token", (req, res) => {

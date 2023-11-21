@@ -1,11 +1,23 @@
 import './header.css';
 
 import { Link, Outlet } from 'react-router-dom';
-
 import { Menubar } from 'primereact/menubar';
 import { Button } from 'primereact/button';
 
+import { useAppDispatch } from '@/store/hooks';
+import { getDenunciaDataThunk } from '@/store/dataSlice/data.thunks';
+import { getDelitosThunk } from '@/store/dataSlice/data.thunks';
+import { useEffect } from 'react';
+
 const Header_ = () => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getDenunciaDataThunk());
+    dispatch(getDelitosThunk());
+    console.log('LLAMADA A LA API');
+  }, [dispatch]);
+
   const items = [
     {
       style: 'color: white',

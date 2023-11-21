@@ -4,9 +4,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
 
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { getDenunciaDataThunk } from '@/store/dataSlice/data.thunks';
-import { useEffect } from 'react';
+import { useAppSelector } from '@/store/hooks';
 
 const today = new Date();
 const maxDate = new Date();
@@ -19,7 +17,6 @@ export const FiltrosDenuncias = ({
   onFilterChange,
   handleRealizarBusqueda,
 }) => {
-  const dispatch = useAppDispatch();
   const { data } = useAppSelector((state) => state.data);
   const {
     seccionales,
@@ -27,11 +24,8 @@ export const FiltrosDenuncias = ({
     delegacionesFiscales,
     realizaciones,
     competencias,
+    estados,
   } = data;
-
-  useEffect(() => {
-    dispatch(getDenunciaDataThunk());
-  }, [dispatch]);
 
   return (
     <>
@@ -92,8 +86,11 @@ export const FiltrosDenuncias = ({
           </div>
           <div className='col-12 md:col-6 lg:col-3'>
             <Dropdown
-              value={filters.ratificada}
-              onChange={(e) => onFilterChange('ratificada', e.target.value)}
+              value={filters.estado}
+              options={estados}
+              optionLabel='estado'
+              optionValue='idEstado'
+              onChange={(e) => onFilterChange('estado', e.target.value)}
               placeholder='Seleccione estado'
               className='w-12'
             />
