@@ -1,4 +1,3 @@
-
 const httpErrorHandler = require('@utils/httpErrorHandler');
 const queryHandler = require('@utils/queryHandler');
 const safeConcatQuery = require('@utils/safeConcatQuery');
@@ -7,70 +6,70 @@ const { matchedData } = require('express-validator');
 const showError = require('@utils/showError');
 const { formatDateHour } = require('@utils/formatDate');
 
-const GetController = {}
-
+const GetController = {};
 
 GetController.getDenuncias = async (req, res) => {
-    const { limit, offset } = req.body;
+  const { limit, offset } = req.body;
 
-    let filters = ``;
+  let filters = ``;
 
-    if (req.body.idDenuncia !== undefined && req.body.idDenuncia !== '') {
-        filters += ` AND d.id_denuncia = ${req.body.idDenuncia}`;
-    }
+  if (req.body.idDenuncia !== undefined && req.body.idDenuncia !== '') {
+    filters += ` AND d.id_denuncia = ${req.body.idDenuncia}`;
+  }
 
-    if (req.body.tipoDenuncia !== undefined && req.body.tipoDenuncia !== 0) {
-        filters += ` AND d.id_tipo_denuncia = ${req.body.tipoDenuncia}`;
-    }
+  if (req.body.tipoDenuncia !== undefined && req.body.tipoDenuncia !== 0) {
+    filters += ` AND d.id_tipo_denuncia = ${req.body.tipoDenuncia}`;
+  }
 
-    if (req.body.seccional !== undefined && req.body.seccional !== 0) {
-        filters += ` AND d.id_seccional = ${req.body.seccional}`;
-    }
+  if (req.body.seccional !== undefined && req.body.seccional !== 0) {
+    filters += ` AND d.id_seccional = ${req.body.seccional}`;
+  }
 
-    if (req.body.idLegajo !== undefined && req.body.idLegajo !== '') {
-        filters += ` AND d.id_legajo = ${req.body.idLegajo}`;
-    }
+  if (req.body.idLegajo !== undefined && req.body.idLegajo !== '') {
+    filters += ` AND d.id_legajo = ${req.body.idLegajo}`;
+  }
 
-    if (req.body.competencia !== undefined && req.body.competencia !== 0) {
-        filters += ` AND d.competencia = ${req.body.competencia}`;
-    }
+  if (req.body.competencia !== undefined && req.body.competencia !== 0) {
+    filters += ` AND d.competencia = ${req.body.competencia}`;
+  }
 
-    if (req.body.realizacion !== undefined && req.body.realizacion !== 0) {
-        filters += ` AND d.realizacion = ${req.body.realizacion}`;
-    }
+  if (req.body.realizacion !== undefined && req.body.realizacion !== 0) {
+    filters += ` AND d.realizacion = ${req.body.realizacion}`;
+  }
 
-    if (
-        req.body.fiscaliaAsignada !== undefined &&
-        req.body.fiscaliaAsignada !== ''
-    ) {
-        filters += ` AND sc.id_sector = ${req.body.fiscaliaAsignada}`;
-    }
+  if (
+    req.body.fiscaliaAsignada !== undefined &&
+    req.body.fiscaliaAsignada !== ''
+  ) {
+    filters += ` AND sc.id_sector = ${req.body.fiscaliaAsignada}`;
+  }
 
-    if (
-        req.body.fechaDenunciaDesde !== '' &&
-        req.body.fechaDenunciaHasta !== ''
-    ) {
-        filters += ` AND d.fecha_denuncia BETWEEN '${formatDate(
-            req.body.fechaDenunciaDesde
-        )}' AND '${formatDate(req.body.fechaDenunciaHasta)}'`;
-    }
+  if (
+    req.body.fechaDenunciaDesde !== '' &&
+    req.body.fechaDenunciaHasta !== ''
+  ) {
+    filters += ` AND d.fecha_denuncia BETWEEN '${formatDate(
+      req.body.fechaDenunciaDesde
+    )}' AND '${formatDate(req.body.fechaDenunciaHasta)}'`;
+  }
 
-    try {
-        let query = `
+  try {
+    let query = `
         SELECT 
           COUNT(*) AS total_records
         FROM denuncia d
         LEFT JOIN legajo l ON d.id_legajo = l.id_legajo
         LEFT JOIN sectores sc ON l.id_sector = sc.id_sector
         WHERE d.estado = 1 ${filters};`;
-        const count = await queryHandler(query);
+    const count = await queryHandler(query);
 
-        query = `
+    query = `
         SELECT
             d.id_denuncia AS idDenuncia,
             d.fecha_denuncia AS fechaDenuncia,
             d.hora_denuncia AS horaDenuncia,
             d.realizacion,
+            d.ratificacion,
             d.id_user_ratificacion AS idUserRatificacion,
             d.competencia,
             td.nombre AS tipoDenuncia,
@@ -86,23 +85,23 @@ GetController.getDenuncias = async (req, res) => {
         LIMIT ${limit}
         OFFSET ${offset}
       `;
-        const denuncias = await queryHandler(query);
+    const denuncias = await queryHandler(query);
 
-        res.status(200).json({
-            message: 'ok',
-            data: { denuncias, totalRecords: count[0]['total_records'] },
-        });
-    } catch (error) {
-        console.log(error);
-        httpErrorHandler(res);
-    }
+    res.status(200).json({
+      message: 'ok',
+      data: { denuncias, totalRecords: count[0]['total_records'] },
+    });
+  } catch (error) {
+    console.log(error);
+    httpErrorHandler(res);
+  }
 };
 
 GetController.getDenunciaById = async (req, res) => {
-    const { id } = req.params;
+  const { id } = req.params;
 
-    try {
-        let query = `
+  try {
+    let query = `
         SELECT
           d.id_denuncia AS idDenuncia,
           d.descripcion_como AS descripcionComo,
@@ -128,16 +127,16 @@ GetController.getDenunciaById = async (req, res) => {
         LEFT JOIN barrios b ON d.id_barrio = b.id_barrio
         WHERE id_denuncia = ?
         LIMIT 1`;
-        const denuncia = await queryHandler(query, [id]);
+    const denuncia = await queryHandler(query, [id]);
 
-        if (!denuncia[0]) {
-            return res.status(404).json({
-                message: `Denuncia con el id: ${id} no existe`,
-                data: { denuncia },
-            });
-        }
+    if (!denuncia[0]) {
+      return res.status(404).json({
+        message: `Denuncia con el id: ${id} no existe`,
+        data: { denuncia },
+      });
+    }
 
-        query = `
+    query = `
         SELECT 
           i.id,
           i.nombre,
@@ -151,23 +150,23 @@ GetController.getDenunciaById = async (req, res) => {
         LEFT JOIN interviniente i ON id.id_interviniente = i.id
         LEFT JOIN interviniente_tipo it ON i.id_interviniente_tipo = it.id_interviniente_tipo
         WHERE id_denuncia = ?`;
-        const intervinientes = await queryHandler(query, [id]);
+    const intervinientes = await queryHandler(query, [id]);
 
-        const victimas = intervinientes.filter(
-            (interviniente) => interviniente.tipoInterviniente === 'Victima'
-        );
+    const victimas = intervinientes.filter(
+      (interviniente) => interviniente.tipoInterviniente === 'Victima'
+    );
 
-        const denunciados = intervinientes.filter(
-            (interviniente) => interviniente.tipoInterviniente === 'Denunciado'
-        );
+    const denunciados = intervinientes.filter(
+      (interviniente) => interviniente.tipoInterviniente === 'Denunciado'
+    );
 
-        const testigos = intervinientes.filter(
-            (interviniente) => interviniente.tipoInterviniente === 'Testigo'
-        );
+    const testigos = intervinientes.filter(
+      (interviniente) => interviniente.tipoInterviniente === 'Testigo'
+    );
 
-        // ============================= Querys Adjuntos =====================================
+    // ============================= Querys Adjuntos =====================================
 
-        query = ` 
+    query = ` 
         SELECT 
           s.id_denuncia_adjuntos as idDenunciaAdjuntos,
           s.id_denuncia as idDenuncia,
@@ -177,20 +176,20 @@ GetController.getDenunciaById = async (req, res) => {
           s.estado
         FROM denuncia_adjuntos s
         WHERE id_denuncia = ?`;
-        const adjuntos = await queryHandler(query, [id]);
+    const adjuntos = await queryHandler(query, [id]);
 
-        // ============================== Querys para denuncias de propiedad. ======================================
+    // ============================== Querys para denuncias de propiedad. ======================================
 
-        let automoviles,
-            autopartes,
-            bicicletas,
-            cheques,
-            documentacion,
-            otro,
-            tarjetas,
-            telefonos;
+    let automoviles,
+      autopartes,
+      bicicletas,
+      cheques,
+      documentacion,
+      otro,
+      tarjetas,
+      telefonos;
 
-        query = ` 
+    query = ` 
       SELECT 
         p.id_denuncia_propiedad as idDenunciaPropiedad,
         p.id_denuncia as idDenuncia,
@@ -211,89 +210,89 @@ GetController.getDenunciaById = async (req, res) => {
       FROM denuncia_propiedad p
       WHERE id_denuncia = ?;
     `;
-        [datosGeneralesDenunciaPropiedad] = await queryHandler(query, [id]);
+    [datosGeneralesDenunciaPropiedad] = await queryHandler(query, [id]);
 
-        if (datosGeneralesDenunciaPropiedad !== undefined) {
-            query = `
+    if (datosGeneralesDenunciaPropiedad !== undefined) {
+      query = `
         SELECT 
         *
         FROM denuncia_propiedad_automoviles WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
         `;
-            automoviles = await queryHandler(query, [id]);
+      automoviles = await queryHandler(query, [id]);
 
-            query = `
+      query = `
         SELECT
         *
         FROM denuncia_propiedad_autopartes WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
         `;
-            autopartes = await queryHandler(query, [id]);
+      autopartes = await queryHandler(query, [id]);
 
-            query = `
+      query = `
         SELECT
         *
         FROM denuncia_propiedad_bicicletas WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
         `;
-            bicicletas = await queryHandler(query, [id]);
+      bicicletas = await queryHandler(query, [id]);
 
-            query = `
+      query = `
         SELECT
         *
         FROM denuncia_propiedad_cheques WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
         `;
-            cheques = await queryHandler(query, [id]);
+      cheques = await queryHandler(query, [id]);
 
-            query = `
+      query = `
         SELECT
         *
         FROM denuncia_propiedad_documentacion WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
         `;
-            documentacion = await queryHandler(query, [id]);
+      documentacion = await queryHandler(query, [id]);
 
-            query = `
+      query = `
         SELECT
         *
         FROM denuncia_propiedad_otro WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
         `;
-            otro = await queryHandler(query, [id]);
+      otro = await queryHandler(query, [id]);
 
-            query = `
+      query = `
         SELECT
         *
         FROM denuncia_propiedad_tarjetas WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
         `;
-            tarjetas = await queryHandler(query, [id]);
+      tarjetas = await queryHandler(query, [id]);
 
-            query = `
+      query = `
         SELECT
         *
         FROM denuncia_propiedad_telefonos WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
         `;
-            telefonos = await queryHandler(query, [id]);
-        }
+      telefonos = await queryHandler(query, [id]);
+    }
 
-        // ============================ Fin querys denuncia propiedad ==============================
+    // ============================ Fin querys denuncia propiedad ==============================
 
-        // ============================ Querys para incidentes viales ==============================
-        let vehiculos;
-        query = `
+    // ============================ Querys para incidentes viales ==============================
+    let vehiculos;
+    query = `
         SELECT 
           incidentes.id_denuncia_incidentes_viales as idDenunciaIncidentesViales, 
           incidentes.id_denuncia as idDenuncia, 
           incidentes.cant_vehiculos as cantVehiculos
         FROM denuncia_incidentes_viales incidentes
         WHERE id_denuncia = ?`;
-        const [datosGeneralesIncidentesViales] = await queryHandler(query, [id]);
+    const [datosGeneralesIncidentesViales] = await queryHandler(query, [id]);
 
-        if (datosGeneralesIncidentesViales !== undefined) {
-            query = `
+    if (datosGeneralesIncidentesViales !== undefined) {
+      query = `
         SELECT * FROM denuncia_incidentes_viales_vehiculos 
         WHERE id_denuncia_incidentes_viales = ${datosGeneralesIncidentesViales.idDenunciaIncidentesViales}`;
-            vehiculos = await queryHandler(query, [id]);
-        }
-        //============================= Fin de querys incidentes viales ============================
+      vehiculos = await queryHandler(query, [id]);
+    }
+    //============================= Fin de querys incidentes viales ============================
 
-        // ============================ Querys Violencia de Genero =================================
-        query = ` 
+    // ============================ Querys Violencia de Genero =================================
+    query = ` 
         SELECT 
           v.id_denuncia_violencia_genero as idDenunciaViolenciaGenero,
           v.id_denuncia as idDenuncia,
@@ -320,56 +319,56 @@ GetController.getDenunciaById = async (req, res) => {
           v.valoracion
         FROM denuncia_violencia_genero v
         WHERE id_denuncia = ?`;
-        const [datosViolenciaDeGenero] = await queryHandler(query, [id]);
-        //========================== Fin Querys Violencia de Genero =================================
+    const [datosViolenciaDeGenero] = await queryHandler(query, [id]);
+    //========================== Fin Querys Violencia de Genero =================================
 
-        res.status(200).json({
-            message: `Denuncia con el id: ${id}`,
-            data: {
-                denuncia: denuncia[0],
-                intervinientes: { victimas, denunciados, testigos },
-                adjuntos: adjuntos,
-                datosDenunciaPropiedad: {
-                    datosGeneralesDenunciaPropiedad,
-                    automoviles,
-                    autopartes,
-                    bicicletas,
-                    cheques,
-                    documentacion,
-                    otro,
-                    tarjetas,
-                    telefonos,
-                },
-                datosIncidentesViales: { datosGeneralesIncidentesViales, vehiculos },
-                datosViolenciaDeGenero: datosViolenciaDeGenero,
-            },
-        });
-    } catch (error) {
-        console.log(error);
-        httpErrorHandler(res);
-    }
+    res.status(200).json({
+      message: `Denuncia con el id: ${id}`,
+      data: {
+        denuncia: denuncia[0],
+        intervinientes: { victimas, denunciados, testigos },
+        adjuntos: adjuntos,
+        datosDenunciaPropiedad: {
+          datosGeneralesDenunciaPropiedad,
+          automoviles,
+          autopartes,
+          bicicletas,
+          cheques,
+          documentacion,
+          otro,
+          tarjetas,
+          telefonos,
+        },
+        datosIncidentesViales: { datosGeneralesIncidentesViales, vehiculos },
+        datosViolenciaDeGenero: datosViolenciaDeGenero,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    httpErrorHandler(res);
+  }
 };
 
 GetController.getDatosDeFiltros = async (req, res) => {
-    try {
-        let query = `
+  try {
+    let query = `
           SELECT
               id_tipo_denuncia AS idTipoDenuncia,
               nombre AS tipoDenuncia
           FROM denuncia_tipos
       `;
-        const tiposDenuncia = await queryHandler(query);
+    const tiposDenuncia = await queryHandler(query);
 
-        query = `
+    query = `
           SELECT
               id_seccional AS idSeccional,
               nombre AS seccional 
           FROM seccionales
       `;
 
-        const seccionales = await queryHandler(query);
+    const seccionales = await queryHandler(query);
 
-        query = `
+    query = `
           SELECT
               id_sector AS idDelegacionFiscal,
               label AS delegacionFiscal
@@ -377,64 +376,64 @@ GetController.getDatosDeFiltros = async (req, res) => {
           WHERE fiscalia_h = 'SI'
       `;
 
-        const delegacionesFiscales = await queryHandler(query);
+    const delegacionesFiscales = await queryHandler(query);
 
-        res.status(200).json({
-            message: 'ok',
-            data: { tiposDenuncia, seccionales, delegacionesFiscales },
-        });
-    } catch (error) {
-        console.log(error);
-        httpErrorHandler(res);
-    }
+    res.status(200).json({
+      message: 'ok',
+      data: { tiposDenuncia, seccionales, delegacionesFiscales },
+    });
+  } catch (error) {
+    console.log(error);
+    httpErrorHandler(res);
+  }
 };
 
 GetController.getDenuncia = async (req, res) => {
-    try {
-        const {
-            numeroDenuncia,
-            anonimo,
-            numeroIdentificacion,
-            tipoIdentificacion,
-        } = matchedData(req);
+  try {
+    const {
+      numeroDenuncia,
+      anonimo,
+      numeroIdentificacion,
+      tipoIdentificacion,
+    } = matchedData(req);
 
-        if (!anonimo) {
-            const queryInterviniente =
-                'SELECT t2.* FROM interviniente_denuncia t1 INNER JOIN interviniente t2 ON t1.id_interviniente = t2.id WHERE t1.id_denuncia = ? AND t2.numero_identificacion = ? AND t2.tipo_identificacion = ?';
+    if (!anonimo) {
+      const queryInterviniente =
+        'SELECT t2.* FROM interviniente_denuncia t1 INNER JOIN interviniente t2 ON t1.id_interviniente = t2.id WHERE t1.id_denuncia = ? AND t2.numero_identificacion = ? AND t2.tipo_identificacion = ?';
 
-            const existIntervinientes = await queryHandler(queryInterviniente, [
-                numeroDenuncia,
-                numeroIdentificacion,
-                tipoIdentificacion,
-            ]);
+      const existIntervinientes = await queryHandler(queryInterviniente, [
+        numeroDenuncia,
+        numeroIdentificacion,
+        tipoIdentificacion,
+      ]);
 
-            if (!existIntervinientes.length)
-                throw new Error(
-                    'La denuncia no coincide con el numero y tipo de identificacion'
-                );
-        }
-
-        const query =
-            'SELECT competencia, fecha_denuncia, hora_denuncia, fecha_ratificacion FROM denuncia WHERE id_denuncia = ? AND anonimo = ? LIMIT 1';
-        const [denuncia] = await queryHandler(query, [numeroDenuncia, anonimo]);
-
-        if (!denuncia) throw new Error('Denuncia no encontrada');
-
-        res.status(200).json({
-            ok: true,
-            data: denuncia,
-        });
-    } catch (error) {
-        showError(error);
-        httpErrorHandler(res, 500, '500 SERVER ERROR', false, error.message);
+      if (!existIntervinientes.length)
+        throw new Error(
+          'La denuncia no coincide con el numero y tipo de identificacion'
+        );
     }
+
+    const query =
+      'SELECT competencia, fecha_denuncia, hora_denuncia, fecha_ratificacion FROM denuncia WHERE id_denuncia = ? AND anonimo = ? LIMIT 1';
+    const [denuncia] = await queryHandler(query, [numeroDenuncia, anonimo]);
+
+    if (!denuncia) throw new Error('Denuncia no encontrada');
+
+    res.status(200).json({
+      ok: true,
+      data: denuncia,
+    });
+  } catch (error) {
+    showError(error);
+    httpErrorHandler(res, 500, '500 SERVER ERROR', false, error.message);
+  }
 };
 
 GetController.getResumenParaRatificar = async (req, res) => {
-    const { id } = req.params;
+  const { id } = req.params;
 
-    try {
-        let query = `
+  try {
+    let query = `
         SELECT
           -- Resumen de la denuncia
           d.fecha_denuncia AS fechaDenuncia,
@@ -459,15 +458,15 @@ GetController.getResumenParaRatificar = async (req, res) => {
         LEFT JOIN localidades l ON l.id_localidad = d.id_localidad
         WHERE id_denuncia = ?
       `;
-        const [resumen] = await queryHandler(query, [id]);
-        if (!resumen) {
-            return res.status(404).json({
-                message: `Denuncia con el id: ${id} no existe`,
-                data: { resumen },
-            });
-        }
+    const [resumen] = await queryHandler(query, [id]);
+    if (!resumen) {
+      return res.status(404).json({
+        message: `Denuncia con el id: ${id} no existe`,
+        data: { resumen },
+      });
+    }
 
-        query = `
+    query = `
       SELECT 
         i.id,
         i.tipo_persona AS tipoPersona,
@@ -491,9 +490,9 @@ GetController.getResumenParaRatificar = async (req, res) => {
       LEFT JOIN localidades l ON l.id_localidad = i.id_localidad
       LEFT JOIN provincias p ON p.id_provincia = i.id_provincia
       WHERE id_denuncia = ?`;
-        const intervinientes = await queryHandler(query, [id]);
+    const intervinientes = await queryHandler(query, [id]);
 
-        query = `
+    query = `
         SELECT 
           id_comprobante AS idComprobante,
           nombre_original AS nombreOriginal,
@@ -501,65 +500,28 @@ GetController.getResumenParaRatificar = async (req, res) => {
         FROM denuncia_comprobante
         WHERE id_denuncia = ? AND estado = 1
         `;
-        const [comprobante] = await queryHandler(query, [id]);
+    const [comprobante] = await queryHandler(query, [id]);
 
-        const victimas = intervinientes.filter(
-            (interviniente) => interviniente.tipoInterviniente === 'Victima'
-        );
+    const victimas = intervinientes.filter(
+      (interviniente) => interviniente.tipoInterviniente === 'Victima'
+    );
 
-        const denunciados = intervinientes.filter(
-            (interviniente) => interviniente.tipoInterviniente === 'Denunciado'
-        );
+    const denunciados = intervinientes.filter(
+      (interviniente) => interviniente.tipoInterviniente === 'Denunciado'
+    );
 
-        const testigos = intervinientes.filter(
-            (interviniente) => interviniente.tipoInterviniente === 'Testigo'
-        );
+    const testigos = intervinientes.filter(
+      (interviniente) => interviniente.tipoInterviniente === 'Testigo'
+    );
 
-        res.status(200).json({
-            message: `Resumen de la denuncia #${id}`,
-            data: { resumen, victimas, denunciados, testigos, comprobante },
-        });
-    } catch (error) {
-        showError(error);
-        httpErrorHandler(res, 500, '500 SERVER ERROR', false, error.message);
-    }
+    res.status(200).json({
+      message: `Resumen de la denuncia #${id}`,
+      data: { resumen, victimas, denunciados, testigos, comprobante },
+    });
+  } catch (error) {
+    showError(error);
+    httpErrorHandler(res, 500, '500 SERVER ERROR', false, error.message);
+  }
 };
 
-GetController.ratificarDenuncia = async (req, res) => {
-    const { id } = req.params;
-
-    const [fecha, hora] = formatDateHour(new Date()).split(' ');
-
-    try {
-        let query = `SELECT id_user_ratificacion as idUserRatificacion FROM denuncia WHERE id_denuncia = ?`;
-        let [data] = await queryHandler(query, [id]);
-        if (data.idUserRatificacion) {
-            return res
-                .status(400)
-                .json({ message: `Denuncia con el id: ${id} ya fue ratificada` });
-        }
-
-        query = `
-        UPDATE
-          denuncia
-        SET 
-          fecha_ratificacion = ?,
-          hora_ratificacion = ?
-        WHERE id_denuncia = ?`;
-
-        response = await queryHandler(query, [fecha, hora, id]);
-
-        if (response.changedRows === 0) {
-            return res
-                .status(400)
-                .json({ message: `Denuncia con el id: ${id} no fue ratificada` });
-        }
-
-        res.status(200).json({ message: 'ok' });
-    } catch (error) {
-        console.log(error);
-        httpErrorHandler(res);
-    }
-};
-
-module.exports = GetController
+module.exports = GetController;
