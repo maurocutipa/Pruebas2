@@ -14,8 +14,12 @@ const {
     validateTarjetas
 } = require('@validators/objetos-propiedad')
 
+const verifyJWT = require('../middlewares/verifyJWT')
+
 const router = Router();
 
+//MAIN MIDDLEWARES
+router.use('/',verifyJWT, /* doubleCsrfProtection, csrfErrorHandler, */)
 
 router.post('/telefonos', validateTelefonos, ObjetosPropiedadController.createTelefonos)
 router.post('/automoviles', validateAutomoviles, ObjetosPropiedadController.createAutomoviles)
