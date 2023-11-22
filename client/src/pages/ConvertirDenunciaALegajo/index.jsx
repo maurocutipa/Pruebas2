@@ -6,7 +6,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { AsignarDelito } from '@/components/pages/ConvertirDenunciaALegajo/AsignarDelitos';
 import { ResumenHechos } from '@/components/pages/ConvertirDenunciaALegajo/ResumenHechos';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { getDenunciadosParaLegajoThunk } from '@/store/legajoSlice/legajo.thunks';
+import {
+  getDenunciadosParaLegajoThunk,
+  crearDenunciaLegajoThunk,
+} from '@/store/legajoSlice/legajo.thunks';
 import { resetState } from '@/store/legajoSlice/legajo.slice';
 
 export const ConvertirDenunciaALegajo = () => {
@@ -24,7 +27,8 @@ export const ConvertirDenunciaALegajo = () => {
   }, [dispatch, id]);
 
   const handleConvertirALegajo = () => {
-    console.log({ ...denunciaALegajoForm, idDenuncia: id });
+    const formData = { ...denunciaALegajoForm, idDenuncia: Number(id) };
+    dispatch(crearDenunciaLegajoThunk(formData));
   };
 
   const disableButton = () => {

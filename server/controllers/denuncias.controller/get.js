@@ -4,7 +4,7 @@ const safeConcatQuery = require('@utils/safeConcatQuery');
 const convertToSnakeCase = require('@utils/convertToSnakeCase');
 const { matchedData } = require('express-validator');
 const showError = require('@utils/showError');
-const { formatDateHour } = require('@utils/formatDate');
+const { formatDate } = require('@utils/formatDate');
 
 const GetController = {};
 
@@ -75,6 +75,8 @@ GetController.getDenuncias = async (req, res) => {
             td.nombre AS tipoDenuncia,
             s.nombre AS seccional,
             l.id_legajo AS idLegajo,
+            l.letra AS letra,
+            l.nro_exp AS nroExp,
             sc.label AS fiscaliaAsignada
         FROM denuncia d
         JOIN denuncia_tipos td ON d.id_tipo_denuncia = td.id_tipo_denuncia

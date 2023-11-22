@@ -1,5 +1,6 @@
 const httpErrorHandler = require('../utils/httpErrorHandler');
 const queryHandler = require('../utils/queryHandler');
+const dayjs = require('dayjs');
 
 const getDenunciadosParaLegajo = async (req, res) => {
   const { id } = req.params;
@@ -37,4 +38,71 @@ const getDenunciadosParaLegajo = async (req, res) => {
   }
 };
 
-module.exports = { getDenunciadosParaLegajo };
+const crearDenunciaLegajo = async (req, res) => {
+  const { id } = req.params;
+  const body = req.body;
+
+  console.log(body);
+
+  try {
+    let query = `
+      SELECT
+        j.letra,
+        j.id_jurisdiccion AS idJurisdiccion
+      FROM sectores s
+      LEFT JOIN jurisdicciones j ON j.id_jurisdiccion = s.id_jurisdiccion
+      WHERE id_sector = ?
+    `;
+
+    // Letra del sector: sector.letra
+    const [sector] = await queryHandler(query, [body.fiscalia]);
+
+    query = `
+      SELECT
+        MAX(l.nro_exp) AS nroExp
+      FROM legajo l
+      WHERE l.letra = ?
+    `;
+    // Nro maximo del expediente dada la letra: legajo.nroExp
+    const [legajo] = await queryHandler(query, [sector.letra]);
+
+    const currentDate = dayjs().format('YYYY-MM-DD HH:mm:ss');
+
+    let newNroExpediente = legajo.nroExp ? legajo.nroExp + 1 : 1;
+    let values = [
+      sector.letra,
+      newNroExpediente,
+      body.idDenuncia,
+      body.fiscalia,
+      sector.idJurisdiccion,
+      currentDate,
+      req.idUsuario,
+    ];
+
+    // TODO: fiscal_encargado
+    query = `
+      INSERT INTO
+        legajo (letra, nro_exp, id_denuncia, id_sector, id_juridiccion, fecha_ingreso, id_user_ingreso)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+    const response = await queryHandler(query, values);
+
+    query = `
+      UPDATE denuncia 
+        SET denuncia.id_legajo = ?
+      WHERE denuncia.id_denuncia = ?
+    `;
+    values = [response.insertId, body.idDenuncia];
+    await queryHandler(query, values);
+
+    res.status(200).json({
+      message: 'Se creo un nuevo legajo de denuncia',
+      data: {},
+    });
+  } catch (error) {
+    console.log(error);
+    httpErrorHandler(res);
+  }
+};
+
+module.exports = { getDenunciadosParaLegajo, crearDenunciaLegajo };
