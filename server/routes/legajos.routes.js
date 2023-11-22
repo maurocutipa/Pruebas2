@@ -12,6 +12,6 @@ const router = Router();
 router.use('/', verifyJWT);
 
 router.get('/get-denunciados/:id', getDenunciadosParaLegajo);
-router.post('/denuncia-legajo/:id', verifyJWT, crearDenunciaLegajo);
+router.post('/denuncia-legajo/:id', crearDenunciaLegajo);
 
 module.exports = router;
