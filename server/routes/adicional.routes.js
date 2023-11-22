@@ -1,8 +1,12 @@
 const AdicionalController = require('../controllers/adicionalController')
 const express = require('express')
 const { validateGetBarrios, validateGetlocalidad } = require('../validators/adicional/adicional')
+const verifyJWT = require('../middlewares/verifyJWT')
 
 const router = express.Router()
+
+//MAIN MIDDLEWARES
+router.use('/', verifyJWT)
 
 router.get('/barrios/:id', validateGetBarrios, AdicionalController.getBarrios)
 router.get('/provincias', AdicionalController.getProvincias)
