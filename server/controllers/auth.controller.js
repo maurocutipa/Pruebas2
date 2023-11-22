@@ -48,15 +48,19 @@ const login = async (req, res) => {
     ]);
 
     // Busqueda de roles del usuario
-    query = "SELECT rol.nombre FROM rol_asignado ra INNER JOIN rol ON ra.id_rol = rol.id_rol WHERE (ra.id_usuario_sector = ? AND ra.tipo = 'Usuario') OR (ra.id_usuario_sector = ? AND ra.tipo = 'Sector')";
-    let roles = await queryHandler(query, [usuario.id_usuario, usuario.id_sector]);
+    query =
+      "SELECT rol.nombre FROM rol_asignado ra INNER JOIN rol ON ra.id_rol = rol.id_rol WHERE (ra.id_usuario_sector = ? AND ra.tipo = 'Usuario') OR (ra.id_usuario_sector = ? AND ra.tipo = 'Sector')";
+    let roles = await queryHandler(query, [
+      usuario.id_usuario,
+      usuario.id_sector,
+    ]);
     //roles = roles.map((rol) => rol.nombre);
 
     //console.log(roles);
     const accessToken = await generateJWT({
       usuario: usuario,
       idUsuario: usuario.id_usuario,
-      roles
+      roles,
     });
 
     res.cookie('jwt', accessToken, {
@@ -71,7 +75,7 @@ const login = async (req, res) => {
       data: {
         usuario: usuario.username,
         idUsuario: usuario.id_usuario,
-        roles
+        roles,
       },
     });
   } catch (error) {
@@ -112,14 +116,17 @@ const refresh = async (req, res) => {
       maxAge: 12 * 60 * 60 * 1000,
     });
 
+    console.log(req.usuario);
+
     res.status(200).json({
       message: 'Nuevo token',
       data: {
-        usuario: req.usuario.username,
+        usuario: req.usuario,
         /* roles: req.roles, */
       },
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'Error en el servidor' });
   }
 };

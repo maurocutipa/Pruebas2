@@ -24,7 +24,6 @@ export const crearDenunciaLegajoThunk = createAsyncThunk(
     try {
       const { data } = await crearDenunciaLegajo(formData);
 
-      console.log(data);
       return data.data;
     } catch (error) {
       console.log(error);

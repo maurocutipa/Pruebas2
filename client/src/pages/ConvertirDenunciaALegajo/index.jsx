@@ -1,5 +1,5 @@
 // Generado y sin generar
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Button } from 'primereact/button';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -11,8 +11,10 @@ import {
   crearDenunciaLegajoThunk,
 } from '@/store/legajoSlice/legajo.thunks';
 import { resetState } from '@/store/legajoSlice/legajo.slice';
+import { Toast } from 'primereact/toast';
 
 export const ConvertirDenunciaALegajo = () => {
+  const toast = useRef(null);
   const navigate = useNavigate();
   const { id } = useParams();
   const { legajoData, denunciaALegajoForm } = useAppSelector(
@@ -26,9 +28,26 @@ export const ConvertirDenunciaALegajo = () => {
     dispatch(getDenunciadosParaLegajoThunk(id));
   }, [dispatch, id]);
 
-  const handleConvertirALegajo = () => {
+  const handleConvertirALegajo = async () => {
     const formData = { ...denunciaALegajoForm, idDenuncia: Number(id) };
-    dispatch(crearDenunciaLegajoThunk(formData));
+    const { meta } = await dispatch(crearDenunciaLegajoThunk(formData));
+
+    if (meta.requestStatus === 'fulfilled') {
+      toast.current.show({
+        severity: 'success',
+        summary: 'Éxito',
+        detail:
+          'La denuncia fue convertida a legajo ,puede regresar a la bandeja de denuncias',
+        life: 3000,
+      });
+    } else {
+      toast.current.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No se pudo convertir la denuncia a legajo',
+        life: 3000,
+      });
+    }
   };
 
   const disableButton = () => {
@@ -46,6 +65,7 @@ export const ConvertirDenunciaALegajo = () => {
 
   return (
     <>
+      <Toast ref={toast} />
       {legajoData.denunciados && data.delitos ? (
         <div className='px-8 py-4'>
           <h1 className='text-center'>Convertir Denuncia N° {id} a Legajo</h1>
