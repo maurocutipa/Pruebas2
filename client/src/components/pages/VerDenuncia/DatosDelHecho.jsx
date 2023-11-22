@@ -3,16 +3,21 @@ import { Divider } from 'primereact/divider';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import { MultiSelect } from 'primereact/multiselect';
+import { TabView, TabPanel } from 'primereact/tabview';
 import { VehiculosInvolucradosTable } from './TablasVerDenuncia/ObjetosSustraidos/VehiculosInvolucradosTable';
 import { ObjetosSustraidosTable } from './TablasVerDenuncia/ObjetosSustraidos/ObjetosSustraidosTable';
+import { Dialog } from 'primereact/dialog';
 import { PdfViewer } from '../../common/PdfViewer';
-import { GET_COMPROBANTE_PDF } from '../../../constants';
+import { GET_ADJUNTOS } from '../../../constants';
+import { useState } from 'react';
 
 export const DatosDelHecho = ({ datosDenuncia }) => {
   console.log(datosDenuncia);
   const denuncia = datosDenuncia.denuncia;
   const tipoDenuncia = datosDenuncia.denuncia.tipoDenuncia;
   const adjuntosDenuncia = datosDenuncia.adjuntos;
+
+  const [visible, setVisible] = useState(false);
 
   return (
     <>
@@ -53,14 +58,20 @@ export const DatosDelHecho = ({ datosDenuncia }) => {
         </div>
         <div className='col'>
           {/* Reemplaza la imagen del mapa con el componente Embed de Google Maps */}
-          <iframe
-            width="100%"
-            height="100%"
-            style={{ border: 0 }}
-            loading="lazy"
-            src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyB9XerbY6zq1u0LZYj-LYq47n3Pkkn2vXU
+          {
+            denuncia.latitudHecho && denuncia.longitudHecho ? (
+              <iframe
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                loading="lazy"
+                src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyB9XerbY6zq1u0LZYj-LYq47n3Pkkn2vXU
             &q=${denuncia.latitudHecho},${denuncia.longitudHecho}`}>
-          </iframe>
+              </iframe>
+            ) : (
+              <h1>No se agregó ubicacion exacta. </h1>
+            )
+          }
         </div>
       </div>
 
@@ -76,9 +87,33 @@ export const DatosDelHecho = ({ datosDenuncia }) => {
       <p>{denuncia.detalleAdjunto}</p>
       <h4>Adjuntos: </h4>
       <ul>
-        {Object.values(adjuntosDenuncia).map((elemento, indice) => (
-          <PdfViewer key={indice} url={`${GET_COMPROBANTE_PDF}/${elemento.nombreArchivo}`} />
-        ))}
+        <Button label="Ver Documentos" icon="pi pi-file" onClick={() => setVisible(true)} className='btn-blue-mpa' />
+        <Dialog visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
+          <TabView>
+            <TabPanel header="Documentos">
+              {Object.values(adjuntosDenuncia).map((elemento, indice) => {
+                <PdfViewer key={indice} url={`${GET_ADJUNTOS}/${elemento.nombreArchivo}`} />
+              })}
+            </TabPanel>
+            <TabPanel header="Multimedia">
+              {Object.values(adjuntosDenuncia).map((elemento, indice) => {
+                const extension = elemento.nombreArchivo.split('.').pop().toLowerCase();
+                if (['mp4', 'mov', 'avi', 'jpg', 'png', 'jepg'].includes(extension)) {
+                  return (
+                    <div key={indice}>
+                      <iframe src={`${GET_ADJUNTOS}/${elemento.nombreArchivo}`} frameBorder="0"></iframe>
+                      <p>Archivo Multimedia: {elemento.nombreArchivo}</p>
+                    </div>
+                  );
+                }
+                return null;
+              })}
+            </TabPanel>
+            <TabPanel header="Otros">
+
+            </TabPanel>
+          </TabView>
+        </Dialog>
       </ul>
 
       <Divider />
@@ -92,7 +127,7 @@ export const DatosDelHecho = ({ datosDenuncia }) => {
           <VehiculosInvolucradosTable datosIncidentesViales={datosDenuncia.datosIncidentesViales} />
         </>
       ) : tipoDenuncia === 3 ? (
-        <ObjetosSustraidosTable datosDenunciaPropiedad = {datosDenuncia.datosDenunciaPropiedad} />
+        <ObjetosSustraidosTable datosDenunciaPropiedad={datosDenuncia.datosDenunciaPropiedad} />
       ) : null}
 
       <Divider />
