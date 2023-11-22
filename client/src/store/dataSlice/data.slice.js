@@ -35,6 +35,11 @@ const remisiones = [
   { idRemision: 2, remision: 'Dentro del Ministerio Público de la Acusación' },
 ];
 
+const ratificaciones = [
+  { idRatificacion: 'SI', ratificacion: 'SI'},
+  { idRatificacion: 'NO', ratificacion: 'NO'},
+]
+
 const initialState = {
   loading: true,
   data: {
@@ -62,6 +67,7 @@ export const dataSlice = createSlice({
           realizaciones,
           estados,
           remisiones,
+          ratificaciones
         };
       })
       .addCase(getDelitosThunk.fulfilled, (state, { payload }) => {
