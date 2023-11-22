@@ -5,7 +5,7 @@ const { generateJWT } = require('../utils/jsonwebtoken');
 
 const login = async (req, res) => {
   const { email, password } = req.body;
-  let query = `SELECT us.id_usuario, us.nombre, us.apellido, us.username, us.password, ps.salt FROM usuarios us INNER JOIN usuarios_password_salt ps ON us.id_usuario = ps.id_usuario  WHERE us.email_institucional = ? LIMIT 1`;
+  let query = `SELECT us.id_usuario, us.nombre, us.apellido, us.username, us.password, ps.salt, us.id_sector FROM usuarios us INNER JOIN usuarios_password_salt ps ON us.id_usuario = ps.id_usuario  WHERE us.email_institucional = ? LIMIT 1`;
 
   try {
     let [usuario] = await queryHandler(query, [email]);
@@ -48,15 +48,15 @@ const login = async (req, res) => {
     ]);
 
     // Busqueda de roles del usuario
-    /* query =
-            'SELECT nombre FROM cfg_usuarios_roles WHERE idcfg_usuarios_roles IN (SELECT id_usuarios_roles FROM cfg_usuarios_roles_asignados WHERE id_usuario=?)';
-        let roles = await queryHandler(query, [usuario.id]);
-        roles = roles.map((rol) => rol.nombre); */
+    query = "SELECT rol.nombre FROM rol_asignado ra INNER JOIN rol ON ra.id_rol = rol.id_rol WHERE (ra.id_usuario_sector = ? AND ra.tipo = 'Usuario') OR (ra.id_usuario_sector = ? AND ra.tipo = 'Sector')";
+    let roles = await queryHandler(query, [usuario.id_usuario, usuario.id_sector]);
+    //roles = roles.map((rol) => rol.nombre);
 
+    //console.log(roles);
     const accessToken = await generateJWT({
       usuario: usuario,
       idUsuario: usuario.id_usuario,
-      /* roles */
+      roles
     });
 
     res.cookie('jwt', accessToken, {
@@ -68,7 +68,11 @@ const login = async (req, res) => {
 
     res.status(200).json({
       message: 'Acceso exitoso',
-      data: { usuario: usuario.username /* roles */ },
+      data: {
+        usuario: usuario.username,
+        idUsuario: usuario.id_usuario,
+        roles
+      },
     });
   } catch (error) {
     console.log(error);
