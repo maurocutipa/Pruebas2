@@ -12,14 +12,14 @@ export const ObjetosSustraidosTable = ({ datosDenunciaPropiedad }) => {
   return (
     <>
       <TabView>
-        <TabPanel header="telefonos"> <TelefonosTable telefonos={datosDenunciaPropiedad.telefonos} /> </TabPanel>
-        <TabPanel header="automoviles"> <AutomovilesTable automoviles={datosDenunciaPropiedad.automoviles} /> </TabPanel>
-        <TabPanel header="bicicletas"> <BicicletasTable bicicletas={datosDenunciaPropiedad.bicicletas} /> </TabPanel>
-        <TabPanel header="autopartes"> <AutopartesTable autopartes={datosDenunciaPropiedad.autopartes} /> </TabPanel>
-        <TabPanel header="documentacion"> <DocumentacionTable documentacion={datosDenunciaPropiedad.documentacion} /> </TabPanel>
-        <TabPanel header="tarjetas de credito / debito"> <TarjetasTable tarjetas={datosDenunciaPropiedad.tarjetas} /> </TabPanel>
-        <TabPanel header="cheques"> <ChequesTable cheques={datosDenunciaPropiedad.cheques} /> </TabPanel>
-        <TabPanel header="otros"> <OtrosTable otros={datosDenunciaPropiedad.otro} /> </TabPanel>
+        <TabPanel header="Teléfonos"> <TelefonosTable telefonos={datosDenunciaPropiedad.telefonos} /> </TabPanel>
+        <TabPanel header="Automoviles"> <AutomovilesTable automoviles={datosDenunciaPropiedad.automoviles} /> </TabPanel>
+        <TabPanel header="Bicicletas"> <BicicletasTable bicicletas={datosDenunciaPropiedad.bicicletas} /> </TabPanel>
+        <TabPanel header="Autopartes"> <AutopartesTable autopartes={datosDenunciaPropiedad.autopartes} /> </TabPanel>
+        <TabPanel header="Documentacion"> <DocumentacionTable documentacion={datosDenunciaPropiedad.documentacion} /> </TabPanel>
+        <TabPanel header="Tarjetas de credito / debito"> <TarjetasTable tarjetas={datosDenunciaPropiedad.tarjetas} /> </TabPanel>
+        <TabPanel header="Cheques"> <ChequesTable cheques={datosDenunciaPropiedad.cheques} /> </TabPanel>
+        <TabPanel header="Otros"> <OtrosTable otros={datosDenunciaPropiedad.otro} /> </TabPanel>
       </TabView>
     </>
   )
