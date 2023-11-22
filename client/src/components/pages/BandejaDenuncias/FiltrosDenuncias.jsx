@@ -25,6 +25,7 @@ export const FiltrosDenuncias = ({
     realizaciones,
     competencias,
     estados,
+    ratificaciones
   } = data;
 
   return (
@@ -151,6 +152,20 @@ export const FiltrosDenuncias = ({
               placeholder='N° Legajo asignado'
               className='w-12'
               type='number'
+            />
+          </div>
+
+          <div className='col-12 md:col-6 lg:col-3'>
+            <Dropdown
+              options={ratificaciones}
+              optionLabel='ratificacion'
+              optionValue='idRatificacion'
+              value={filters.ratificacion}
+              onChange={(e) =>
+                onFilterChange('ratificacion', e.target.value)
+              }
+              placeholder='Ratificacion'
+              className='w-12'
             />
           </div>
         </div>

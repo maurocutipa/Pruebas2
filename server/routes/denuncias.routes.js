@@ -31,6 +31,11 @@ const {
 
 } = require('../validators/denuncias');
 
+const verifyJWT = require('../middlewares/verifyJWT')
+
+//MAIN MIDDLEWARES
+router.use('/',verifyJWT, /* doubleCsrfProtection, csrfErrorHandler, */)
+
 router.post('/get-all', DenunciasController.getDenuncias);
 router.get('/get-datos-filtros', DenunciasController.getDatosDeFiltros);
 router.get('/get/:id', DenunciasController.getDenunciaById);
@@ -38,21 +43,21 @@ router.get('/get-resumen-ratificar/:id', DenunciasController.getResumenParaRatif
 router.delete('/delete/:id', DenunciasController.deleteDenuncia);
 router.patch('/ratificar-denuncia/:id', DenunciasController.ratificarDenuncia);
 
-router.post('/general-create', /* doubleCsrfProtection, csrfErrorHandler, */ validateCreateGeneral, DenunciasController.createDenunciaGeneral);
-router.post('/genero-create', /* doubleCsrfProtection, csrfErrorHandler, */ validateCreateGenero, DenunciasController.createDenunciaGenero);
-router.post('/familiar-create', /* doubleCsrfProtection, csrfErrorHandler, */ validateCreateFamiliar, DenunciasController.createDenunciaFamiliar);
-router.post('/busqueda-persona-create', /* doubleCsrfProtection, csrfErrorHandler, */ validateCreateBusquedaPersona, DenunciasController.createDenunciaBusquedaPersona);
-router.post('/abigeato-create', /* doubleCsrfProtection, csrfErrorHandler, */ validateCreateAbigeato, DenunciasController.createDenunciaAbigeato);
-router.post('/abigeato-detalle-create', /* doubleCsrfProtection, csrfErrorHandler, */ validateCreateAbigeatoDetalles, DenunciasController.createDenunciaAbigeatoDetalles);
-router.post('/propiedad-create', /* doubleCsrfProtection, csrfErrorHandler, */ validateCreatePropiedad, DenunciasController.createDenunciaPropiedad);
-router.post('/delitos-personas-create', /* doubleCsrfProtection, csrfErrorHandler, */ validateCreateDelitoPersona, DenunciasController.createDenunciaDelitosPersonas);
-router.post('/delitos-sexuales-create', /* doubleCsrfProtection, csrfErrorHandler, */ validateCreateDelitoSexual, DenunciasController.createDenunciaDelitosSexuales);
-router.post('/danos-create', /* doubleCsrfProtection, csrfErrorHandler, */ validateCreateDanos, DenunciasController.createDenunciaDanos);
-router.post('/incidente-vial-create', /* doubleCsrfProtection, csrfErrorHandler, */ validateCreateIncidentesViales, DenunciasController.createDenunciaIncidenteVial);
-router.post('/incidente-vial-vehiculo-create', /* doubleCsrfProtection, csrfErrorHandler, */ validateCreateIncidentesVialesVehiculos, DenunciasController.createDenunciaIncidenteVialVehiculo);
-router.post('/maltrato-animal-create', /* doubleCsrfProtection, csrfErrorHandler, */ validateCreateMaltratoAnimal, DenunciasController.createDenunciaMaltratoAnimal);
 
-//router.put('/upload/:id', validateUpload, DenunciasController.uploadFile)
+router.post('/general-create', validateCreateGeneral, DenunciasController.createDenunciaGeneral);
+router.post('/genero-create', validateCreateGenero, DenunciasController.createDenunciaGenero);
+router.post('/familiar-create', validateCreateFamiliar, DenunciasController.createDenunciaFamiliar);
+router.post('/busqueda-persona-create', validateCreateBusquedaPersona, DenunciasController.createDenunciaBusquedaPersona);
+router.post('/abigeato-create', validateCreateAbigeato, DenunciasController.createDenunciaAbigeato);
+router.post('/abigeato-detalle-create', validateCreateAbigeatoDetalles, DenunciasController.createDenunciaAbigeatoDetalles);
+router.post('/propiedad-create', validateCreatePropiedad, DenunciasController.createDenunciaPropiedad);
+router.post('/delitos-personas-create', validateCreateDelitoPersona, DenunciasController.createDenunciaDelitosPersonas);
+router.post('/delitos-sexuales-create', validateCreateDelitoSexual, DenunciasController.createDenunciaDelitosSexuales);
+router.post('/danos-create', validateCreateDanos, DenunciasController.createDenunciaDanos);
+router.post('/incidente-vial-create', validateCreateIncidentesViales, DenunciasController.createDenunciaIncidenteVial);
+router.post('/incidente-vial-vehiculo-create', validateCreateIncidentesVialesVehiculos, DenunciasController.createDenunciaIncidenteVialVehiculo);
+router.post('/maltrato-animal-create', validateCreateMaltratoAnimal, DenunciasController.createDenunciaMaltratoAnimal);
+
 
 
 router.post('/create', UploadMiddleware,  ParseDataMiddleware, validateMain, mainDenunciaCreate, ComprobanteMiddleware, AuditoriaMiddleware)

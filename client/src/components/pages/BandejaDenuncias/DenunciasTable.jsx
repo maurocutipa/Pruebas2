@@ -23,6 +23,7 @@ const filtersInitialState = {
   estado: '',
   fiscaliaAsignada: '',
   idLegajo: '',
+  ratificacion: ''
 };
 
 const lazyInitialState = {
