@@ -6,19 +6,12 @@ export const loginThunk = createAsyncThunk(
   'auth/login',
   async (body, { rejectWithValue }) => {
     try {
-      let dataFake = null;
-      if (body.email !== 'admin@admin' || body.password !== 'admin') {
-        throw new Error('Usuario o contraseña incorrecta');
-      }
+      const { data } = await login(body);
 
-      // const { data } = await login(body);
-
-      dataFake = { username: 'ADMIN', id: 123 };
-      return { data: dataFake, message: 'Login exitoso' };
+      return data;
     } catch (error) {
       console.log(error.message);
-      // return rejectWithValue(error.response.data);
-      return rejectWithValue(error.message);
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -37,7 +30,7 @@ export const refreshThunk = createAsyncThunk(
 );
 
 // data: { message: string }
-export const logouthThunk = createAsyncThunk(
+export const logoutThunk = createAsyncThunk(
   'auth/logout',
   async (_, { rejectWithValue }) => {
     try {

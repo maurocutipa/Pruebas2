@@ -1,6 +1,7 @@
 :root {
   --blue-mpa-900: #051041;
   --blue-mpa-800: #071866;
+  --blue-mpa-700: #0a2083;
   --lightblue-mpa-900: #1f3dc2;
 }
 
@@ -38,4 +39,13 @@ body {
 
 .bg-black {
   background-color: black;
+}
+
+.link {
+  background-color: var(--blue-mpa-900);
+  border: var(--blue-mpa-900);
+}
+
+.link:hover {
+  background-color: #142057;
 }
