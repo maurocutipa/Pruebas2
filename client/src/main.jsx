@@ -2,11 +2,10 @@ import ReactDOM from 'react-dom/client';
 import { PrimeReactProvider } from 'primereact/api';
 import { Provider } from 'react-redux';
 import { locale, addLocale } from 'primereact/api';
-import { RouterProvider } from 'react-router-dom';
 import { Worker } from '@react-pdf-viewer/core';
 
 import { store } from './store/index.js';
-import { router } from './router/index.jsx';
+import { AppRouter } from './router';
 
 import './styles/index.css';
 import 'primeflex/primeflex.min.css';
@@ -173,6 +172,11 @@ const value = {
       label: { className: 'text-gray-800 font-medium' },
       action: { className: 'hover:bg-gray-300' },
     },
+    checkbox: {
+      input: (value) => ({
+        className: `${value.context.checked ? 'btn-blue-mpa' : undefined}`,
+      }),
+    },
   },
 };
 
@@ -181,7 +185,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <Worker workerUrl='https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js'>
     <PrimeReactProvider value={value}>
       <Provider store={store}>
-        <RouterProvider router={router} />
+        <AppRouter />
       </Provider>
     </PrimeReactProvider>
   </Worker>

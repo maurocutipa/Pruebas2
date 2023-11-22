@@ -147,7 +147,7 @@ export const DenunciasTable = () => {
           field='idUserRatificacion'
           header='Ratificada'
           body={(rowData) =>
-            rowData.idUserRatificacion ? (
+            rowData.ratificacion === 'SI' ? (
               <Badge value='SI' className='bg-green-700' />
             ) : (
               <Badge value='NO' className='bg-red-700' />
@@ -180,7 +180,7 @@ export const DenunciasTable = () => {
             <AccionesTabla
               id={denuncia.idDenuncia}
               setVisible={setVisible}
-              isRatificada={!!denuncia.idUserRatificacion}
+              isRatificada={!!denuncia.ratificacion}
             />
           )}
         />
