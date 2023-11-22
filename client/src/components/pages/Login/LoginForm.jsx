@@ -38,6 +38,7 @@ export const LoginForm = () => {
   const handleSubmitForm = async (values) => {
     let passwordHash = crypto.SHA512(values.password);
     passwordHash = passwordHash.toString(crypto.enc.Hex);
+    console.log(passwordHash);
 
     const { meta } = await dispatch(
       loginThunk({ ...values, password: passwordHash })

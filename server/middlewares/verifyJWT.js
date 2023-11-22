@@ -1,6 +1,9 @@
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
 
 const verifyJWT = (req, res, next) => {
+
+  const authHeader = req.cookies;
+
     if(process.NODE_ENV !== 'production') {
         next()
         return
@@ -21,4 +24,4 @@ const verifyJWT = (req, res, next) => {
     );
 }
 
-module.exports = verifyJWT
+module.exports = verifyJWT;

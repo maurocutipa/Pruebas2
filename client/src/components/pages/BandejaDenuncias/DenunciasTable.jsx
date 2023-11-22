@@ -37,6 +37,7 @@ export const DenunciasTable = () => {
   const { denuncias, totalRecords, loading } = useAppSelector(
     (state) => state.denuncias
   );
+  console.log(denuncias);
 
   const [visible, setVisible] = useState(false);
   useState(false);
@@ -168,7 +169,10 @@ export const DenunciasTable = () => {
           header='Nro de Legajo Asignado'
           body={(rowData) =>
             rowData.idLegajo ? (
-              <Badge value={rowData.idLegajo} className='bg-blue-700' />
+              <Badge
+                value={`${rowData.letra}-${rowData.nroExp}-MPA`}
+                className='bg-blue-700'
+              />
             ) : (
               <Badge value='Pendiente' className='bg-gray-300 text-gray-900' />
             )
