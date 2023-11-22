@@ -4,7 +4,7 @@ const safeConcatQuery = require('@utils/safeConcatQuery');
 const convertToSnakeCase = require('@utils/convertToSnakeCase');
 const { matchedData } = require('express-validator');
 const showError = require('@utils/showError');
-const { formatDateHour } = require('@utils/formatDate');
+const { formatDate } = require('@utils/formatDate');
 
 const GetController = {};
 
@@ -12,45 +12,51 @@ GetController.getDenuncias = async (req, res) => {
   const { limit, offset } = req.body;
 
   let filters = ``;
+  let filterValues = []
 
-  if (req.body.idDenuncia !== undefined && req.body.idDenuncia !== '') {
-    filters += ` AND d.id_denuncia = ${req.body.idDenuncia}`;
+  if (req.body.idDenuncia) {
+    filters += ` AND d.id_denuncia like ?`;
+    filterValues = [...filterValues, req.body.idDenuncia]
   }
 
-  if (req.body.tipoDenuncia !== undefined && req.body.tipoDenuncia !== 0) {
-    filters += ` AND d.id_tipo_denuncia = ${req.body.tipoDenuncia}`;
+  if (req.body.tipoDenuncia) {
+    filterValues = [...filterValues, req.body.tipoDenuncia]
+    filters += ` AND d.id_tipo_denuncia like ?`;
   }
 
-  if (req.body.seccional !== undefined && req.body.seccional !== 0) {
-    filters += ` AND d.id_seccional = ${req.body.seccional}`;
+  if (req.body.seccional) {
+    filterValues = [...filterValues, req.body.seccional]
+    filters += ` AND d.id_seccional like ?`;
   }
 
-  if (req.body.idLegajo !== undefined && req.body.idLegajo !== '') {
-    filters += ` AND d.id_legajo = ${req.body.idLegajo}`;
+  if (req.body.idLegajo) {
+    filterValues = [...filterValues, req.body.idLegajo]
+    filters += ` AND d.id_legajo like ?`;
   }
 
-  if (req.body.competencia !== undefined && req.body.competencia !== 0) {
-    filters += ` AND d.competencia = ${req.body.competencia}`;
+  if (req.body.competencia) {
+    filterValues = [...filterValues, req.body.competencia]
+    filters += ` AND d.competencia like ?`;
   }
 
-  if (req.body.realizacion !== undefined && req.body.realizacion !== 0) {
-    filters += ` AND d.realizacion = ${req.body.realizacion}`;
+  if (req.body.realizacion) {
+    filterValues = [...filterValues, req.body.realizacion]
+    filters += ` AND d.realizacion like ?`;
   }
 
-  if (
-    req.body.fiscaliaAsignada !== undefined &&
-    req.body.fiscaliaAsignada !== ''
-  ) {
-    filters += ` AND sc.id_sector = ${req.body.fiscaliaAsignada}`;
+  if (req.body.fiscaliaAsignada && req.body.fiscaliaAsignada) {
+    filterValues = [...filterValues, req.body.fiscaliaAsignada]
+    filters += ` AND sc.id_sector like ?`;
   }
 
-  if (
-    req.body.fechaDenunciaDesde !== '' &&
-    req.body.fechaDenunciaHasta !== ''
-  ) {
-    filters += ` AND d.fecha_denuncia BETWEEN '${formatDate(
-      req.body.fechaDenunciaDesde
-    )}' AND '${formatDate(req.body.fechaDenunciaHasta)}'`;
+  if (req.body.fechaDenunciaDesde && req.body.fechaDenunciaHasta) {
+    filterValues = [...filterValues, formatDate(req.body.fechaDenunciaDesde), formatDate(req.body.fechaDenunciaHasta)]
+    filters += ` AND d.fecha_denuncia BETWEEN ? AND ? `;
+  }
+
+  if(req.body.ratificacion){
+    filterValues = [...filterValues, req.body.ratificacion]
+    filters += ` AND d.ratificacion like ?`
   }
 
   try {
@@ -61,7 +67,7 @@ GetController.getDenuncias = async (req, res) => {
         LEFT JOIN legajo l ON d.id_legajo = l.id_legajo
         LEFT JOIN sectores sc ON l.id_sector = sc.id_sector
         WHERE d.estado = 1 ${filters};`;
-    const count = await queryHandler(query);
+    const count = await queryHandler(query, filterValues);
 
     query = `
         SELECT
@@ -70,7 +76,6 @@ GetController.getDenuncias = async (req, res) => {
             d.hora_denuncia AS horaDenuncia,
             d.realizacion,
             d.ratificacion,
-            d.id_user_ratificacion AS idUserRatificacion,
             d.competencia,
             td.nombre AS tipoDenuncia,
             s.nombre AS seccional,
@@ -85,7 +90,7 @@ GetController.getDenuncias = async (req, res) => {
         LIMIT ${limit}
         OFFSET ${offset}
       `;
-    const denuncias = await queryHandler(query);
+    const denuncias = await queryHandler(query, [...filterValues, limit, offset]);
 
     res.status(200).json({
       message: 'ok',
@@ -216,58 +221,58 @@ GetController.getDenunciaById = async (req, res) => {
       query = `
         SELECT 
         *
-        FROM denuncia_propiedad_automoviles WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
+        FROM denuncia_propiedad_automoviles WHERE id_denuncia_propiedad = ? 
         `;
-      automoviles = await queryHandler(query, [id]);
+      automoviles = await queryHandler(query, [datosGeneralesDenunciaPropiedad.idDenunciaPropiedad]);
 
       query = `
         SELECT
         *
-        FROM denuncia_propiedad_autopartes WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
+        FROM denuncia_propiedad_autopartes WHERE id_denuncia_propiedad = ? 
         `;
-      autopartes = await queryHandler(query, [id]);
+      autopartes = await queryHandler(query, [datosGeneralesDenunciaPropiedad.idDenunciaPropiedad]);
 
       query = `
         SELECT
         *
-        FROM denuncia_propiedad_bicicletas WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
+        FROM denuncia_propiedad_bicicletas WHERE id_denuncia_propiedad = ? 
         `;
-      bicicletas = await queryHandler(query, [id]);
+      bicicletas = await queryHandler(query, [datosGeneralesDenunciaPropiedad.idDenunciaPropiedad]);
 
       query = `
         SELECT
         *
-        FROM denuncia_propiedad_cheques WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
+        FROM denuncia_propiedad_cheques WHERE id_denuncia_propiedad = ? 
         `;
-      cheques = await queryHandler(query, [id]);
+      cheques = await queryHandler(query, [datosGeneralesDenunciaPropiedad.idDenunciaPropiedad]);
 
       query = `
         SELECT
         *
-        FROM denuncia_propiedad_documentacion WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
+        FROM denuncia_propiedad_documentacion WHERE id_denuncia_propiedad = ? 
         `;
-      documentacion = await queryHandler(query, [id]);
+      documentacion = await queryHandler(query, [datosGeneralesDenunciaPropiedad.idDenunciaPropiedad]);
 
       query = `
         SELECT
         *
-        FROM denuncia_propiedad_otro WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
+        FROM denuncia_propiedad_otro WHERE id_denuncia_propiedad = ? 
         `;
-      otro = await queryHandler(query, [id]);
+      otro = await queryHandler(query, [datosGeneralesDenunciaPropiedad.idDenunciaPropiedad]);
 
       query = `
         SELECT
         *
-        FROM denuncia_propiedad_tarjetas WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
+        FROM denuncia_propiedad_tarjetas WHERE id_denuncia_propiedad = ? 
         `;
-      tarjetas = await queryHandler(query, [id]);
+      tarjetas = await queryHandler(query, [datosGeneralesDenunciaPropiedad.idDenunciaPropiedad]);
 
       query = `
         SELECT
         *
-        FROM denuncia_propiedad_telefonos WHERE id_denuncia_propiedad = ${datosGeneralesDenunciaPropiedad.idDenunciaPropiedad}
+        FROM denuncia_propiedad_telefonos WHERE id_denuncia_propiedad = ? 
         `;
-      telefonos = await queryHandler(query, [id]);
+      telefonos = await queryHandler(query, [datosGeneralesDenunciaPropiedad.idDenunciaPropiedad]);
     }
 
     // ============================ Fin querys denuncia propiedad ==============================
@@ -286,8 +291,8 @@ GetController.getDenunciaById = async (req, res) => {
     if (datosGeneralesIncidentesViales !== undefined) {
       query = `
         SELECT * FROM denuncia_incidentes_viales_vehiculos 
-        WHERE id_denuncia_incidentes_viales = ${datosGeneralesIncidentesViales.idDenunciaIncidentesViales}`;
-      vehiculos = await queryHandler(query, [id]);
+        WHERE id_denuncia_incidentes_viales = ?`;
+      vehiculos = await queryHandler(query, [datosGeneralesIncidentesViales.idDenunciaIncidentesViales]);
     }
     //============================= Fin de querys incidentes viales ============================
 
