@@ -7,8 +7,10 @@ export const loginThunk = createAsyncThunk(
   async (body, { rejectWithValue }) => {
     try {
       const { data } = await login(body);
+
       return data;
     } catch (error) {
+      console.log(error.message);
       return rejectWithValue(error.response.data);
     }
   }
@@ -28,7 +30,7 @@ export const refreshThunk = createAsyncThunk(
 );
 
 // data: { message: string }
-export const logouthThunk = createAsyncThunk(
+export const logoutThunk = createAsyncThunk(
   'auth/logout',
   async (_, { rejectWithValue }) => {
     try {

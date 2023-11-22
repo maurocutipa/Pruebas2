@@ -42,11 +42,6 @@ export const AccionesTabla = ({ id, setVisible, isRatificada }) => {
     dispatch(setIdDenuncia(id));
   };
 
-  const convertirDenuncia = () => {
-    console.log('CONVERTIR DENUNCIA', id);
-    navigate(`/convertir-denuncia-legajo/${id}`);
-  };
-
   const menuitems = [
     {
       label: 'Acciones',
@@ -60,13 +55,9 @@ export const AccionesTabla = ({ id, setVisible, isRatificada }) => {
           command: () => (isRatificada ? descargarPdf() : ratificarDenuncia()),
         },
         {
-          label: 'Realizar pase',
+          label: 'Accion a realizar',
           command: () => realizarPase(),
         },
-        // {
-        //   label: 'Convertir denuncia a legajo',
-        //   command: () => convertirDenuncia(),
-        // },
         {
           label: 'Eliminar denuncia',
           command: () => eliminarDenuncia(),
