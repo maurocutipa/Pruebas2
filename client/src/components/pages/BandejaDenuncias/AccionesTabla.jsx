@@ -55,7 +55,7 @@ export const AccionesTabla = ({ id, setVisible, isRatificada }) => {
           command: () => (isRatificada ? descargarPdf() : ratificarDenuncia()),
         },
         {
-          label: 'Accion a realizar',
+          label: 'Acción a realizar',
           command: () => realizarPase(),
         },
         {

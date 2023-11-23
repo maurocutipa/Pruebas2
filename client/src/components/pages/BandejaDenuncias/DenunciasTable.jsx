@@ -162,6 +162,7 @@ export const DenunciasTable = () => {
             rowData.realizacion ? rowData.realizacion : 'NO TIENE'
           }
         />
+
         <Column
           field='seccional'
           header='Seccional'
@@ -169,6 +170,7 @@ export const DenunciasTable = () => {
             rowData.seccional ? rowData.seccional : 'NO TIENE'
           }
         />
+
         <Column
           field='fechaDenuncia'
           header='Fecha de Denuncia'
@@ -176,6 +178,7 @@ export const DenunciasTable = () => {
             parseDDMMYYYYHHMM(rowData.fechaDenuncia, rowData.horaDenuncia)
           }
         />
+
         <Column field='tipoDenuncia' header='Tipo de Denuncia' />
         <Column
           field='competencia'
@@ -186,7 +189,15 @@ export const DenunciasTable = () => {
         />
 
         <Column
-          field='idUserRatificacion'
+          field='fiscaliaAsignada'
+          header='Fiscalía Asignada'
+          body={(rowData) =>
+            rowData.fiscaliaAsignada ? rowData.fiscaliaAsignada : 'No registra'
+          }
+        />
+
+        <Column
+          field='ratificacion'
           header='Ratificada'
           body={(rowData) =>
             rowData.ratificacion === 'SI' ? (
@@ -194,14 +205,6 @@ export const DenunciasTable = () => {
             ) : (
               <Badge value='NO' className='bg-red-700' />
             )
-          }
-        />
-
-        <Column
-          field='fiscaliaAsignada'
-          header='Fiscalía Asignada'
-          body={(rowData) =>
-            rowData.fiscaliaAsignada ? rowData.fiscaliaAsignada : 'No registra'
           }
         />
         <Column

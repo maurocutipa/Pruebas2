@@ -42,8 +42,6 @@ const crearDenunciaLegajo = async (req, res) => {
   const { id } = req.params;
   const body = req.body;
 
-  console.log(body);
-
   try {
     let query = `
       SELECT
@@ -88,6 +86,41 @@ const crearDenunciaLegajo = async (req, res) => {
     const nuevoLegajo = await queryHandler(query, values);
 
     // Insertar los delitos e intervinientes
+    const intervinientesDelitos = body.delitos;
+    await Promise.all(
+      intervinientesDelitos.map((i) => {
+        const query = `
+        INSERT INTO
+          interviniente_delito (id_legajo, id_interviniente, id_delito, estado)
+        VALUES (?, ?, ?, 1)`;
+
+        const values = [nuevoLegajo.insertId, i.denunciado, i.delito];
+        return queryHandler(query, values);
+      })
+    );
+
+    const resumenHechos = body.resumenHechos;
+    await Promise.all(
+      resumenHechos.map(async (r) => {
+        let query = `
+          INSERT INTO
+            legajo_resumen_hechos (id_legajo, descripcion, id_user_create, estado) 
+          VALUES (?, ?, ?, 1)
+        `;
+
+        let values = [nuevoLegajo.insertId, r.descripcion, req.idUsuario];
+        const resumenHecho = await queryHandler(query, values);
+
+        query = `
+          INSERT INTO
+            legajo_resumen_intervinientes (id_legajo_resumen_hecho, id_interviniente, estado) 
+          VALUES (?, ?, 1)
+        `;
+        values = [resumenHecho.insertId, r.denunciado];
+
+        return queryHandler(query, values);
+      })
+    );
 
     query = `
       UPDATE denuncia 
