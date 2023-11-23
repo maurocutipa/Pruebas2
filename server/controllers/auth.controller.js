@@ -93,10 +93,12 @@ const logout = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: 'None',
-      maxAge: 10,
+      maxAge: -1,
     });
+
     res.sendStatus(204);
   } catch (error) {
+    console.log(error);
     return res.sendStatus(500);
   }
 };
@@ -116,12 +118,10 @@ const refresh = async (req, res) => {
       maxAge: 12 * 60 * 60 * 1000,
     });
 
-    console.log(req.usuario);
-
     res.status(200).json({
       message: 'Nuevo token',
       data: {
-        usuario: req.usuario,
+        usuario: req.usuario.username,
         /* roles: req.roles, */
       },
     });
