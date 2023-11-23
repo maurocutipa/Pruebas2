@@ -58,7 +58,7 @@ const login = async (req, res) => {
 
     //console.log(roles);
     const accessToken = await generateJWT({
-      usuario: usuario,
+      username: usuario.username,
       idUsuario: usuario.id_usuario,
       roles,
     });
@@ -73,7 +73,7 @@ const login = async (req, res) => {
     res.status(200).json({
       message: 'Acceso exitoso',
       data: {
-        usuario: usuario.username,
+        username: usuario.username,
         idUsuario: usuario.id_usuario,
         roles,
       },
@@ -107,8 +107,8 @@ const refresh = async (req, res) => {
   try {
     const refreshToken = await generateJWT({
       idUsuario: req.idUsuario,
-      usuario: req.usuario,
-      /* req.roles */
+      username: req.username,
+      roles: req.roles
     });
 
     res.cookie('jwt', refreshToken, {
@@ -121,8 +121,9 @@ const refresh = async (req, res) => {
     res.status(200).json({
       message: 'Nuevo token',
       data: {
-        usuario: req.usuario.username,
-        /* roles: req.roles, */
+        username: req.username,
+        roles: req.roles,
+        idUsuario: req.idUsuario
       },
     });
   } catch (error) {
