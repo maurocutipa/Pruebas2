@@ -30,5 +30,5 @@ export const ratificarDenuncia = (id) => {
 };
 
 export const getResumenDenuncia = (id) => {
-  return api.get(URLS.getResumenDenuncia(id))
-}
+  return api.get(URLS.getResumenDenuncia(id));
+};

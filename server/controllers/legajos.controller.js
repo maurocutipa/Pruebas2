@@ -85,14 +85,16 @@ const crearDenunciaLegajo = async (req, res) => {
         legajo (letra, nro_exp, id_denuncia, id_sector, id_juridiccion, fecha_ingreso, id_user_ingreso)
       VALUES (?, ?, ?, ?, ?, ?, ?)
     `;
-    const response = await queryHandler(query, values);
+    const nuevoLegajo = await queryHandler(query, values);
+
+    // Insertar los delitos e intervinientes
 
     query = `
       UPDATE denuncia 
         SET denuncia.id_legajo = ?
       WHERE denuncia.id_denuncia = ?
     `;
-    values = [response.insertId, body.idDenuncia];
+    values = [nuevoLegajo.insertId, body.idDenuncia];
     await queryHandler(query, values);
 
     res.status(200).json({
