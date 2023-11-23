@@ -13,8 +13,8 @@ const verifyJWT = (req, res, next) => {
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) return res.sendStatus(403); //token inválido
-    req.usuario = decoded.usuario;
-    //req.roles = decoded.roles,
+    req.username = decoded.username;
+    req.roles = decoded.roles;
     req.idUsuario = decoded.idUsuario;
     next();
   });
