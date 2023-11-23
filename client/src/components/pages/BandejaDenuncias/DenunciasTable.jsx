@@ -11,6 +11,7 @@ import { RealizarPaseDenuncia } from './RealizarPaseDenuncia.jsx';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks.js';
 import { getDenunciasThunk } from '@/store/denunciasSlice/denuncias.thunks.js';
 import { parseDDMMYYYYHHMM } from '@/utils/parseDate.js';
+import dayjs from 'dayjs'
 
 const filtersInitialState = {
   idDenuncia: '',
@@ -73,7 +74,7 @@ export const DenunciasTable = () => {
 
   const HeaderTable = () => {
     return (
-      <div className='flex justify-content-between md:flex-row flex-column'>
+      <div className='flex justify-content-start md:flex-row flex-column gap-3'>
         <Button
           type='button'
           icon='pi pi-filter-slash'
@@ -82,11 +83,51 @@ export const DenunciasTable = () => {
           onClick={resetAllFilters}
           className='md:mb-0 mb-8 text-lightblue-mpa'
         />
+
+        <Button
+          type='button'
+          icon='pi pi-file-export'
+          label='Exportar a Excel'
+          outlined
+          onClick={exportExcel}
+          className='md:mb-0 mb-8 text-lightblue-mpa'
+        />
       </div>
     );
   };
 
   const onPage = (event) => setlazyState(event);
+
+  const exportExcel = () => {
+    console.log(denuncias);
+    import('xlsx').then((xlsx) => {
+      const worksheet = xlsx.utils.json_to_sheet(denuncias.map(denuncia => ({
+        ...denuncia,
+        fechaDenuncia: dayjs(denuncia.fechaDenuncia).format('DD/MM/YYYY')
+      })), {});
+      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
+      const excelBuffer = xlsx.write(workbook, {
+        bookType: 'xlsx',
+        type: 'array'
+      });
+
+      saveAsExcelFile(excelBuffer, 'denuncias');
+    });
+  };
+
+  const saveAsExcelFile = (buffer, fileName) => {
+    import('file-saver').then((module) => {
+      if (module && module.default) {
+        let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+        let EXCEL_EXTENSION = '.xlsx';
+        const data = new Blob([buffer], {
+          type: EXCEL_TYPE
+        });
+
+        module.default.saveAs(data, fileName + new Date().getTime() + EXCEL_EXTENSION);
+      }
+    });
+  };
 
   return (
     <>
