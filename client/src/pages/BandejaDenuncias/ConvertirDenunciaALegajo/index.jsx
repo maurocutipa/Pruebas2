@@ -3,8 +3,8 @@ import { useEffect, useRef } from 'react';
 import { Button } from 'primereact/button';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { AsignarDelito } from '@/components/pages/ConvertirDenunciaALegajo/AsignarDelitos';
-import { ResumenHechos } from '@/components/pages/ConvertirDenunciaALegajo/ResumenHechos';
+import { AsignarDelito } from '@/components/pages/BandejaDenuncias/ConvertirDenunciaALegajo/AsignarDelitos';
+import { ResumenHechos } from '@/components/pages/BandejaDenuncias/ConvertirDenunciaALegajo/ResumenHechos';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   getDenunciadosParaLegajoThunk,
@@ -13,7 +13,7 @@ import {
 import { resetState } from '@/store/legajoSlice/legajo.slice';
 import { Toast } from 'primereact/toast';
 import { toastError, toastSuccess } from '@/utils/toastMessage';
-import { getAccionTomadaThunk } from '../../store/legajoSlice/legajo.thunks';
+import { getAccionTomadaThunk } from '@/store/legajoSlice/legajo.thunks';
 
 export const ConvertirDenunciaALegajo = () => {
   const toast = useRef(null);

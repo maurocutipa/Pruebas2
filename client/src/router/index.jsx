@@ -1,13 +1,14 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Header_ from '@/components/layouts/Header_';
 
-import LoginPage from '@/pages/Login/Login.jsx';
+import LoginPage from '@/pages/Login';
 import BandejaDenuncias from '@/pages/BandejaDenuncias';
-import { VerDenuncia } from '@/pages/VerDenuncia';
-import { ConvertirDenunciaALegajo } from '@/pages/ConvertirDenunciaALegajo';
-import { RatificarDenuncia } from '@/pages/RatificarDenuncia';
-import { ArchivarDenuncia } from '@/pages/ArchivarDenuncia';
-import { DenunciaNoPenal } from '@/pages/DenunciaNoPenal';
+import { VerDenuncia } from '@/pages/BandejaDenuncias/VerDenuncia';
+import { ConvertirDenunciaALegajo } from '@/pages/BandejaDenuncias/ConvertirDenunciaALegajo';
+import { RatificarDenuncia } from '@/pages/BandejaDenuncias/RatificarDenuncia';
+import { ArchivarDenuncia } from '@/pages/BandejaDenuncias/ArchivarDenuncia';
+import { DenunciaNoPenal } from '@/pages/BandejaDenuncias/DenunciaNoPenal';
+
 import { PrivateRoutes } from './auth/PrivateRoutes';
 import { PublicRoutes } from './auth/PublicRoutes';
 import { useAuth } from '../hooks/useAuth';
