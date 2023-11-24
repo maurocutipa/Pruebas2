@@ -7,6 +7,7 @@ import { FirmaYTOS } from '@/components/pages/RatificarDenuncia/FirmaYTOS';
 import { useAppDispatch } from '@/store/hooks';
 import { ratificarDenunciaThunk } from '@/store/denunciasSlice/denuncias.thunks';
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
+import { toastError, toastSuccess } from '@/utils/toastMessage';
 
 export const RatificarDenuncia = () => {
   const toast = useRef(null);
@@ -28,22 +29,14 @@ export const RatificarDenuncia = () => {
     const { meta } = await dispatch(ratificarDenunciaThunk(id));
 
     if (meta.requestStatus === 'fulfilled') {
-      toast.current.show({
-        severity: 'success',
-        summary: 'Éxito',
-        detail:
-          'Se realizó la ratificación, puede regresar a la bandeja de denuncias',
-        life: 3000,
-      });
+      toastSuccess(
+        toast,
+        'Se realizó la ratificación, puede regresar a la bandeja de denuncias'
+      );
 
       setIsDisabled(true);
     } else {
-      toast.current.show({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'No se realizó la ratificación',
-        life: 3000,
-      });
+      toastError(toast, 'No se pudo realizar la ratificación');
     }
   };
 

@@ -16,6 +16,7 @@ export const FiltrosDenuncias = ({
   filters,
   onFilterChange,
   handleRealizarBusqueda,
+  resetAllFilters,
 }) => {
   const { data } = useAppSelector((state) => state.data);
   const {
@@ -25,7 +26,7 @@ export const FiltrosDenuncias = ({
     realizaciones,
     competencias,
     estados,
-    ratificaciones
+    ratificaciones,
   } = data;
 
   return (
@@ -161,21 +162,32 @@ export const FiltrosDenuncias = ({
               optionLabel='ratificacion'
               optionValue='idRatificacion'
               value={filters.ratificacion}
-              onChange={(e) =>
-                onFilterChange('ratificacion', e.target.value)
-              }
+              onChange={(e) => onFilterChange('ratificacion', e.target.value)}
               placeholder='Ratificacion'
               className='w-12'
             />
           </div>
         </div>
 
-        <div className='col-12 md:col-6 lg:col-3 mt-4'>
-          <Button
-            label='Realizar búsqueda'
-            className='w-full py-3 btn-blue-mpa'
-            onClick={handleRealizarBusqueda}
-          />
+        <div className='grid'>
+          <div className='col-12 md:col-6 lg:col-3 mt-4'>
+            <Button
+              label='Realizar búsqueda'
+              className='w-full py-3 btn-blue-mpa'
+              onClick={handleRealizarBusqueda}
+            />
+          </div>
+
+          <div className='col-12 md:col-6 lg:col-3 mt-4'>
+            <Button
+              type='button'
+              icon='pi pi-filter-slash'
+              label='Limpiar filtros'
+              outlined
+              onClick={resetAllFilters}
+              className='text-lightblue-mpa w-full lg:w-6 py-3'
+            />
+          </div>
         </div>
       </div>
     </>

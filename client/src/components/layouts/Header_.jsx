@@ -69,9 +69,11 @@ const Header_ = () => {
               className='mr-2'
               shape='circle'
             />
-            <div className='flex flex-column align'>
+            <div className='flex flex-column'>
               {/* <span className='font-bold'>{usuario?.toUpperCase()}</span> */}
-              <span className='text-sm'>{user?.username.toUpperCase()}</span>
+              <div className='text-sm font-bold'>
+                {user?.username.toUpperCase()}
+              </div>
             </div>
           </button>
         );
