@@ -12,6 +12,7 @@ import {
 } from '@/store/legajoSlice/legajo.thunks';
 import { resetState } from '@/store/legajoSlice/legajo.slice';
 import { Toast } from 'primereact/toast';
+import { toastError, toastSuccess } from '@/utils/toastMessage';
 
 export const ConvertirDenunciaALegajo = () => {
   const toast = useRef(null);
@@ -33,20 +34,12 @@ export const ConvertirDenunciaALegajo = () => {
     const { meta } = await dispatch(crearDenunciaLegajoThunk(formData));
 
     if (meta.requestStatus === 'fulfilled') {
-      toast.current.show({
-        severity: 'success',
-        summary: 'Éxito',
-        detail:
-          'La denuncia fue convertida a legajo ,puede regresar a la bandeja de denuncias',
-        life: 3000,
-      });
+      toastSuccess(
+        toast,
+        'Denuncia convertida a legajo, puede regresar a la bandeja de denuncias'
+      );
     } else {
-      toast.current.show({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'No se pudo convertir la denuncia a legajo',
-        life: 3000,
-      });
+      toastError(toast, 'No se pudo convertir la denuncia a legajo');
     }
   };
 

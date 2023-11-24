@@ -11,7 +11,7 @@ import { RealizarPaseDenuncia } from './RealizarPaseDenuncia.jsx';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks.js';
 import { getDenunciasThunk } from '@/store/denunciasSlice/denuncias.thunks.js';
 import { parseDDMMYYYYHHMM } from '@/utils/parseDate.js';
-import dayjs from 'dayjs'
+import { exportExcel } from '@/utils/exportExcel.js';
 
 const filtersInitialState = {
   idDenuncia: '',
@@ -74,60 +74,29 @@ export const DenunciasTable = () => {
 
   const HeaderTable = () => {
     return (
-      <div className='flex justify-content-start md:flex-row flex-column gap-3'>
-        <Button
-          type='button'
-          icon='pi pi-filter-slash'
-          label='Limpiar filtros'
-          outlined
-          onClick={resetAllFilters}
-          className='md:mb-0 mb-8 text-lightblue-mpa'
-        />
+      <div className='flex justify-content-between align-items-center md:flex-row flex-column'>
+        <div className='font-semibold text-gray-600 md:mb-0 mb-6'>
+          {lazyState.first + 1}-{lazyState.first + lazyState.rows} de{' '}
+          {totalRecords} resultados
+        </div>
 
-        <Button
-          type='button'
-          icon='pi pi-file-export'
-          label='Exportar a Excel'
-          outlined
-          onClick={exportExcel}
-          className='md:mb-0 mb-8 text-lightblue-mpa'
-        />
+        <div className='mr-4'>
+          <Button
+            type='button'
+            icon='pi pi-file-excel'
+            rounded
+            onClick={() => exportExcel(denuncias)}
+            severity='success'
+            tooltip='Exportar a Excel'
+            tooltipOptions={{ position: 'top' }}
+            className='bg-green-800 border-green-800'
+          />
+        </div>
       </div>
     );
   };
 
   const onPage = (event) => setlazyState(event);
-
-  const exportExcel = () => {
-    console.log(denuncias);
-    import('xlsx').then((xlsx) => {
-      const worksheet = xlsx.utils.json_to_sheet(denuncias.map(denuncia => ({
-        ...denuncia,
-        fechaDenuncia: dayjs(denuncia.fechaDenuncia).format('DD/MM/YYYY')
-      })), {});
-      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
-      const excelBuffer = xlsx.write(workbook, {
-        bookType: 'xlsx',
-        type: 'array'
-      });
-
-      saveAsExcelFile(excelBuffer, 'denuncias');
-    });
-  };
-
-  const saveAsExcelFile = (buffer, fileName) => {
-    import('file-saver').then((module) => {
-      if (module && module.default) {
-        let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-        let EXCEL_EXTENSION = '.xlsx';
-        const data = new Blob([buffer], {
-          type: EXCEL_TYPE
-        });
-
-        module.default.saveAs(data, fileName + new Date().getTime() + EXCEL_EXTENSION);
-      }
-    });
-  };
 
   return (
     <>
@@ -143,7 +112,9 @@ export const DenunciasTable = () => {
       <DataTable
         value={denuncias}
         paginator
-        rows={5}
+        paginatorTemplate='FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
+        rows={lazyState.rows}
+        rowsPerPageOptions={[5, 10, 15]}
         totalRecords={totalRecords}
         lazy
         loading={loading}
@@ -152,6 +123,8 @@ export const DenunciasTable = () => {
         dataKey='idDenuncia'
         emptyMessage='No se encontraron denuncias'
         className='mb-8 shadow-3'
+        stateStorage='session'
+        stateKey='denuncias-state-local'
         header={HeaderTable()}
       >
         <Column field='idDenuncia' header='Nro' />
