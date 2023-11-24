@@ -7,8 +7,8 @@ import { TabView, TabPanel } from 'primereact/tabview';
 import { VehiculosInvolucradosTable } from './TablasVerDenuncia/ObjetosSustraidos/VehiculosInvolucradosTable';
 import { ObjetosSustraidosTable } from './TablasVerDenuncia/ObjetosSustraidos/ObjetosSustraidosTable';
 import { Dialog } from 'primereact/dialog';
-import { PdfViewer } from '../../common/PdfViewer';
-import { GET_ADJUNTOS } from '../../../constants';
+import { PdfViewer } from '@/components/common/PdfViewer';
+import { GET_ADJUNTOS } from '@/constants';
 import { useState } from 'react';
 
 export const DatosDelHecho = ({ datosDenuncia }) => {
