@@ -61,18 +61,35 @@ router.post('/firmarExist', /* INCLUIR MULTER MIDDLEWARE, */ async (req, res) =>
                 },
 
                 text: {
-
+				
                     // The tags {{signerName}} and {{signerNationalId}} will be substituted according to the user's certificate
                     // signerName -> full name of the signer
                     // signerNationalId -> if the certificate is ICP-Brasil, contains the signer's CPF
-                    text: 'Signed by {{signerName}} ({{signerNationalId}})',
-
-                    // Specify that the signing time should also be rendered
-                    includeSigningTime: true,
-
-                    // Optionally set the horizontal alignment of the text ('Left' or 'Right'), if not set the default is Left
-                    horizontalAlign: 'Left'
-
+                    //text: 'Signed by {{signerName}} ({{signerNationalId}})',
+                    
+                    'fontSize': 6,
+                        'text': 'Firmado Digitalmente por  {{signerName}}' +
+                        '\nFecha y Hora: '+ Date.now().toString() +
+                        '\nVerificador: ' + ' TEST '+
+                        '\nEste documento esta firmado digitalmente conforme los'+
+                        'términos de la Ley 25.506. La presente firma podrá'+
+                        'verificarse y/o validarse en www.mpajujuy.gob.ar/pki ',
+                        // text' => "Firmado por {{name}} ({{br_cpf_formatted}})",
+                        'includeSigningTime' : false,
+                        'horizontalAlign' : 'Left',
+                        'container' : {
+                            // 'left' => 0.2,
+                            // 'top' => 0.2,
+                            // 'right' => 0.2,
+                            // 'bottom' => 0.2,
+                            'left' : 0.2,
+                            'top' : 0.2,
+                            'right' : 0.2,
+                            'bottom' : 0.2,
+                            'width' : null,
+                            'height' : null
+                        }
+                    
                 },
 
                 position: {
