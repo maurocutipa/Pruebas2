@@ -45,6 +45,19 @@ const crearDenunciaLegajo = async (req, res) => {
   try {
     let query = `
       SELECT
+        accion
+      FROM denuncia
+      WHERE id_denuncia = ? 
+    `;
+    const [denuncia] = await queryHandler(query, [body.idDenuncia]);
+    if (denuncia.accion) {
+      return res
+        .status(400)
+        .json({ message: 'Ya se tomaron acciones para esta denuncia' });
+    }
+
+    query = `
+      SELECT
         j.letra,
         j.id_jurisdiccion AS idJurisdiccion
       FROM sectores s
@@ -124,7 +137,8 @@ const crearDenunciaLegajo = async (req, res) => {
 
     query = `
       UPDATE denuncia 
-        SET denuncia.id_legajo = ?
+        SET denuncia.id_legajo = ?,
+        denuncia.accion = 'PENAL'
       WHERE denuncia.id_denuncia = ?
     `;
     values = [nuevoLegajo.insertId, body.idDenuncia];
@@ -140,4 +154,37 @@ const crearDenunciaLegajo = async (req, res) => {
   }
 };
 
-module.exports = { getDenunciadosParaLegajo, crearDenunciaLegajo };
+const getAccionTomada = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    let query = `
+        SELECT
+          d.accion
+        FROM denuncia d
+        WHERE id_denuncia = ?`;
+
+    const [denuncia] = await queryHandler(query, [id]);
+
+    if (!denuncia) {
+      return res.status(404).json({
+        message: `Denuncia con el id: ${id} no existe`,
+        data: { denuncia },
+      });
+    }
+
+    res.status(200).json({
+      message: 'Acciones tomadas',
+      data: { seTomoAccion: !!denuncia.accion },
+    });
+  } catch (error) {
+    console.log(error);
+    httpErrorHandler(res);
+  }
+};
+
+module.exports = {
+  getDenunciadosParaLegajo,
+  crearDenunciaLegajo,
+  getAccionTomada,
+};
