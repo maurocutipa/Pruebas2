@@ -144,3 +144,6 @@ uploads/**
 
 # Test Script
 test.js
+
+#public
+public/**
