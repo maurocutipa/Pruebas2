@@ -33,7 +33,7 @@ if (process.env.NODE_ENV !== 'production') {
 app.use(accessLog)
 
 //for reverse proxy
-//app.set('trust proxy', true);
+app.set('trust proxy', '127.0.0.1');
 
 //cookie settings
 app.use(cookieParser(process.env.COOKIE_SECRET));

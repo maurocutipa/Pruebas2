@@ -22,7 +22,7 @@ const ComprobanteMiddleware = async (req, res, next) => {
 
         const usuario = await queryHandler(`select nombre, apellido, grado from usuarios`)
 
-        if(denuncia.certezaLugar){
+        if (denuncia.certezaLugar) {
             denuncia.barrio = barrios.filter(barrio => barrio.id = denuncia.idBarrio)[0].nombre
             denuncia.localidad = localidades.filter(localidad => localidad.id = denuncia.idLocaidad)[0].nombre
         }
@@ -70,26 +70,22 @@ const ComprobanteMiddleware = async (req, res, next) => {
                 lugar: "San salvador",
                 fuerza: "Ejemplo"
             }
-            
-        }))
 
-        
-        //AUDITORIA
-        req.actividad = "CREAR DENUNCIA"
-        req.idUsuario = 2 //test
-        req.denuncia.tipoDenuncia = (tipoDenuncia && tipoDenuncia.nombre) || "Sin especificar",
+        }))
+        /* denunciantes.forEach(den => {
+                    sendEmail(den.email)
+                }) */
+
         next()
 
-        /* denunciantes.forEach(den => {
-            sendEmail(den.email)
-        }) */
 
-        res.status(200).json({
+
+        /* res.status(200).json({
             ok: true,
             message: "Denuncia creada",
             idDenuncia: denuncia.idDenuncia,
             email: denunciantes[0] && denunciantes[0].email
-        })
+        }) */
     } catch (error) {
         showError(error)
         HttpErrorHandler(res)
