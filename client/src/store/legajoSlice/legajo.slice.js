@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
   crearDenunciaLegajoThunk,
+  getAccionTomadaThunk,
   getDenunciadosParaLegajoThunk,
 } from './legajo.thunks';
 
@@ -30,6 +31,7 @@ const initialState = {
   legajoData: {
     denunciados: [],
   },
+  seTomoAccion: false,
 };
 
 export const legajoSlice = createSlice({
@@ -103,8 +105,9 @@ export const legajoSlice = createSlice({
         }
       )
       // Convertir denuncia a legajo
-      .addCase(crearDenunciaLegajoThunk.fulfilled, (state, { payload }) => {
-        console.log(payload);
+      .addCase(crearDenunciaLegajoThunk.fulfilled, (state, { payload }) => {})
+      .addCase(getAccionTomadaThunk.fulfilled, (state, { payload }) => {
+        state.seTomoAccion = payload.seTomoAccion;
       });
   },
 });
