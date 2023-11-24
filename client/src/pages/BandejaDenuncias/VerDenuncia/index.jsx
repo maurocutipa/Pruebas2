@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Dropdown } from 'primereact/dropdown';
 import { Divider } from 'primereact/divider';
 
-import { DatosGenerales } from '../../components/pages/VerDenuncia/DatosGenerales';
-import { TablasDenuncia } from '../../components/pages/VerDenuncia/TablasDenuncia';
-import { DatosDelHecho } from '../../components/pages/VerDenuncia/DatosDelHecho';
+import { DatosGenerales } from '@/components/pages/BandejaDenuncias/VerDenuncia/DatosGenerales';
+import { TablasDenuncia } from '@/components/pages/BandejaDenuncias/VerDenuncia/TablasDenuncia';
+import { DatosDelHecho } from '@/components/pages/BandejaDenuncias/VerDenuncia/DatosDelHecho';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { getDenunciaByIdThunk } from '@/store/denunciasSlice/denuncias.thunks';
 import { ProgressSpinner } from 'primereact/progressspinner';
@@ -32,23 +32,25 @@ export const VerDenuncia = () => {
               <label htmlFor='tiposDenuncia' className='p-2'>
                 Tipo de Denuncia:
               </label>
-              <Dropdown placeholder='Seleccione el tipo de denuncia'
+              <Dropdown
+                placeholder='Seleccione el tipo de denuncia'
                 options={data.tiposDenuncia}
                 optionLabel='tipoDenuncia'
                 optionValue='idTipoDenuncia'
-                value={currentDenuncia.denuncia.tipoDenuncia} 
-                />
+                value={currentDenuncia.denuncia.tipoDenuncia}
+              />
             </div>
             <div className='col pt-4'>
               <label htmlFor='competenciaDenuncia' className='p-2 ml-8'>
                 Competencia
               </label>
-              <Dropdown placeholder='Seleccione competencia'
-                options={data.competencias} 
+              <Dropdown
+                placeholder='Seleccione competencia'
+                options={data.competencias}
                 optionLabel='competencia'
                 optionValue='idCompetencia'
                 value={currentDenuncia.competencia}
-                />
+              />
             </div>
           </section>
 

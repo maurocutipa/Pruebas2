@@ -3,8 +3,8 @@ import { useEffect, useRef } from 'react';
 import { Button } from 'primereact/button';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { AsignarDelito } from '@/components/pages/ConvertirDenunciaALegajo/AsignarDelitos';
-import { ResumenHechos } from '@/components/pages/ConvertirDenunciaALegajo/ResumenHechos';
+import { AsignarDelito } from '@/components/pages/BandejaDenuncias/ConvertirDenunciaALegajo/AsignarDelitos';
+import { ResumenHechos } from '@/components/pages/BandejaDenuncias/ConvertirDenunciaALegajo/ResumenHechos';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   getDenunciadosParaLegajoThunk,
@@ -13,12 +13,13 @@ import {
 import { resetState } from '@/store/legajoSlice/legajo.slice';
 import { Toast } from 'primereact/toast';
 import { toastError, toastSuccess } from '@/utils/toastMessage';
+import { getAccionTomadaThunk } from '@/store/legajoSlice/legajo.thunks';
 
 export const ConvertirDenunciaALegajo = () => {
   const toast = useRef(null);
   const navigate = useNavigate();
   const { id } = useParams();
-  const { legajoData, denunciaALegajoForm } = useAppSelector(
+  const { legajoData, denunciaALegajoForm, seTomoAccion } = useAppSelector(
     (state) => state.legajo
   );
   const { data } = useAppSelector((state) => state.data);
@@ -26,6 +27,7 @@ export const ConvertirDenunciaALegajo = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    dispatch(getAccionTomadaThunk(id));
     dispatch(getDenunciadosParaLegajoThunk(id));
   }, [dispatch, id]);
 
@@ -55,6 +57,24 @@ export const ConvertirDenunciaALegajo = () => {
     dispatch(resetState());
     navigate('/bandeja-denuncias');
   };
+
+  if (seTomoAccion) {
+    return (
+      <div className='px-8 py-4'>
+        <h2>
+          Ya se tomo una accion para esta denuncia, puede regresar a la bandeja
+        </h2>
+        <Button
+          icon='pi pi-angle-left'
+          label='Regresar a la bandeja'
+          className='text-lightblue-mpa p-0 mt-5'
+          type='button'
+          link
+          onClick={goToBandeja}
+        />
+      </div>
+    );
+  }
 
   return (
     <>

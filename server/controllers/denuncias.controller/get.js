@@ -12,51 +12,55 @@ GetController.getDenuncias = async (req, res) => {
   const { limit, offset } = req.body;
 
   let filters = ``;
-  let filterValues = []
+  let filterValues = [];
 
   if (req.body.idDenuncia) {
     filters += ` AND d.id_denuncia like ?`;
-    filterValues = [...filterValues, req.body.idDenuncia]
+    filterValues = [...filterValues, req.body.idDenuncia];
   }
 
   if (req.body.tipoDenuncia) {
-    filterValues = [...filterValues, req.body.tipoDenuncia]
+    filterValues = [...filterValues, req.body.tipoDenuncia];
     filters += ` AND d.id_tipo_denuncia like ?`;
   }
 
   if (req.body.seccional) {
-    filterValues = [...filterValues, req.body.seccional]
+    filterValues = [...filterValues, req.body.seccional];
     filters += ` AND d.id_seccional like ?`;
   }
 
   if (req.body.idLegajo) {
-    filterValues = [...filterValues, req.body.idLegajo]
+    filterValues = [...filterValues, req.body.idLegajo];
     filters += ` AND d.id_legajo like ?`;
   }
 
   if (req.body.competencia) {
-    filterValues = [...filterValues, req.body.competencia]
+    filterValues = [...filterValues, req.body.competencia];
     filters += ` AND d.competencia like ?`;
   }
 
   if (req.body.realizacion) {
-    filterValues = [...filterValues, req.body.realizacion]
+    filterValues = [...filterValues, req.body.realizacion];
     filters += ` AND d.realizacion like ?`;
   }
 
   if (req.body.fiscaliaAsignada && req.body.fiscaliaAsignada) {
-    filterValues = [...filterValues, req.body.fiscaliaAsignada]
+    filterValues = [...filterValues, req.body.fiscaliaAsignada];
     filters += ` AND sc.id_sector like ?`;
   }
 
   if (req.body.fechaDenunciaDesde && req.body.fechaDenunciaHasta) {
-    filterValues = [...filterValues, formatDate(req.body.fechaDenunciaDesde), formatDate(req.body.fechaDenunciaHasta)]
+    filterValues = [
+      ...filterValues,
+      formatDate(req.body.fechaDenunciaDesde),
+      formatDate(req.body.fechaDenunciaHasta),
+    ];
     filters += ` AND d.fecha_denuncia BETWEEN ? AND ? `;
   }
 
-  if(req.body.ratificacion){
-    filterValues = [...filterValues, req.body.ratificacion]
-    filters += ` AND d.ratificacion like ?`
+  if (req.body.ratificacion) {
+    filterValues = [...filterValues, req.body.ratificacion];
+    filters += ` AND d.ratificacion like ?`;
   }
 
   try {
@@ -92,7 +96,11 @@ GetController.getDenuncias = async (req, res) => {
         LIMIT ${limit}
         OFFSET ${offset}
       `;
-    const denuncias = await queryHandler(query, [...filterValues, limit, offset]);
+    const denuncias = await queryHandler(query, [
+      ...filterValues,
+      limit,
+      offset,
+    ]);
 
     res.status(200).json({
       message: 'ok',
@@ -225,56 +233,72 @@ GetController.getDenunciaById = async (req, res) => {
         *
         FROM denuncia_propiedad_automoviles WHERE id_denuncia_propiedad = ? 
         `;
-      automoviles = await queryHandler(query, [datosGeneralesDenunciaPropiedad.idDenunciaPropiedad]);
+      automoviles = await queryHandler(query, [
+        datosGeneralesDenunciaPropiedad.idDenunciaPropiedad,
+      ]);
 
       query = `
         SELECT
         *
         FROM denuncia_propiedad_autopartes WHERE id_denuncia_propiedad = ? 
         `;
-      autopartes = await queryHandler(query, [datosGeneralesDenunciaPropiedad.idDenunciaPropiedad]);
+      autopartes = await queryHandler(query, [
+        datosGeneralesDenunciaPropiedad.idDenunciaPropiedad,
+      ]);
 
       query = `
         SELECT
         *
         FROM denuncia_propiedad_bicicletas WHERE id_denuncia_propiedad = ? 
         `;
-      bicicletas = await queryHandler(query, [datosGeneralesDenunciaPropiedad.idDenunciaPropiedad]);
+      bicicletas = await queryHandler(query, [
+        datosGeneralesDenunciaPropiedad.idDenunciaPropiedad,
+      ]);
 
       query = `
         SELECT
         *
         FROM denuncia_propiedad_cheques WHERE id_denuncia_propiedad = ? 
         `;
-      cheques = await queryHandler(query, [datosGeneralesDenunciaPropiedad.idDenunciaPropiedad]);
+      cheques = await queryHandler(query, [
+        datosGeneralesDenunciaPropiedad.idDenunciaPropiedad,
+      ]);
 
       query = `
         SELECT
         *
         FROM denuncia_propiedad_documentacion WHERE id_denuncia_propiedad = ? 
         `;
-      documentacion = await queryHandler(query, [datosGeneralesDenunciaPropiedad.idDenunciaPropiedad]);
+      documentacion = await queryHandler(query, [
+        datosGeneralesDenunciaPropiedad.idDenunciaPropiedad,
+      ]);
 
       query = `
         SELECT
         *
         FROM denuncia_propiedad_otro WHERE id_denuncia_propiedad = ? 
         `;
-      otro = await queryHandler(query, [datosGeneralesDenunciaPropiedad.idDenunciaPropiedad]);
+      otro = await queryHandler(query, [
+        datosGeneralesDenunciaPropiedad.idDenunciaPropiedad,
+      ]);
 
       query = `
         SELECT
         *
         FROM denuncia_propiedad_tarjetas WHERE id_denuncia_propiedad = ? 
         `;
-      tarjetas = await queryHandler(query, [datosGeneralesDenunciaPropiedad.idDenunciaPropiedad]);
+      tarjetas = await queryHandler(query, [
+        datosGeneralesDenunciaPropiedad.idDenunciaPropiedad,
+      ]);
 
       query = `
         SELECT
         *
         FROM denuncia_propiedad_telefonos WHERE id_denuncia_propiedad = ? 
         `;
-      telefonos = await queryHandler(query, [datosGeneralesDenunciaPropiedad.idDenunciaPropiedad]);
+      telefonos = await queryHandler(query, [
+        datosGeneralesDenunciaPropiedad.idDenunciaPropiedad,
+      ]);
     }
 
     // ============================ Fin querys denuncia propiedad ==============================
@@ -294,7 +318,9 @@ GetController.getDenunciaById = async (req, res) => {
       query = `
         SELECT * FROM denuncia_incidentes_viales_vehiculos 
         WHERE id_denuncia_incidentes_viales = ?`;
-      vehiculos = await queryHandler(query, [datosGeneralesIncidentesViales.idDenunciaIncidentesViales]);
+      vehiculos = await queryHandler(query, [
+        datosGeneralesIncidentesViales.idDenunciaIncidentesViales,
+      ]);
     }
     //============================= Fin de querys incidentes viales ============================
 
