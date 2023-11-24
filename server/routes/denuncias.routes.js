@@ -7,8 +7,7 @@ const UploadMiddleware = require('../middlewares/UploadMiddlware')
 const ParseDataMiddleware = require('../middlewares/ParseDataMiddleware')
 const ComprobanteMiddleware = require('../middlewares/ComprobanteMiddleware');
 
-const AuditoriaMiddleware = require("../middlewares/auditoriaMiddleware")
-
+const AuditoriaController = require("../controllers/auditoria.controller")
 const router = Router();
 
 const {
@@ -60,9 +59,6 @@ router.post('/maltrato-animal-create', validateCreateMaltratoAnimal, DenunciasCo
 
 
 
-router.post('/create', UploadMiddleware,  ParseDataMiddleware, validateMain, mainDenunciaCreate, ComprobanteMiddleware, AuditoriaMiddleware)
-
-//router.post('/consultar', validateConsultar, DenunciasController.getDenuncia)
-
+router.post('/create', UploadMiddleware,  ParseDataMiddleware, validateMain, mainDenunciaCreate, ComprobanteMiddleware, AuditoriaController.denunciaAuditoria)
 
 module.exports = router;
