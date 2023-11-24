@@ -48,15 +48,19 @@ const login = async (req, res) => {
     ]);
 
     // Busqueda de roles del usuario
-    query = "SELECT rol.nombre FROM rol_asignado ra INNER JOIN rol ON ra.id_rol = rol.id_rol WHERE (ra.id_usuario_sector = ? AND ra.tipo = 'Usuario') OR (ra.id_usuario_sector = ? AND ra.tipo = 'Sector')";
-    let roles = await queryHandler(query, [usuario.id_usuario, usuario.id_sector]);
+    query =
+      "SELECT rol.nombre FROM rol_asignado ra INNER JOIN rol ON ra.id_rol = rol.id_rol WHERE (ra.id_usuario_sector = ? AND ra.tipo = 'Usuario') OR (ra.id_usuario_sector = ? AND ra.tipo = 'Sector')";
+    let roles = await queryHandler(query, [
+      usuario.id_usuario,
+      usuario.id_sector,
+    ]);
     //roles = roles.map((rol) => rol.nombre);
 
     //console.log(roles);
     const accessToken = await generateJWT({
-      usuario: usuario,
+      username: usuario.username,
       idUsuario: usuario.id_usuario,
-      roles
+      roles,
     });
 
     res.cookie('jwt', accessToken, {
@@ -69,9 +73,9 @@ const login = async (req, res) => {
     res.status(200).json({
       message: 'Acceso exitoso',
       data: {
-        usuario: usuario.username,
+        username: usuario.username,
         idUsuario: usuario.id_usuario,
-        roles
+        roles,
       },
     });
   } catch (error) {
@@ -89,10 +93,12 @@ const logout = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: 'None',
-      maxAge: 10,
+      maxAge: -1,
     });
+
     res.sendStatus(204);
   } catch (error) {
+    console.log(error);
     return res.sendStatus(500);
   }
 };
@@ -101,8 +107,8 @@ const refresh = async (req, res) => {
   try {
     const refreshToken = await generateJWT({
       idUsuario: req.idUsuario,
-      usuario: req.usuario,
-      /* req.roles */
+      username: req.username,
+      roles: req.roles
     });
 
     res.cookie('jwt', refreshToken, {
@@ -115,11 +121,13 @@ const refresh = async (req, res) => {
     res.status(200).json({
       message: 'Nuevo token',
       data: {
-        usuario: req.usuario.username,
-        /* roles: req.roles, */
+        username: req.username,
+        roles: req.roles,
+        idUsuario: req.idUsuario
       },
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'Error en el servidor' });
   }
 };

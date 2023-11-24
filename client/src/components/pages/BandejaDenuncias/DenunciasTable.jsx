@@ -11,6 +11,7 @@ import { RealizarPaseDenuncia } from './RealizarPaseDenuncia.jsx';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks.js';
 import { getDenunciasThunk } from '@/store/denunciasSlice/denuncias.thunks.js';
 import { parseDDMMYYYYHHMM } from '@/utils/parseDate.js';
+import { exportExcel } from '@/utils/exportExcel.js';
 
 const filtersInitialState = {
   idDenuncia: '',
@@ -23,6 +24,7 @@ const filtersInitialState = {
   estado: '',
   fiscaliaAsignada: '',
   idLegajo: '',
+  ratificacion: '',
 };
 
 const lazyInitialState = {
@@ -72,15 +74,24 @@ export const DenunciasTable = () => {
 
   const HeaderTable = () => {
     return (
-      <div className='flex justify-content-between md:flex-row flex-column'>
-        <Button
-          type='button'
-          icon='pi pi-filter-slash'
-          label='Limpiar filtros'
-          outlined
-          onClick={resetAllFilters}
-          className='md:mb-0 mb-8 text-lightblue-mpa'
-        />
+      <div className='flex justify-content-between align-items-center md:flex-row flex-column'>
+        <div className='font-semibold text-gray-600 md:mb-0 mb-6'>
+          {lazyState.first + 1}-{lazyState.first + lazyState.rows} de{' '}
+          {totalRecords} resultados
+        </div>
+
+        <div className='mr-4'>
+          <Button
+            type='button'
+            icon='pi pi-file-excel'
+            rounded
+            onClick={() => exportExcel(denuncias)}
+            severity='success'
+            tooltip='Exportar a Excel'
+            tooltipOptions={{ position: 'top' }}
+            className='bg-green-800 border-green-800'
+          />
+        </div>
       </div>
     );
   };
@@ -101,7 +112,9 @@ export const DenunciasTable = () => {
       <DataTable
         value={denuncias}
         paginator
-        rows={5}
+        paginatorTemplate='FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
+        rows={lazyState.rows}
+        rowsPerPageOptions={[5, 10, 15]}
         totalRecords={totalRecords}
         lazy
         loading={loading}
@@ -110,6 +123,8 @@ export const DenunciasTable = () => {
         dataKey='idDenuncia'
         emptyMessage='No se encontraron denuncias'
         className='mb-8 shadow-3'
+        stateStorage='session'
+        stateKey='denuncias-state-local'
         header={HeaderTable()}
       >
         <Column field='idDenuncia' header='Nro' />
@@ -120,6 +135,7 @@ export const DenunciasTable = () => {
             rowData.realizacion ? rowData.realizacion : 'NO TIENE'
           }
         />
+
         <Column
           field='seccional'
           header='Seccional'
@@ -127,6 +143,7 @@ export const DenunciasTable = () => {
             rowData.seccional ? rowData.seccional : 'NO TIENE'
           }
         />
+
         <Column
           field='fechaDenuncia'
           header='Fecha de Denuncia'
@@ -134,6 +151,7 @@ export const DenunciasTable = () => {
             parseDDMMYYYYHHMM(rowData.fechaDenuncia, rowData.horaDenuncia)
           }
         />
+
         <Column field='tipoDenuncia' header='Tipo de Denuncia' />
         <Column
           field='competencia'
@@ -144,7 +162,15 @@ export const DenunciasTable = () => {
         />
 
         <Column
-          field='idUserRatificacion'
+          field='fiscaliaAsignada'
+          header='Fiscalía Asignada'
+          body={(rowData) =>
+            rowData.fiscaliaAsignada ? rowData.fiscaliaAsignada : 'No registra'
+          }
+        />
+
+        <Column
+          field='ratificacion'
           header='Ratificada'
           body={(rowData) =>
             rowData.ratificacion === 'SI' ? (
@@ -154,20 +180,15 @@ export const DenunciasTable = () => {
             )
           }
         />
-
-        <Column
-          field='fiscaliaAsignada'
-          header='Fiscalía Asignada'
-          body={(rowData) =>
-            rowData.fiscaliaAsignada ? rowData.fiscaliaAsignada : 'No registra'
-          }
-        />
         <Column
           field='idLegajo'
           header='Nro de Legajo Asignado'
           body={(rowData) =>
             rowData.idLegajo ? (
-              <Badge value={rowData.idLegajo} className='bg-blue-700' />
+              <Badge
+                value={`${rowData.letra}-${rowData.nroExp}-MPA`}
+                className='bg-blue-700'
+              />
             ) : (
               <Badge value='Pendiente' className='bg-gray-300 text-gray-900' />
             )

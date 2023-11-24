@@ -13,7 +13,7 @@ import { logoutThunk } from '@/store/authSlice/auth.thunks';
 import { useEffect, useRef } from 'react';
 
 const Header_ = () => {
-  const { usuario } = useAppSelector((state) => state.auth.user);
+  const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const profileButton = useRef(null);
   const navigate = useNavigate();
@@ -69,9 +69,11 @@ const Header_ = () => {
               className='mr-2'
               shape='circle'
             />
-            <div className='flex flex-column align'>
-              <span className='font-bold'>{usuario?.toUpperCase()}</span>
-              <span className='text-sm'>Rol</span>
+            <div className='flex flex-column'>
+              {/* <span className='font-bold'>{usuario?.toUpperCase()}</span> */}
+              <div className='text-sm font-bold'>
+                {user?.username.toUpperCase()}
+              </div>
             </div>
           </button>
         );

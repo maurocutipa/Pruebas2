@@ -1,5 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getDenunciadosParaLegajoThunk } from './legajo.thunks';
+import {
+  crearDenunciaLegajoThunk,
+  getAccionTomadaThunk,
+  getDenunciadosParaLegajoThunk,
+} from './legajo.thunks';
 
 const initialState = {
   resumenHechosForm: {
@@ -27,6 +31,7 @@ const initialState = {
   legajoData: {
     denunciados: [],
   },
+  seTomoAccion: false,
 };
 
 export const legajoSlice = createSlice({
@@ -92,12 +97,18 @@ export const legajoSlice = createSlice({
     resetState: () => initialState,
   },
   extraReducers: (builder) => {
-    builder.addCase(
-      getDenunciadosParaLegajoThunk.fulfilled,
-      (state, { payload }) => {
-        state.legajoData.denunciados = payload.denunciados;
-      }
-    );
+    builder
+      .addCase(
+        getDenunciadosParaLegajoThunk.fulfilled,
+        (state, { payload }) => {
+          state.legajoData.denunciados = payload.denunciados;
+        }
+      )
+      // Convertir denuncia a legajo
+      .addCase(crearDenunciaLegajoThunk.fulfilled, (state, { payload }) => {})
+      .addCase(getAccionTomadaThunk.fulfilled, (state, { payload }) => {
+        state.seTomoAccion = payload.seTomoAccion;
+      });
   },
 });
 

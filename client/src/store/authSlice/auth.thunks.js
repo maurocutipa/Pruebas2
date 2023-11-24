@@ -24,6 +24,7 @@ export const refreshThunk = createAsyncThunk(
       const { data } = await refresh();
       return data;
     } catch ({ response }) {
+      console.log(response);
       return rejectWithValue(response.data);
     }
   }

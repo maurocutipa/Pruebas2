@@ -2,21 +2,21 @@ import { createSlice } from '@reduxjs/toolkit';
 import { getDelitosThunk, getDenunciaDataThunk } from './data.thunks';
 
 const competencias = [
-  { idCompetencia: 1, competencia: 'No penal' },
-  { idCompetencia: 2, competencia: 'Penal' },
-  { idCompetencia: 3, competencia: 'Menores' },
-  { idCompetencia: 4, competencia: 'Civiles' },
-  { idCompetencia: 5, competencia: 'Contravención' },
-  { idCompetencia: 6, competencia: 'Ambiental' },
-  { idCompetencia: 7, competencia: 'Archivo' },
-  { idCompetencia: 8, competencia: 'Familia' },
-  { idCompetencia: 9, competencia: 'Otros' },
+  { idCompetencia: 'No penal', competencia: 'No penal' },
+  { idCompetencia: 'Penal', competencia: 'Penal' },
+  { idCompetencia: 'Menores', competencia: 'Menores' },
+  { idCompetencia: 'Civiles', competencia: 'Civiles' },
+  { idCompetencia: 'Contravención', competencia: 'Contravención' },
+  { idCompetencia: 'Ambiental', competencia: 'Ambiental' },
+  { idCompetencia: 'Archivo', competencia: 'Archivo' },
+  { idCompetencia: 'Familia', competencia: 'Familia' },
+  { idCompetencia: 'Otros', competencia: 'Otros' },
 ];
 
 const realizaciones = [
-  { idRealizacion: 1, realizacion: 'Web' },
-  { idRealizacion: 2, realizacion: 'Presencial' },
-  { idRealizacion: 3, realizacion: 'Oficio' },
+  { idRealizacion: 'WEB', realizacion: 'Web' },
+  { idRealizacion: 'PRE', realizacion: 'Presencial' },
+  { idRealizacion: 'OFI', realizacion: 'Oficio' },
 ];
 
 const estados = [
@@ -34,6 +34,11 @@ const remisiones = [
   { idRemision: 1, remision: 'Otra dependencia pública' },
   { idRemision: 2, remision: 'Dentro del Ministerio Público de la Acusación' },
 ];
+
+const ratificaciones = [
+  { idRatificacion: 'SI', ratificacion: 'SI'},
+  { idRatificacion: 'NO', ratificacion: 'NO'},
+]
 
 const initialState = {
   loading: true,
@@ -62,6 +67,7 @@ export const dataSlice = createSlice({
           realizaciones,
           estados,
           remisiones,
+          ratificaciones
         };
       })
       .addCase(getDelitosThunk.fulfilled, (state, { payload }) => {

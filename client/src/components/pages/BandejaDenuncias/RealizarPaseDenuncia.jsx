@@ -43,14 +43,14 @@ export const RealizarPaseDenuncia = ({ visible, setVisible }) => {
   return (
     <Dialog
       draggable={false}
-      header={`Realizar Pase de la Denuncia: #${selectedIdDenuncia}`}
+      header={`Acción a Realizar de la Denuncia Nro: ${selectedIdDenuncia}`}
       visible={visible}
       onHide={onHide}
       className='md:w-6 w-8'
     >
       <div className='mx-4 mt-2'>
         <div className='mb-5'>
-          <label htmlFor='competencia'>Seleccione el pase</label>
+          <label htmlFor='competencia'>Seleccione la acción</label>
           <Dropdown
             id='pase'
             name='pase'

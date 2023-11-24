@@ -1,18 +1,25 @@
 // Generado y sin generar
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Button } from 'primereact/button';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { AsignarDelito } from '@/components/pages/ConvertirDenunciaALegajo/AsignarDelitos';
-import { ResumenHechos } from '@/components/pages/ConvertirDenunciaALegajo/ResumenHechos';
+import { AsignarDelito } from '@/components/pages/BandejaDenuncias/ConvertirDenunciaALegajo/AsignarDelitos';
+import { ResumenHechos } from '@/components/pages/BandejaDenuncias/ConvertirDenunciaALegajo/ResumenHechos';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { getDenunciadosParaLegajoThunk } from '@/store/legajoSlice/legajo.thunks';
+import {
+  getDenunciadosParaLegajoThunk,
+  crearDenunciaLegajoThunk,
+} from '@/store/legajoSlice/legajo.thunks';
 import { resetState } from '@/store/legajoSlice/legajo.slice';
+import { Toast } from 'primereact/toast';
+import { toastError, toastSuccess } from '@/utils/toastMessage';
+import { getAccionTomadaThunk } from '@/store/legajoSlice/legajo.thunks';
 
 export const ConvertirDenunciaALegajo = () => {
+  const toast = useRef(null);
   const navigate = useNavigate();
   const { id } = useParams();
-  const { legajoData, denunciaALegajoForm } = useAppSelector(
+  const { legajoData, denunciaALegajoForm, seTomoAccion } = useAppSelector(
     (state) => state.legajo
   );
   const { data } = useAppSelector((state) => state.data);
@@ -20,11 +27,22 @@ export const ConvertirDenunciaALegajo = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    dispatch(getAccionTomadaThunk(id));
     dispatch(getDenunciadosParaLegajoThunk(id));
   }, [dispatch, id]);
 
-  const handleConvertirALegajo = () => {
-    console.log({ ...denunciaALegajoForm, idDenuncia: id });
+  const handleConvertirALegajo = async () => {
+    const formData = { ...denunciaALegajoForm, idDenuncia: Number(id) };
+    const { meta } = await dispatch(crearDenunciaLegajoThunk(formData));
+
+    if (meta.requestStatus === 'fulfilled') {
+      toastSuccess(
+        toast,
+        'Denuncia convertida a legajo, puede regresar a la bandeja de denuncias'
+      );
+    } else {
+      toastError(toast, 'No se pudo convertir la denuncia a legajo');
+    }
   };
 
   const disableButton = () => {
@@ -40,8 +58,27 @@ export const ConvertirDenunciaALegajo = () => {
     navigate('/bandeja-denuncias');
   };
 
+  if (seTomoAccion) {
+    return (
+      <div className='px-8 py-4'>
+        <h2>
+          Ya se tomo una accion para esta denuncia, puede regresar a la bandeja
+        </h2>
+        <Button
+          icon='pi pi-angle-left'
+          label='Regresar a la bandeja'
+          className='text-lightblue-mpa p-0 mt-5'
+          type='button'
+          link
+          onClick={goToBandeja}
+        />
+      </div>
+    );
+  }
+
   return (
     <>
+      <Toast ref={toast} />
       {legajoData.denunciados && data.delitos ? (
         <div className='px-8 py-4'>
           <h1 className='text-center'>Convertir Denuncia N° {id} a Legajo</h1>
