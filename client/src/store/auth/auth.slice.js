@@ -3,7 +3,7 @@ import { loginThunk, logoutThunk, refreshThunk } from './auth.thunks';
 
 const initialState = {
   user: null,
-  loading: false,
+  loading: true,
   message: '',
 };
 

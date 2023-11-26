@@ -7,7 +7,7 @@ import {
   eliminarResumenHecho,
   setDelitoAsignadoForm,
   eliminarDelitoAsignado,
-} from '@/store/legajoSlice/legajo.slice';
+} from '@/store/denuncias/denunciaLegajo/denunciaLegajo.slice';
 
 export const AccionesTabla = ({ data, action }) => {
   const dispatch = useAppDispatch();

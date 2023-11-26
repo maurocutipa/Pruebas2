@@ -1,17 +1,21 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import authSlice from './authSlice/auth.slice';
-import denunciasSlice from './denunciasSlice/denuncias.slice';
-import pasesSlice from './pasesSlice/pases.slice';
-import dataSlice from './dataSlice/data.slice';
-import legajoSlice from './legajoSlice/legajo.slice';
+import authSlice from './auth/auth.slice';
+import dataSlice from './data/data.slice';
+
+import denunciasSlice from './denuncias/denuncias.slice';
+import denunciaLegajoSlice from './denuncias/denunciaLegajo/denunciaLegajo.slice';
+import ratificarDenunciaSlice from './denuncias/ratificarDenuncia/ratificarDenuncia.slice';
 
 export const store = configureStore({
   reducer: {
     auth: authSlice,
     data: dataSlice,
+    /**
+     * Denuncias Slices
+     */
     denuncias: denunciasSlice,
-    pases: pasesSlice,
-    legajo: legajoSlice,
+    denunciaLegajo: denunciaLegajoSlice,
+    ratificarDenuncia: ratificarDenunciaSlice,
   },
 });

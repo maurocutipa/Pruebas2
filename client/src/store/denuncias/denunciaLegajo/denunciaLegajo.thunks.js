@@ -7,7 +7,7 @@ import {
 } from '@/api/legajo.api';
 
 export const getDenunciadosParaLegajoThunk = createAsyncThunk(
-  'legajo/getDenunciadosParaLegajo',
+  'denunciaLegajo/getDenunciadosParaLegajo',
   async (id, { rejectWithValue }) => {
     try {
       const { data } = await getDenunciadosParaLegajo(id);
@@ -20,7 +20,7 @@ export const getDenunciadosParaLegajoThunk = createAsyncThunk(
 );
 
 export const crearDenunciaLegajoThunk = createAsyncThunk(
-  'legajo/crearDenunciaLegajo',
+  'denunciaLegajo/crearDenunciaLegajo',
   async (formData, { rejectWithValue }) => {
     try {
       const { data } = await crearDenunciaLegajo(formData);

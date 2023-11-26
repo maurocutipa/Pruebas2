@@ -3,7 +3,7 @@ import {
   crearDenunciaLegajoThunk,
   getAccionTomadaThunk,
   getDenunciadosParaLegajoThunk,
-} from './legajo.thunks';
+} from './denunciaLegajo.thunks';
 
 const initialState = {
   resumenHechosForm: {
@@ -34,8 +34,8 @@ const initialState = {
   seTomoAccion: false,
 };
 
-export const legajoSlice = createSlice({
-  name: 'legajo',
+export const denunciaLegajoSlice = createSlice({
+  name: 'denunciaLegajo',
   initialState,
   reducers: {
     /**
@@ -105,7 +105,7 @@ export const legajoSlice = createSlice({
         }
       )
       // Convertir denuncia a legajo
-      .addCase(crearDenunciaLegajoThunk.fulfilled, (state, { payload }) => {})
+      .addCase(crearDenunciaLegajoThunk.fulfilled, () => {})
       .addCase(getAccionTomadaThunk.fulfilled, (state, { payload }) => {
         state.seTomoAccion = payload.seTomoAccion;
       });
@@ -123,6 +123,6 @@ export const {
   agregarDelito,
   agregarFiscalia,
   resetState,
-} = legajoSlice.actions;
+} = denunciaLegajoSlice.actions;
 
-export default legajoSlice.reducer;
+export default denunciaLegajoSlice.reducer;

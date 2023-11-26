@@ -7,7 +7,7 @@ import { DatosGenerales } from '@/components/pages/BandejaDenuncias/VerDenuncia/
 import { TablasDenuncia } from '@/components/pages/BandejaDenuncias/VerDenuncia/TablasDenuncia';
 import { DatosDelHecho } from '@/components/pages/BandejaDenuncias/VerDenuncia/DatosDelHecho';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { getDenunciaByIdThunk } from '@/store/denunciasSlice/denuncias.thunks';
+import { getDenunciaByIdThunk } from '@/store/denuncias/denuncias.thunks';
 import { ProgressSpinner } from 'primereact/progressspinner';
 
 export const VerDenuncia = () => {

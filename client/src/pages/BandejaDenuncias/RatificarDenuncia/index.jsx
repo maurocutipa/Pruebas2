@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ResumenDenuncia } from '@/components/pages/BandejaDenuncias/RatificarDenuncia/ResumenDenuncia';
 import { FirmaYTOS } from '@/components/pages/BandejaDenuncias/RatificarDenuncia/FirmaYTOS';
 import { useAppDispatch } from '@/store/hooks';
-import { ratificarDenunciaThunk } from '@/store/denunciasSlice/denuncias.thunks';
+import { ratificarDenunciaThunk } from '@/store/denuncias/ratificarDenuncia/ratificarDenuncia.thunks';
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { toastError, toastSuccess } from '@/utils/toastMessage';
 
@@ -14,7 +14,7 @@ export const RatificarDenuncia = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   const handleRatificarDenuncia = (event) => {
     confirmPopup({
@@ -33,8 +33,6 @@ export const RatificarDenuncia = () => {
         toast,
         'Se realizó la ratificación, puede regresar a la bandeja de denuncias'
       );
-
-      setIsDisabled(true);
     } else {
       toastError(toast, 'No se pudo realizar la ratificación');
     }
@@ -57,7 +55,7 @@ export const RatificarDenuncia = () => {
             onClick={() => navigate('/bandeja-denuncias')}
           />
           <ResumenDenuncia id={id} />
-          <FirmaYTOS />
+          <FirmaYTOS visible={visible} setVisible={setVisible} id={id} />
         </div>
 
         <div className='flex justify-content-between mt-6 mb-2'>
@@ -76,7 +74,7 @@ export const RatificarDenuncia = () => {
               label={'Firmar'}
               className='btn-blue-mpa mr-4'
               size='large'
-              disabled={isDisabled}
+              onClick={() => setVisible(true)}
             />
 
             <Button
@@ -84,7 +82,6 @@ export const RatificarDenuncia = () => {
               label={'Ratificar Denuncia'}
               className='btn-blue-mpa'
               size='large'
-              disabled={isDisabled}
             />
           </div>
         </div>
