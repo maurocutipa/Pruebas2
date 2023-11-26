@@ -6,8 +6,8 @@ import { Menu } from 'primereact/menu';
 import { useNavigate } from 'react-router-dom';
 
 import { useAppDispatch } from '@/store/hooks';
-import { deleteDenunciaThunk } from '@/store/denunciasSlice/denuncias.thunks';
-import { setIdDenuncia } from '@/store/denunciasSlice/denuncias.slice';
+import { deleteDenunciaThunk } from '@/store/denuncias/denuncias.thunks';
+import { setIdDenuncia } from '@/store/denuncias/denuncias.slice';
 
 export const AccionesTabla = ({ id, setVisible, isRatificada }) => {
   const navigate = useNavigate();

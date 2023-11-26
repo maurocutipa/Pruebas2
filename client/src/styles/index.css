@@ -49,3 +49,9 @@ body {
 .link:hover {
   background-color: #142057;
 }
+
+.signature-canvas {
+  border: 1px solid black;
+  height: 300px;
+  width: 100%;
+}

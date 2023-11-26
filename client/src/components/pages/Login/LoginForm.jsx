@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import crypto from 'crypto-js';
 import * as Yup from 'yup';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { loginThunk } from '@/store/authSlice/auth.thunks';
+import { loginThunk } from '@/store/auth/auth.thunks';
 import { InvalidFieldMessage } from '@/components/common/InvalidFieldMessage';
 import { useState } from 'react';
 

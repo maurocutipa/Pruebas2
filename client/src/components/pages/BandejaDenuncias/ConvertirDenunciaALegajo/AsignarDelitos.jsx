@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import * as Yup from 'yup';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { Column } from 'primereact/column';
@@ -8,8 +9,7 @@ import { useFormik } from 'formik';
 import {
   agregarDelito,
   modificarDelitoAsignado,
-} from '@/store/legajoSlice/legajo.slice';
-import * as Yup from 'yup';
+} from '@/store/denuncias/denunciaLegajo/denunciaLegajo.slice';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { AccionesTabla } from './AccionesTabla';
 import { generateUUID } from '@/utils/generateUUID';
@@ -22,7 +22,9 @@ const validationSchema = Yup.object().shape({
 });
 
 export const AsignarDelito = ({ denunciados, delitos, delitosAsignados }) => {
-  const { delitoAsignadoForm } = useAppSelector((state) => state.legajo);
+  const { delitoAsignadoForm } = useAppSelector(
+    (state) => state.denunciaLegajo
+  );
   const dispatch = useAppDispatch();
 
   const initialValues = delitoAsignadoForm.form;

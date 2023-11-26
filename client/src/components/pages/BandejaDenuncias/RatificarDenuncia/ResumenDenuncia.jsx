@@ -4,7 +4,7 @@ import { Card } from 'primereact/card';
 import { Dialog } from 'primereact/dialog';
 import { Divider } from 'primereact/divider';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { getResumenDenunciaThunk } from '@/store/denunciasSlice/denuncias.thunks';
+import { getResumenDenunciaThunk } from '@/store/denuncias/ratificarDenuncia/ratificarDenuncia.thunks';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { PdfViewer } from '@/components/common/PdfViewer';
 import { Button } from 'primereact/button';
@@ -14,7 +14,9 @@ import { parseDDMMYYYYHHMM } from '@/utils/parseDate';
 export const ResumenDenuncia = ({ id }) => {
   const [showComprobante, setShowComprobante] = useState(false);
   const dispatch = useAppDispatch();
-  const { resumenDenuncia } = useAppSelector((state) => state.denuncias);
+  const { resumenDenuncia } = useAppSelector(
+    (state) => state.ratificarDenuncia
+  );
 
   const { resumen, victimas, denunciados, testigos } = resumenDenuncia
     ? resumenDenuncia

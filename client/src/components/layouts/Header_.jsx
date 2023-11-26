@@ -7,9 +7,11 @@ import { Menu } from 'primereact/menu';
 import { Button } from 'primereact/button';
 
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { getDenunciaDataThunk } from '@/store/dataSlice/data.thunks';
-import { getDelitosThunk } from '@/store/dataSlice/data.thunks';
-import { logoutThunk } from '@/store/authSlice/auth.thunks';
+import {
+  getDenunciaDataThunk,
+  getDelitosThunk,
+} from '@/store/data/data.thunks';
+import { logoutThunk } from '@/store/auth/auth.thunks';
 import { useEffect, useRef } from 'react';
 
 const Header_ = () => {

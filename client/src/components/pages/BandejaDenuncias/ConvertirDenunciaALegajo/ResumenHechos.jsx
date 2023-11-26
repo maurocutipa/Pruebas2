@@ -15,7 +15,7 @@ import {
   agregarResumenHecho,
   modificarResumenHecho,
   agregarFiscalia,
-} from '@/store/legajoSlice/legajo.slice';
+} from '@/store/denuncias/denunciaLegajo/denunciaLegajo.slice';
 import * as Yup from 'yup';
 import { generateUUID } from '@/utils/generateUUID';
 import { InvalidFieldMessage } from '@/components/common/InvalidFieldMessage';
@@ -32,7 +32,7 @@ export const ResumenHechos = ({
   resumenHechos,
 }) => {
   const dispatch = useAppDispatch();
-  const { resumenHechosForm } = useAppSelector((state) => state.legajo);
+  const { resumenHechosForm } = useAppSelector((state) => state.denunciaLegajo);
 
   const initialValues = { fiscalia: '', ...resumenHechosForm.form };
   const formik = useFormik({

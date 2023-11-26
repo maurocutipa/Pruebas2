@@ -6,21 +6,21 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { AsignarDelito } from '@/components/pages/BandejaDenuncias/ConvertirDenunciaALegajo/AsignarDelitos';
 import { ResumenHechos } from '@/components/pages/BandejaDenuncias/ConvertirDenunciaALegajo/ResumenHechos';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { Toast } from 'primereact/toast';
+import { toastError, toastSuccess } from '@/utils/toastMessage';
+import { getAccionTomadaThunk } from '@/store/denuncias/denunciaLegajo/denunciaLegajo.thunks';
 import {
   getDenunciadosParaLegajoThunk,
   crearDenunciaLegajoThunk,
-} from '@/store/legajoSlice/legajo.thunks';
-import { resetState } from '@/store/legajoSlice/legajo.slice';
-import { Toast } from 'primereact/toast';
-import { toastError, toastSuccess } from '@/utils/toastMessage';
-import { getAccionTomadaThunk } from '@/store/legajoSlice/legajo.thunks';
+} from '@/store/denuncias/denunciaLegajo/denunciaLegajo.thunks';
+import { resetState } from '@/store/denuncias/denunciaLegajo/denunciaLegajo.slice';
 
 export const ConvertirDenunciaALegajo = () => {
   const toast = useRef(null);
   const navigate = useNavigate();
   const { id } = useParams();
   const { legajoData, denunciaALegajoForm, seTomoAccion } = useAppSelector(
-    (state) => state.legajo
+    (state) => state.denunciaLegajo
   );
   const { data } = useAppSelector((state) => state.data);
 

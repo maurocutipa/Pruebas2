@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { refreshThunk } from '@/store/authSlice/auth.thunks';
+import { refreshThunk } from '@/store/auth/auth.thunks';
 
 export const useAuth = () => {
   const { user, loading } = useAppSelector((state) => state.auth);

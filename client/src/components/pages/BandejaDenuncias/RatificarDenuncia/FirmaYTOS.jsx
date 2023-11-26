@@ -1,6 +1,44 @@
+/* eslint-disable react/prop-types */
+import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
+import { Dialog } from 'primereact/dialog';
+import { Steps } from 'primereact/steps';
+import { useState } from 'react';
+import SignaturePad from 'react-signature-canvas';
 
-export const FirmaYTOS = () => {
+const items = [
+  {
+    label: 'Firma del Denunciante',
+  },
+  {
+    label: 'Firma del Funcionario Interviniente',
+  },
+];
+
+export const FirmaYTOS = ({ visible, setVisible, id }) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const onHide = () => {
+    setActiveIndex(0);
+    setVisible(false);
+  };
+
+  const handleNextIndex = () => {
+    if (activeIndex >= 1) {
+      return;
+    }
+
+    setActiveIndex((prev) => prev + 1);
+  };
+
+  const handlePrevIndex = () => {
+    if (activeIndex <= 0) {
+      return;
+    }
+
+    setActiveIndex((prev) => prev - 1);
+  };
+
   return (
     <Card className='shadow-1 px-7 mt-6'>
       <h2>Términos y Condiciones</h2>
@@ -85,6 +123,117 @@ export const FirmaYTOS = () => {
           </div>
         </div>
       </div>
+
+      {/* Firmas */}
+      <Dialog
+        draggable={false}
+        header={`Firma para finalizar la ratificación de la denuncia: ${id}`}
+        visible={visible}
+        onHide={onHide}
+        className='md:w-6 w-8'
+      >
+        <Steps model={items} activeIndex={activeIndex} readOnly />
+        <form className='mx-4 mt-6'>
+          {activeIndex === 0 && (
+            <section className='mx-2'>
+              <div className='mb-1'>
+                <h3>Firma del Denunciante</h3>
+
+                <div className='mt-2'>
+                  <SignaturePad
+                    // ref={firmaDenunciante}
+                    canvasProps={{ className: 'signature-canvas' }}
+                  />
+
+                  <div className='mt-3'>
+                    <Button
+                      size='small'
+                      label='Guardar'
+                      className='btn-blue-mpa mr-2'
+                      type='button'
+                    />
+
+                    <Button
+                      size='small'
+                      label='Limpiar'
+                      className='bg-bluegray-100 text-gray-900 border-bluegray-100 hover:bg-bluegray-200'
+                      type='button'
+                    />
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {activeIndex === 1 && (
+            <section className='mx-2'>
+              <div className='mb-3'>
+                <h3>Firma del Funcionario Interviniente</h3>
+
+                <div className='mt-2'>
+                  <SignaturePad
+                    // ref={firmaDenunciante}
+                    canvasProps={{ className: 'signature-canvas' }}
+                  />
+                  <div className='mt-3'>
+                    <Button
+                      size='small'
+                      label='Guardar'
+                      className='btn-blue-mpa mr-2'
+                      type='button'
+                    />
+
+                    <Button
+                      size='small'
+                      label='Limpiar'
+                      className='bg-bluegray-100 text-gray-900 border-bluegray-100 hover:bg-bluegray-200'
+                      type='button'
+                    />
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
+
+          <div className='flex justify-content-between'>
+            <div>
+              {activeIndex !== 0 && (
+                <Button
+                  icon='pi pi-chevron-left'
+                  iconPos='left'
+                  label='Anterior'
+                  className='text-lightblue-mpa'
+                  type='button'
+                  link
+                  onClick={handlePrevIndex}
+                />
+              )}
+            </div>
+
+            <div>
+              {activeIndex !== 1 && (
+                <Button
+                  icon='pi pi-chevron-right'
+                  iconPos='right'
+                  label='Siguiente'
+                  className='text-lightblue-mpa'
+                  type='button'
+                  link
+                  onClick={handleNextIndex}
+                />
+              )}
+
+              {activeIndex === 1 && (
+                <Button
+                  label='Finalizar'
+                  className='btn-blue-mpa'
+                  type='button'
+                />
+              )}
+            </div>
+          </div>
+        </form>
+      </Dialog>
     </Card>
   );
 };

@@ -8,8 +8,8 @@ import { Badge } from 'primereact/badge';
 import { FiltrosDenuncias } from './FiltrosDenuncias.jsx';
 import { AccionesTabla } from './AccionesTabla.jsx';
 import { RealizarPaseDenuncia } from './RealizarPaseDenuncia.jsx';
-import { useAppDispatch, useAppSelector } from '../../../store/hooks.js';
-import { getDenunciasThunk } from '@/store/denunciasSlice/denuncias.thunks.js';
+import { useAppDispatch, useAppSelector } from '@/store/hooks.js';
+import { getDenunciasThunk } from '@/store/denuncias/denuncias.thunks.js';
 import { parseDDMMYYYYHHMM } from '@/utils/parseDate.js';
 import { exportExcel } from '@/utils/exportExcel.js';
 

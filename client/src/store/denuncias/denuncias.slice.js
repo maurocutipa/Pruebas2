@@ -3,8 +3,6 @@ import {
   deleteDenunciaThunk,
   getDenunciaByIdThunk,
   getDenunciasThunk,
-  getResumenDenunciaThunk,
-  ratificarDenunciaThunk,
 } from './denuncias.thunks';
 import { parseDDMMYYYY } from '@/utils/parseDate';
 
@@ -52,28 +50,19 @@ export const denunciasSlice = createSlice({
           intervinientes: {
             ...payload.data.intervinientes,
           },
-          adjuntos: 
-          {
-            ...payload.data.adjuntos
+          adjuntos: {
+            ...payload.data.adjuntos,
           },
-          datosDenunciaPropiedad: 
-          {
-            ...payload.data.datosDenunciaPropiedad
-          }, 
-          datosViolenciaDeGenero: 
-          {
-            ...payload.data.datosViolenciaDeGenero
-          }, 
-          datosIncidentesViales: 
-          {
-            ...payload.data.datosIncidentesViales
-          }
+          datosDenunciaPropiedad: {
+            ...payload.data.datosDenunciaPropiedad,
+          },
+          datosViolenciaDeGenero: {
+            ...payload.data.datosViolenciaDeGenero,
+          },
+          datosIncidentesViales: {
+            ...payload.data.datosIncidentesViales,
+          },
         };
-      })
-      // Ratificar Denuncia
-      .addCase(ratificarDenunciaThunk.fulfilled, () => {})
-      .addCase(getResumenDenunciaThunk.fulfilled, (state, { payload }) => {
-        state.resumenDenuncia = payload;
       });
   },
 });
