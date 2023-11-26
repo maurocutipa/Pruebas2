@@ -34,7 +34,9 @@
     "nodemailer": "^6.9.6",
     "nodemon": "^3.0.1",
     "puppeteer": "^21.4.0",
+    "qrcode": "^1.5.3",
     "request": "^2.88.2",
+    "restpki-client": "^2.3.5",
     "winston": "^3.11.0"
   },
   "_moduleAliases": {
