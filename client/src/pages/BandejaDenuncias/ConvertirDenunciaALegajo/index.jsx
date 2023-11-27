@@ -8,10 +8,10 @@ import { ResumenHechos } from '@/components/pages/BandejaDenuncias/ConvertirDenu
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { Toast } from 'primereact/toast';
 import { toastError, toastSuccess } from '@/utils/toastMessage';
-import { getAccionTomadaThunk } from '@/store/denuncias/denunciaLegajo/denunciaLegajo.thunks';
 import {
   getDenunciadosParaLegajoThunk,
   crearDenunciaLegajoThunk,
+  getAccionTomadaThunk,
 } from '@/store/denuncias/denunciaLegajo/denunciaLegajo.thunks';
 import { resetState } from '@/store/denuncias/denunciaLegajo/denunciaLegajo.slice';
 
@@ -29,6 +29,10 @@ export const ConvertirDenunciaALegajo = () => {
   useEffect(() => {
     dispatch(getAccionTomadaThunk(id));
     dispatch(getDenunciadosParaLegajoThunk(id));
+
+    return () => {
+      dispatch(resetState());
+    };
   }, [dispatch, id]);
 
   const handleConvertirALegajo = async () => {
@@ -54,16 +58,15 @@ export const ConvertirDenunciaALegajo = () => {
   };
 
   const goToBandeja = () => {
-    dispatch(resetState());
     navigate('/bandeja-denuncias');
   };
 
   if (seTomoAccion) {
     return (
       <div className='px-8 py-4'>
-        <h2>
+        <div className='text-lg text-center text-red-700 font-bold'>
           Ya se tomo una accion para esta denuncia, puede regresar a la bandeja
-        </h2>
+        </div>
         <Button
           icon='pi pi-angle-left'
           label='Regresar a la bandeja'
