@@ -11,7 +11,7 @@ import { DenunciaNoPenal } from '@/pages/BandejaDenuncias/DenunciaNoPenal';
 
 import { PrivateRoutes } from './auth/PrivateRoutes';
 import { PublicRoutes } from './auth/PublicRoutes';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 
 export const AppRouter = () => {
   const { user, loading } = useAuth();

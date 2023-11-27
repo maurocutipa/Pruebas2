@@ -8,7 +8,7 @@ import { Button } from 'primereact/button';
 import { GET_COMPROBANTE_PDF } from '@/constants';
 import { parseDDMMYYYYHHMM } from '@/utils/parseDate';
 
-export const ResumenDenuncia = ({ id, resumenDenuncia }) => {
+export const ResumenDenuncia = ({ id, resumenDenuncia, estaRatificada }) => {
   const [showComprobante, setShowComprobante] = useState(false);
 
   const { resumen, victimas, denunciados, testigos } = resumenDenuncia || {};
@@ -183,12 +183,14 @@ export const ResumenDenuncia = ({ id, resumenDenuncia }) => {
         </div>
 
         <div className='mt-6'>
-          <Button
-            className='btn-blue-mpa'
-            label='Mostrar comprobante completo'
-            onClick={handleMostrarComprobante}
-            disabled={!resumenDenuncia.comprobante}
-          />
+          {!estaRatificada && (
+            <Button
+              className='btn-blue-mpa'
+              label='Mostrar comprobante completo'
+              onClick={handleMostrarComprobante}
+              disabled={!resumenDenuncia.comprobante}
+            />
+          )}
         </div>
       </Card>
 
