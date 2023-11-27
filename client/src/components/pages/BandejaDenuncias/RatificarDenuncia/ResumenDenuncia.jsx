@@ -93,7 +93,7 @@ export const ResumenDenuncia = ({ id }) => {
       {resumenDenuncia ? (
         <>
           <Card className='shadow-1 px-7'>
-            <h2>Resumen de la Denuncia Nro: {id}</h2>
+            <h2>Resumen de la Denuncia N° {id}</h2>
 
             <div className='grid mt-6'>
               <div className='col-12 lg:col-6' id='datos-generales'>
@@ -202,13 +202,6 @@ export const ResumenDenuncia = ({ id }) => {
                   </>
                 )}
               </div>
-            </div>
-
-            <div className='mt-6'>
-              <h3>Adjuntos/Evidencias</h3>
-
-              <p className=''>Descripción de la evidencia</p>
-              <p className=''>Archivos cargados</p>
             </div>
 
             <div className='mt-6'>

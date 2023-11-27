@@ -9,6 +9,7 @@ const initialState = {
   form: {
     firmaDenunciante: null,
     firmaFuncionario: null,
+    estaRatificada: false,
   },
 };
 
@@ -31,7 +32,10 @@ export const ratificarDenunciaSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(ratificarDenunciaThunk.fulfilled, () => {})
+      .addCase(ratificarDenunciaThunk.fulfilled, (state) => {
+        state.form.firmaDenunciante = null;
+        state.form.firmaFuncionario = null;
+      })
       .addCase(getResumenDenunciaThunk.fulfilled, (state, { payload }) => {
         state.resumenDenuncia = payload;
       });
