@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react"
 import { LacunaWebPKI } from 'web-pki'
 import api from '@/api'
 import axios from "axios"
+import { ModalFirmaDigital } from "../../components/common/ModalFirmaDigital"
 export const Firmar = () => {
 
     const [certs, setCerts] = useState(null)
@@ -84,8 +85,11 @@ export const Firmar = () => {
         }
     }
 
+    const [visibleModal, setVisibleModal] = useState(true)
+
     return (
         <div>
+            <ModalFirmaDigital visible={visibleModal} setVisible={setVisibleModal} />
             <h1>FIRMA DIGITAL</h1>
             <div>
                 <h1>VALIDAR FIRMA DIGITAL</h1>
