@@ -72,12 +72,6 @@ export const RatificarDenuncia = () => {
             <ConfirmPopup />
             <h1 className='text-center'>Ratificar Denuncia N° {id}</h1>
 
-            {estaRatificada && (
-              <div className='text-lg text-center text-red-700 font-bold'>
-                Esta denuncia ya fue ratificada
-              </div>
-            )}
-
             <div className='mt-6'>
               <Button
                 icon='pi pi-angle-left'
@@ -88,31 +82,42 @@ export const RatificarDenuncia = () => {
                 onClick={() => navigate('/bandeja-denuncias')}
               />
 
-              {!estaRatificada && (
-                <>
-                  <ResumenDenuncia id={id} resumenDenuncia={resumenDenuncia} />
-                  <FirmaYTOS
-                    id={id}
-                    firmaDenunciante={firmaDenunciante}
-                    firmaFuncionario={firmaFuncionario}
-                  />
-                </>
-              )}
-            </div>
-
-            {!estaRatificada && (
-              <div className='flex justify-content-between mt-6 mb-2'>
-                <Button
-                  icon='pi pi-angle-left'
-                  label={'Cancelar'}
-                  className='bg-red-700 hover:bg-red-800 border-red-700'
-                  size='large'
-                  onClick={() => {
-                    navigate('/bandeja-denuncias');
-                  }}
+              <>
+                <ResumenDenuncia
+                  id={id}
+                  resumenDenuncia={resumenDenuncia}
+                  estaRatificada={estaRatificada}
                 />
 
-                <div>
+                <FirmaYTOS
+                  id={id}
+                  firmaDenunciante={firmaDenunciante}
+                  firmaFuncionario={firmaFuncionario}
+                  estaRatificada={estaRatificada}
+                />
+              </>
+            </div>
+
+            <div className='flex justify-content-between mt-6 mb-2'>
+              <Button
+                icon='pi pi-angle-left'
+                label={'Cancelar'}
+                className='bg-red-700 hover:bg-red-800 border-red-700'
+                size='large'
+                onClick={() => {
+                  navigate('/bandeja-denuncias');
+                }}
+              />
+
+              <div>
+                {estaRatificada ? (
+                  <Button
+                    onClick={() => setShowComprobante(true)}
+                    label={'Ver Comprobante'}
+                    className='btn-blue-mpa'
+                    size='large'
+                  />
+                ) : (
                   <Button
                     onClick={handleRatificarDenuncia}
                     label={'Ratificar Denuncia'}
@@ -120,32 +125,25 @@ export const RatificarDenuncia = () => {
                     size='large'
                     disabled={!firmaDenunciante || !firmaFuncionario}
                   />
+                )}
+              </div>
 
-                  <Button
-                    onClick={() => setShowComprobante(true)}
-                    label={'Ver Comprobante'}
-                    className='btn-blue-mpa'
-                    size='large'
+              <Dialog
+                header={`Nuevo comprobante de la denuncia N° ${id}`}
+                visible={showComprobante}
+                className='w-10 xl:w-8'
+                onHide={() => setShowComprobante(false)}
+                draggable={false}
+              >
+                <div className='px-4' style={{ height: '500px' }}>
+                  <PdfPreview
+                    firmaDenunciante={firmaDenunciante}
+                    firmaFuncionario={firmaFuncionario}
+                    comprobanteURL={`${GET_COMPROBANTE_PDF}/${resumenDenuncia.comprobante?.nombreArchivo}`}
                   />
                 </div>
-              </div>
-            )}
-
-            <Dialog
-              header={`Nuevo comprobante de la denuncia N° ${id}`}
-              visible={showComprobante}
-              className='w-10 xl:w-8'
-              onHide={() => setShowComprobante(false)}
-              draggable={false}
-            >
-              <div className='px-4' style={{ height: '500px' }}>
-                <PdfPreview
-                  firmaDenunciante={firmaDenunciante}
-                  firmaFuncionario={firmaFuncionario}
-                  comprobanteURL={`${GET_COMPROBANTE_PDF}/${resumenDenuncia.comprobante?.nombreArchivo}`}
-                />
-              </div>
-            </Dialog>
+              </Dialog>
+            </div>
           </div>
         </>
       ) : (

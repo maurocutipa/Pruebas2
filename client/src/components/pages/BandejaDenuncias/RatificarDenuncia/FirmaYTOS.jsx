@@ -4,7 +4,12 @@ import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { CampoFirma } from './CampoFirma';
 
-export const FirmaYTOS = ({ id, firmaDenunciante, firmaFuncionario }) => {
+export const FirmaYTOS = ({
+  id,
+  firmaDenunciante,
+  firmaFuncionario,
+  estaRatificada,
+}) => {
   const firmaDenuncianteRef = useRef(null);
   const firmaFuncionarioRef = useRef(null);
 
@@ -74,71 +79,75 @@ export const FirmaYTOS = ({ id, firmaDenunciante, firmaFuncionario }) => {
       </div>
 
       <div className='grid mt-8'>
-        <div className='col-12 lg:col-6 text-center'>
-          <div
-            className='w-12'
-            style={{
-              border: '1px solid black',
-              height: '300px',
-            }}
-          >
-            <img
-              src={firmaDenunciante}
-              alt='FIRMA DENUNCIANTE | DEBE CARGAR LA FIRMA'
-              style={{ height: '290px', width: '99%' }}
-            />
-          </div>
-          <div className='mt-2'>
-            <div className='font-bold'>Denunciante</div>
-            <div className='mt-2'>Firma y D.N.I.</div>
-            <Button
-              className='mt-2 btn-blue-mpa'
-              label='Firmar'
-              size='small'
-              onClick={() => setFirmaDenuncianteVisible(true)}
-            />
-            <CampoFirma
-              type='denunciante'
-              title='Firma del Denunciante'
-              id={id}
-              signatureRef={firmaDenuncianteRef}
-              visible={firmaDenuncianteVisible}
-              setVisible={setFirmaDenuncianteVisible}
-            />
-          </div>
-        </div>
-
-        <div className='col-12 lg:col-6 text-center'>
-          <div
-            className='w-12'
-            style={{ border: '1px solid black', height: '300px' }}
-          >
-            <img
-              src={firmaFuncionario}
-              alt='FIRMA FUNCIONARIO | DEBE CARGAR LA FIRMA'
-              style={{ height: '290px', width: '99%' }}
-            />
+        <>
+          <div className='col-12 lg:col-6 text-center'>
+            <div
+              className='w-12'
+              style={{
+                border: '1px solid black',
+                height: '300px',
+              }}
+            >
+              <img
+                src={firmaDenunciante}
+                alt='FIRMA DENUNCIANTE | DEBE CARGAR LA FIRMA'
+                style={{ height: '290px', width: '99%' }}
+              />
+            </div>
+            <div className='mt-2'>
+              <div className='font-bold'>Denunciante</div>
+              <div className='mt-2'>Firma y D.N.I.</div>
+              <Button
+                className='mt-2 btn-blue-mpa'
+                label='Firmar'
+                size='small'
+                disabled={estaRatificada}
+                onClick={() => setFirmaDenuncianteVisible(true)}
+              />
+              <CampoFirma
+                type='denunciante'
+                title='Firma del Denunciante'
+                id={id}
+                signatureRef={firmaDenuncianteRef}
+                visible={firmaDenuncianteVisible}
+                setVisible={setFirmaDenuncianteVisible}
+              />
+            </div>
           </div>
 
-          <div className='mt-2'>
-            <div className='font-bold'>Funcionario Interviniente</div>
-            <div className='mt-2'>Firma y D.N.I.</div>
-            <Button
-              className='mt-2 btn-blue-mpa'
-              label='Firmar'
-              size='small'
-              onClick={() => setFirmaFuncionarioVisible(true)}
-            />
-            <CampoFirma
-              type='funcionario'
-              title='Firma del Funcionario'
-              id={id}
-              signatureRef={firmaFuncionarioRef}
-              visible={firmafuncionarioVisible}
-              setVisible={setFirmaFuncionarioVisible}
-            />
+          <div className='col-12 lg:col-6 text-center'>
+            <div
+              className='w-12'
+              style={{ border: '1px solid black', height: '300px' }}
+            >
+              <img
+                src={firmaFuncionario}
+                alt='FIRMA FUNCIONARIO | DEBE CARGAR LA FIRMA'
+                style={{ height: '290px', width: '99%' }}
+              />
+            </div>
+
+            <div className='mt-2'>
+              <div className='font-bold'>Funcionario Interviniente</div>
+              <div className='mt-2'>Firma y D.N.I.</div>
+              <Button
+                className='mt-2 btn-blue-mpa'
+                disabled={estaRatificada}
+                label='Firmar'
+                size='small'
+                onClick={() => setFirmaFuncionarioVisible(true)}
+              />
+              <CampoFirma
+                type='funcionario'
+                title='Firma del Funcionario'
+                id={id}
+                signatureRef={firmaFuncionarioRef}
+                visible={firmafuncionarioVisible}
+                setVisible={setFirmaFuncionarioVisible}
+              />
+            </div>
           </div>
-        </div>
+        </>
       </div>
     </Card>
   );
