@@ -3,8 +3,9 @@ import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import { MultiSelect } from 'primereact/multiselect';
 import { TabView, TabPanel } from 'primereact/tabview';
-import { VehiculosInvolucradosTable } from './TablasVerDenuncia/ObjetosSustraidos/VehiculosInvolucradosTable';
+import { VehiculosInvolucradosTable } from './TablasVerDenuncia/IncidentesViales/VehiculosInvolucradosTable';
 import { ObjetosSustraidosTable } from './TablasVerDenuncia/ObjetosSustraidos/ObjetosSustraidosTable';
+import { AnexoViolenciaDeGenero } from './TablasVerDenuncia/AnexoViolenciaDeGenero/AnexoViolenciaDeGenero';
 import { Dialog } from 'primereact/dialog';
 import { PdfViewer } from '@/components/common/PdfViewer';
 import { GET_ADJUNTOS } from '@/constants';
@@ -41,17 +42,17 @@ export const DatosDelHecho = ({ datosDenuncia }) => {
   const [selectedCircunstancias, setSelectedCircunstancias] = useState([]); 
 
   const datosCircunstancias = [
-    { label: 'Me dañaron cosas', code: 'danoCosas', actualValue: datosDenuncia.datosDenunciaPropiedad.datosGeneralesDenunciaPropiedad?.danoCosas},
-    { label: 'Utilizaron armas', code: 'armas', actualValue: datosDenuncia.datosDenunciaPropiedad.datosGeneralesDenunciaPropiedad?.armas },
-    { label: 'Hubo violencia física', code: 'violenciaFisica', actualValue: datosDenuncia.datosDenunciaPropiedad.datosGeneralesDenunciaPropiedad?.violenciaFisica },
-    { label: 'Amenaza', code: 'amenaza', actualValue: datosDenuncia.datosDenunciaPropiedad.datosGeneralesDenunciaPropiedad?.amenaza },
-    { label: 'Arrebato', code: 'arrebato', actualValue: datosDenuncia.datosDenunciaPropiedad.datosGeneralesDenunciaPropiedad?.arrebato },
-    { label: 'Otra', code: 'otra', actualValue: datosDenuncia.datosDenunciaPropiedad.datosGeneralesDenunciaPropiedad?.otra },
+    { label: 'Me dañaron cosas', code: 'danoCosas', valor: datosDenuncia.datosDenunciaPropiedad.datosGeneralesDenunciaPropiedad?.danoCosas},
+    { label: 'Utilizaron armas', code: 'armas', valor: datosDenuncia.datosDenunciaPropiedad.datosGeneralesDenunciaPropiedad?.armas },
+    { label: 'Hubo violencia física', code: 'violenciaFisica', valor: datosDenuncia.datosDenunciaPropiedad.datosGeneralesDenunciaPropiedad?.violenciaFisica },
+    { label: 'Amenaza', code: 'amenaza', valor: datosDenuncia.datosDenunciaPropiedad.datosGeneralesDenunciaPropiedad?.amenaza },
+    { label: 'Arrebato', code: 'arrebato', valor: datosDenuncia.datosDenunciaPropiedad.datosGeneralesDenunciaPropiedad?.arrebato },
+    { label: 'Otra', code: 'otra', valor: datosDenuncia.datosDenunciaPropiedad.datosGeneralesDenunciaPropiedad?.otra },
   ];
 
   const circunstanciasActuales = () => {
     datosCircunstancias.forEach(circunstancia => {
-      if (circunstancia.actualValue === 1) {
+      if (circunstancia.valor === 1) {
         circunstanciasTraidas.push(circunstancia)
       }
     });
@@ -201,14 +202,14 @@ export const DatosDelHecho = ({ datosDenuncia }) => {
 
       {/* En caso de Violencia de Genero */}
       {tipoDenuncia === 7 ? (
-        <h3>Anexo de Violencia de Genero</h3>
+        <AnexoViolenciaDeGenero datosViolenciaDeGenero = {datosDenuncia.datosViolenciaDeGenero}/>
       ) : tipoDenuncia === 6 ? (
         <>
           <h3>Vehiculos involucrados:</h3>
-          <VehiculosInvolucradosTable datosIncidentesViales={datosDenuncia.datosIncidentesViales} />
+          <VehiculosInvolucradosTable datosIncidentesViales = {datosDenuncia.datosIncidentesViales} />
         </>
       ) : tipoDenuncia === 3 ? (
-        <ObjetosSustraidosTable datosDenunciaPropiedad={datosDenuncia.datosDenunciaPropiedad} />
+        <ObjetosSustraidosTable datosDenunciaPropiedad = {datosDenuncia.datosDenunciaPropiedad} />
       ) : null}
 
       <Divider />
