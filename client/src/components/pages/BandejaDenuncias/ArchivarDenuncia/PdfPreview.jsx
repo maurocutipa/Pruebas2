@@ -66,9 +66,6 @@ const stylesHtml = {
 
 const html = (htmlContent) => `
   <body>
-    <strong>
-      <p style="font-weight: bold;">hola</p>
-    </strong>
     ${htmlContent ? htmlContent : ''}
   </body>
 `;
