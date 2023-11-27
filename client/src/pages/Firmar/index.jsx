@@ -8,10 +8,13 @@ export const Firmar = () => {
     const [cert, setCert] = useState('')
     const [file, setFile] = useState(null)
     const [token, setToken] = useState('')
+    const [signers, setSigners] = useState(null)
+
     //create a file ref
     const fileRef = useRef(null)
-
-    var pki = new LacunaWebPKI();
+    const fileCheckRef = useRef(null)
+    
+    let pki = new LacunaWebPKI();
 
     useEffect(() => {
 
@@ -31,7 +34,7 @@ export const Firmar = () => {
             token: token,
             thumbprint: cert
         }).success(() => {
-            api.post('http://localhost:4000/api/restpki/finish-sign', {token: token}).then(res => {
+            api.post('http://localhost:4000/api/restpki/finish-signature', {token: token}).then(res => {
                 //console.log(res);
                 console.log(res);
             })
@@ -53,8 +56,8 @@ export const Firmar = () => {
     const startFirma = () => {
         if (file) {
             const data = new FormData()
-            data.append('file', file)
-            axios.post('http://localhost:4000/api/restpki/start-sign', data, {
+            data.append('fileFirma', file)
+            axios.post('http://localhost:4000/api/restpki/start-signature', data, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -64,10 +67,37 @@ export const Firmar = () => {
             })
         }
     }
+    
+    const verificarFirma = () => {
+        if(fileCheckRef.current.files[0]){
+            const data = new FormData()
+            data.append('fileFirma', fileCheckRef.current.files[0])
+            axios.post('http://localhost:4000/api/restpki/verify-signature', data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(res => {
+                
+                setSigners(res.data.signature._signers)
+                console.log(res.data.signature._signers);
+            })
+        }
+    }
 
     return (
         <div>
             <h1>FIRMA DIGITAL</h1>
+            <div>
+                <h1>VALIDAR FIRMA DIGITAL</h1>
+                <input type="file" name="fileCheck" id="fileCheck" ref={fileCheckRef} />
+                <br />
+                <button onClick={verificarFirma}>Verificar</button>
+                {
+                    signers && (
+                        <span>Firmas: {signers.length}</span>
+                    )
+                }
+            </div>
             <div style={{ marginTop: '3em' }}>
                 <h1>ARCHIVO A FIRMAR</h1>
                 {/* add use ref */}
