@@ -2,6 +2,8 @@ import { MultiSelect } from 'primereact/multiselect';
 import { useEffect, useState } from 'react';
 import { Badge } from 'primereact/badge';
 import { Divider } from 'primereact/divider';
+import { Button } from 'primereact/button';
+import { InputNumber } from 'primereact/inputnumber';
 
 export const AnexoViolenciaDeGenero = ({ datosViolenciaDeGenero }) => {
   useEffect(() => {
@@ -9,6 +11,7 @@ export const AnexoViolenciaDeGenero = ({ datosViolenciaDeGenero }) => {
     actualizarSeleccion(tiposViolencia, 1, setSelectedTipos);
     actualizarSeleccion(perfilAgresor, 1, setSelectedPerfil);
     actualizarSeleccion(vulnerabilidades, 1, setSelectedVulnerabilidades);
+    setRiesgo(datosViolenciaDeGenero.valoracion)
   }, []);
 
   const situaciones = [
@@ -47,6 +50,7 @@ export const AnexoViolenciaDeGenero = ({ datosViolenciaDeGenero }) => {
   const [selectedTipos, setSelectedTipos] = useState([]);
   const [selectedPerfil, setSelectedPerfil] = useState([]);
   const [selectedVulnerabilidades, setSelectedVulnerabilidades] = useState([]);
+  const [riesgo, setRiesgo] = useState(0)
 
   const actualizarSeleccion = (opciones, valorActual, setter) => {
     const opcionesSeleccionadas = opciones.filter(opcion => opcion.valor === valorActual);
@@ -57,16 +61,16 @@ export const AnexoViolenciaDeGenero = ({ datosViolenciaDeGenero }) => {
     <>
       <h2>
         Anexo Violencia de Género
-        {datosViolenciaDeGenero.valoracion < 4 ? (
+        {riesgo < 4 ? (
           <Badge value="Riesgo Bajo" size="large" severity="info" className="m-2"></Badge>
-        ) : datosViolenciaDeGenero.valoracion < 10 ? (
+        ) : riesgo < 10 ? (
           <Badge value="Riesgo medio" size="large" severity="warning" className="m-2"></Badge>
-        ) : datosViolenciaDeGenero.valoracion >= 10 ? (
+        ) : riesgo >= 10 ? (
           <Badge value="Riesgo Alto" size="large" severity="danger" className="m-2"></Badge>
         ) : null}
       </h2>
 
-      <h3>Valoración Actual: {datosViolenciaDeGenero.valoracion}</h3>
+      <h3>Valoración Actual: {riesgo}</h3>
 
       <div className="border-1 border-400 p-4">
         <h4 className="underline">SITUACION DE LA RELACION EN PAREJA:</h4>
@@ -113,7 +117,12 @@ export const AnexoViolenciaDeGenero = ({ datosViolenciaDeGenero }) => {
           className="w-8"
         />
         <Divider />
-        <h4>Nueva valoracion: {selectedSituaciones.length + selectedTipos.length + selectedPerfil.length + selectedVulnerabilidades.length}</h4>
+        <h4>Total Valoración:</h4>
+        <InputNumber value={riesgo} disabled></InputNumber>
+        <Button tooltip="Calcular y establecer nueva valoracion"
+          icon="pi pi-calculator" 
+          onClick={() => setRiesgo(selectedSituaciones.length + selectedTipos.length + selectedPerfil.length + selectedVulnerabilidades.length)}
+        />
       </div>
     </>
   );
