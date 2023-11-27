@@ -105,7 +105,9 @@ export const denunciaLegajoSlice = createSlice({
         }
       )
       // Convertir denuncia a legajo
-      .addCase(crearDenunciaLegajoThunk.fulfilled, () => {})
+      .addCase(crearDenunciaLegajoThunk.fulfilled, (state) => {
+        state.seTomoAccion = true;
+      })
       .addCase(getAccionTomadaThunk.fulfilled, (state, { payload }) => {
         state.seTomoAccion = payload.seTomoAccion;
       });

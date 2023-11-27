@@ -7,6 +7,7 @@ const URLS = {
   getDenunciaById: (id) => `/denuncias/get/${id}`,
   deleteDenuncia: (id) => `/denuncias/delete/${id}`,
   ratificarDenuncia: (id) => `/denuncias/ratificar-denuncia/${id}`,
+  estaRatificada: (id) => `/denuncias/esta-ratificada/${id}`,
 };
 
 export const getAllDenuncias = (body) => {
@@ -31,4 +32,8 @@ export const ratificarDenuncia = (id) => {
 
 export const getResumenDenuncia = (id) => {
   return api.get(URLS.getResumenDenuncia(id));
+};
+
+export const estaRatificada = (id) => {
+  return api.get(URLS.estaRatificada(id));
 };
