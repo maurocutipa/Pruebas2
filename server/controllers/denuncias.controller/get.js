@@ -557,4 +557,23 @@ GetController.getResumenParaRatificar = async (req, res) => {
   }
 };
 
+GetController.estaRatificada = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    let query = `SELECT ratificacion FROM denuncia WHERE id_denuncia = ?`;
+
+    const [denuncia] = await queryHandler(query, [id]);
+    let estaRatificada = denuncia.ratificacion === 'SI' ? true : false;
+
+    res.status(200).json({
+      message: 'ok',
+      data: { estaRatificada },
+    });
+  } catch (error) {
+    console.log(error);
+    httpErrorHandler(res);
+  }
+};
+
 module.exports = GetController;

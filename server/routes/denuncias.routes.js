@@ -46,6 +46,7 @@ router.get(
 );
 router.delete('/delete/:id', DenunciasController.deleteDenuncia);
 router.patch('/ratificar-denuncia/:id', DenunciasController.ratificarDenuncia);
+router.get('/esta-ratificada/:id', DenunciasController.estaRatificada);
 
 router.post(
   '/general-create',
