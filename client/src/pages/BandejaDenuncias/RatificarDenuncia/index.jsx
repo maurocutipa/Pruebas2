@@ -1,10 +1,10 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ResumenDenuncia } from '@/components/pages/BandejaDenuncias/RatificarDenuncia/ResumenDenuncia';
 import { FirmaYTOS } from '@/components/pages/BandejaDenuncias/RatificarDenuncia/FirmaYTOS';
-import { useAppDispatch } from '@/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { ratificarDenunciaThunk } from '@/store/denuncias/ratificarDenuncia/ratificarDenuncia.thunks';
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { toastError, toastSuccess } from '@/utils/toastMessage';
@@ -12,14 +12,16 @@ import { toastError, toastSuccess } from '@/utils/toastMessage';
 export const RatificarDenuncia = () => {
   const toast = useRef(null);
   const dispatch = useAppDispatch();
+  const { firmaDenunciante, firmaFuncionario } = useAppSelector(
+    (state) => state.ratificarDenuncia.form
+  );
   const navigate = useNavigate();
   const { id } = useParams();
-  const [visible, setVisible] = useState(false);
 
   const handleRatificarDenuncia = (event) => {
     confirmPopup({
       target: event.currentTarget,
-      message: `¿Esta seguro de ratificar la denuncia #${id}?`,
+      message: `¿Esta seguro de ratificar la denuncia N° ${id}?`,
       icon: 'pi pi-info-circle',
       accept,
     });
@@ -55,7 +57,11 @@ export const RatificarDenuncia = () => {
             onClick={() => navigate('/bandeja-denuncias')}
           />
           <ResumenDenuncia id={id} />
-          <FirmaYTOS visible={visible} setVisible={setVisible} id={id} />
+          <FirmaYTOS
+            id={id}
+            firmaDenunciante={firmaDenunciante}
+            firmaFuncionario={firmaFuncionario}
+          />
         </div>
 
         <div className='flex justify-content-between mt-6 mb-2'>
@@ -71,17 +77,11 @@ export const RatificarDenuncia = () => {
 
           <div>
             <Button
-              label={'Firmar'}
-              className='btn-blue-mpa mr-4'
-              size='large'
-              onClick={() => setVisible(true)}
-            />
-
-            <Button
               onClick={handleRatificarDenuncia}
               label={'Ratificar Denuncia'}
               className='btn-blue-mpa'
               size='large'
+              disabled={!firmaDenunciante || !firmaFuncionario}
             />
           </div>
         </div>
