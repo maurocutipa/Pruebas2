@@ -10,9 +10,9 @@ UpdateController.ratificarDenuncia = async (req, res) => {
   const [fecha, hora] = formatDateHour(new Date()).split(' ');
 
   try {
-    let query = `SELECT id_user_ratificacion as idUserRatificacion FROM denuncia WHERE id_denuncia = ?`;
+    let query = `SELECT ratificacion FROM denuncia WHERE id_denuncia = ?`;
     let [data] = await queryHandler(query, [id]);
-    if (data.idUserRatificacion) {
+    if (data.ratificacion === 'SI') {
       return res
         .status(400)
         .json({ message: `Denuncia con el id: ${id} ya fue ratificada` });
@@ -24,10 +24,12 @@ UpdateController.ratificarDenuncia = async (req, res) => {
       SET 
         fecha_ratificacion = ?,
         hora_ratificacion = ?,
-        ratificacion = 'SI'
+        ratificacion = 'SI',
+        id_user_ratificacion = ?
+
       WHERE id_denuncia = ?`;
 
-    response = await queryHandler(query, [fecha, hora, id]);
+    response = await queryHandler(query, [fecha, hora, req.idUsuario, id]);
 
     if (response.changedRows === 0) {
       return res

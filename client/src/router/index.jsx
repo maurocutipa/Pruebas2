@@ -8,10 +8,11 @@ import { ConvertirDenunciaALegajo } from '@/pages/BandejaDenuncias/ConvertirDenu
 import { RatificarDenuncia } from '@/pages/BandejaDenuncias/RatificarDenuncia';
 import { ArchivarDenuncia } from '@/pages/BandejaDenuncias/ArchivarDenuncia';
 import { DenunciaNoPenal } from '@/pages/BandejaDenuncias/DenunciaNoPenal';
+import { Firmar } from '@/pages/Firmar';
 
 import { PrivateRoutes } from './auth/PrivateRoutes';
 import { PublicRoutes } from './auth/PublicRoutes';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 
 export const AppRouter = () => {
   const { user, loading } = useAuth();
@@ -29,6 +30,8 @@ export const AppRouter = () => {
 
         <Route path='/' element={<PrivateRoutes isAuth={!!user} />}>
           <Route element={<Header_ />}>
+
+            <Route path='/firmar' element={<Firmar />} /> 
             <Route path='/bandeja-denuncias' element={<BandejaDenuncias />} />
 
             <Route path='/ver-denuncia/:id' element={<VerDenuncia />} />
