@@ -36,7 +36,7 @@
     "puppeteer": "^21.4.0",
     "qrcode": "^1.5.3",
     "request": "^2.88.2",
-    "restpki-client": "^2.3.5",
+    "restpki-client": "^1.1.0",
     "winston": "^3.11.0"
   },
   "_moduleAliases": {
