@@ -6,9 +6,9 @@ const fs = require('fs')
 const path = require('path')
 
 class PadesVisualElementsRestPki {
-    static async getVisualRepresentation() {
+    static async getVisualRepresentation(codigo) {
         try {
-            const codigo = PKI.generateVerificationCode()
+            
             const url = process.env.SERVER_NAME + '/verificar/' + codigo
 
             //generar codigo qr con url a un buffer luego convertirlo a base64
