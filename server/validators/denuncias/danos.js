@@ -1,34 +1,34 @@
 const { check, body } = require("express-validator")
 const validateHelper = require('../../utils/validateHelper')
 
-const validateCreateDanos = [
-    body("idDenuncia").exists().not().isEmpty(),
+const validateUpdateDanos = [
+    
     body("danoAnimal").
-        optional().isNumeric({min: 0, max: 1}),
+        optional().isBoolean(),
     body("danoCosaMaterial").
-        optional().isNumeric({min: 0, max: 1}),
+        optional().isBoolean(),
     body("danoInmueble").
-        optional().isNumeric({min: 0, max: 1}),
+        optional().isBoolean(),
     body("danoSistemaInformatico").
-        optional().isNumeric({min: 0, max: 1}),
+        optional().isBoolean(),
     body("consecuenciaDano").
-        optional().isNumeric({min:0,max:1}),
+        optional().isBoolean(),
     body("consecuenciaDestruccion").
-        optional().isNumeric({min:0,max:1}),
+        optional().isBoolean(),
     body("consecuenciaInutilizacion").
-        optional().isNumeric({min:0,max:1}),
+        optional().isBoolean(),
     body("consecuenciaDesaparicion").
-        optional().isNumeric({min:0,max:1}),
+        optional().isBoolean(),
     body("consecuenciaOtro").
-        optional().isNumeric({min:0,max:1}),
+        optional().isBoolean(),
     body("consecuenciaDetallesOtro").
-        if(body("consecuenciaOtro").exists().equals("1")).
-            exists().notEmpty(),
-    body("pertenencia")
-        .exists().not().isEmpty(),
+        optional(),
+    body("pertenencia").
+        optional(),
+
     (req, res, next) => {
         validateHelper(req, res, next)
     }
 ]
 
-module.exports = validateCreateDanos
+module.exports = validateUpdateDanos

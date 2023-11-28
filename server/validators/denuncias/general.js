@@ -1,51 +1,41 @@
 const { check, body } = require("express-validator")
 const validateHelper = require('../../utils/validateHelper')
 
-const validateCreateGeneral = [
+const validateUpdateGeneral = [
     body("descripcionQue").
-        exists().not().isEmpty(),
+        optional(),
     body("descripcionComo").
-        exists().not().isEmpty(),
+        optional(),
     body("certezaFecha").
-        exists().not().isEmpty().isBoolean(),
+        optional().isBoolean(),
     body("fechaHecho").
-        if(body("certezaFecha").equals("1")).
-            exists().not().isEmpty(),
+        optional(),
     body("horaHecho").
-        if(body("certezaFecha").equals("1")).
-            exists().not().isEmpty(),
+        optional(),
     body("detalleFecha").
-        if(body("certezaFecha").equals("0")).
-            exists().not().isEmpty(),
+        optional(),
     body("certezaLugar").
-        exists().not().isEmpty().isBoolean(),
+        optional(),
     body("idLocalidad").
-        exists().not().isEmpty().isNumeric(),
+        optional(),
     body("idBarrio").
-        if(body("certezaLugar").equals("1")).
-            exists().not().isEmpty().isNumeric(),
+        optional(),
     body("pisoHecho").
-        if(body("certezaLugar").equals("1")).
-            exists().not().isEmpty().isNumeric(),
+        optional().isNumeric(),
     body("departamentoHecho").
-        if(body("certezaLugar").equals("1")).
-            exists().not().isEmpty().isNumeric(),
+        optional().isNumeric(),
     body("calleHecho").
-        if(body("certezaLugar").equals("1")).
-            optional(),
+        optional(),
     body("numCalle").
-        if(body("certezaLugar").equals("1")).
-            optional(),
+        optional(),
     body("latitudHecho").
-        if(body("certezaLugar").equals("1")).
-            exists().not().isEmpty(),
+        optional(),
     body("longitudHecho").
-        if(body("certezaLugar").equals("1")).
-            exists().not().isEmpty(),
+        optional(),
     body("detalleLugar").
-        if(body("certezaLugar").equals("0")).
-            exists().not().isEmpty(),
-    body("informacionAdicional").optional(),
+        optional(),
+    body("informacionAdicional").
+        optional(),
     body("anonimo").
         optional().isBoolean(),
     body("datosDenunciado").
@@ -54,30 +44,32 @@ const validateCreateGeneral = [
         optional().isBoolean(),
     body("datosTestigo").
         optional().isBoolean(),
+    body("competencia").
+        optional(),
     body("idTipoDenuncia").
-        exists().not().isEmpty().isNumeric(),
+        optional().isNumeric(),
     
     //nuevos campos 
     body("idSeccional").
-        exists().not().isEmpty().isNumeric(),
+        optional().isNumeric(),
     body("idUsuario").
-        exists().not().isEmpty().isNumeric(),
+        optional().isNumeric(),
     body("funcionGrado").
-        exists().not().isEmpty(),
+        optional(),
     body("flagrancia").
-        exists().not().isEmpty().isBoolean(),
+        optional().isBoolean(),
     body("firmaDenunciante").
-        exists().not().isEmpty().isBoolean(),
+        optional().isBoolean(),
     body("firmaAutoridad").
-        exists().not().isEmpty().isBoolean(),
+        optional().isBoolean(),
     body("realizacion").
-        exists().not().isEmpty(),
+        optional(),
     body("idUserRatificacion").
-        exists().not().isEmpty().isNumeric(),
+        optional().isNumeric(),
 
     (req, res, next) => {
         validateHelper(req, res, next)
     }
 ]
 
-module.exports =  validateCreateGeneral
+module.exports =  validateUpdateGeneral
