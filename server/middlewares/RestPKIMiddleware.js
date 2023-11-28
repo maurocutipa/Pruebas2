@@ -28,7 +28,7 @@ RestPKIMiddleware.startSignature = async (req, res) => {
         const signatureStarter = new PadesSignatureStarter(PKI.getRestPkiClient());
 
         // Set PDF to be signed.
-        if (req.typeSign == 'exist')
+        if (req.typeSignature == 'exist')
             signatureStarter.setPdfToSignFromPath(req.file.path)
         else
             signatureStarter.setPdfToSignFromContentBase64(req.file.buffer.toString('base64'))
@@ -96,13 +96,18 @@ RestPKIMiddleware.finishSignature = async (req, res) => {
         const signerCert = result.certificate;
 
         //generate random name
-        const filename = `${crypto.randomBytes(8).toString('hex')}${req.body.filename? `_${req.body.filename}`:''}.pdf` //
+        const filename = `${crypto.randomBytes(8).toString('hex')}${req.body.filename ? `_${req.body.filename}` : ''}.pdf` //
 
-        //TODO: si se trata de un archivo temporal, eliminarlo
-        //TODO: si se trata de un archivo existente, moverlo a la carpeta de firmados
+
         await result.writeToFile(path.join(__dirname, '../uploads/firma-digital/' + filename));
 
-
+        if (req.body.typeSignature == 'temporal') {
+            const filePath = path.join(__dirname, '../uploads/firma-digital/temp/7b5af4e061e472c4.pdf')
+            fs.unlinkSync(filePath)
+            res.send('Firma temporal creada')
+            return
+        }
+        
         const resQuerie = await queryHandler("INSERT INTO firma_verificar(codigo,ruta,nombreArchivo) VALUES(?,?,?)", [req.body.codigo, '/firma-digital/', filename])
 
         res.status(200).json({
@@ -141,7 +146,7 @@ RestPKIMiddleware.verifySignature = async (req, res) => {
 RestPKIMiddleware.verifySignatureByCode = async (req, res) => {
     try {
 
-        if(!req.params.codigo)
+        if (!req.params.codigo)
             throw new Error('Codigo no encontrado')
 
         const codigo = req.params.codigo
