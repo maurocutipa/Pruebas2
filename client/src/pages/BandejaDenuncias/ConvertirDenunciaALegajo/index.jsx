@@ -1,5 +1,5 @@
 // Generado y sin generar
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -14,15 +14,17 @@ import {
   getAccionTomadaThunk,
 } from '@/store/denuncias/denunciaLegajo/denunciaLegajo.thunks';
 import { resetState } from '@/store/denuncias/denunciaLegajo/denunciaLegajo.slice';
+import { PdfPreview } from '@/components/pages/BandejaDenuncias/ConvertirDenunciaALegajo/PdfPreview';
 
 export const ConvertirDenunciaALegajo = () => {
   const toast = useRef(null);
   const navigate = useNavigate();
   const { id } = useParams();
-  const { legajoData, denunciaALegajoForm, seTomoAccion } = useAppSelector(
+  const { legajoData, denunciaALegajoForm } = useAppSelector(
     (state) => state.denunciaLegajo
   );
   const { data } = useAppSelector((state) => state.data);
+  const [showPdf, setShowPdf] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -36,6 +38,10 @@ export const ConvertirDenunciaALegajo = () => {
   }, [dispatch, id]);
 
   const handleConvertirALegajo = async () => {
+    setShowPdf(true);
+  };
+
+  const execAction = async () => {
     const formData = { ...denunciaALegajoForm, idDenuncia: Number(id) };
     const { meta } = await dispatch(crearDenunciaLegajoThunk(formData));
 
@@ -60,24 +66,6 @@ export const ConvertirDenunciaALegajo = () => {
   const goToBandeja = () => {
     navigate('/bandeja-denuncias');
   };
-
-  if (seTomoAccion) {
-    return (
-      <div className='px-8 py-4'>
-        <div className='text-lg text-center text-red-700 font-bold'>
-          Ya se tomo una accion para esta denuncia, puede regresar a la bandeja
-        </div>
-        <Button
-          icon='pi pi-angle-left'
-          label='Regresar a la bandeja'
-          className='text-lightblue-mpa p-0 mt-5'
-          type='button'
-          link
-          onClick={goToBandeja}
-        />
-      </div>
-    );
-  }
 
   return (
     <>
@@ -124,9 +112,17 @@ export const ConvertirDenunciaALegajo = () => {
               size='large'
             />
           </div>
+
+          {showPdf && (
+            <PdfPreview
+              visible={showPdf}
+              setVisible={setShowPdf}
+              execAction={execAction}
+            />
+          )}
         </div>
       ) : (
-        <div className=''>cargando...</div>
+        <div className=''>Cargando...</div>
       )}
     </>
   );
