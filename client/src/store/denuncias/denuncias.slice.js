@@ -62,6 +62,9 @@ export const denunciasSlice = createSlice({
           datosIncidentesViales: {
             ...payload.data.datosIncidentesViales,
           },
+          datosDelitoSexual: {
+            ...payload.data.datosDelitoSexual,
+          }
         };
       });
   },

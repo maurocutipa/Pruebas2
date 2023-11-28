@@ -355,6 +355,44 @@ GetController.getDenunciaById = async (req, res) => {
     const [datosViolenciaDeGenero] = await queryHandler(query, [id]);
     //========================== Fin Querys Violencia de Genero =================================
 
+    //========================== Querys para Delitos Sexuales ===================================
+    query = ` 
+    SELECT 
+      ds.id_denuncia_delitos_sexuales as idDenunciaDelitosSexuales,
+      ds.hecho_acercamiento as hechoAcercamiento,
+      ds.hecho_contacto_tecnologico as hechoContactoTecnologico,
+      ds.hecho_beso as hechoBeso,
+      ds.hecho_tocamiento as hechoTocamiento, 
+      ds.hecho_introduccion as hechoIntroduccion, 
+      ds.accion_violencia as accionViolencia, 
+      ds.accion_drogas as accionDrogas, 
+      ds.accion_vulnerabilidad as accionVulnerabilidad, 
+      ds.accion_arma as accionArma, 
+      ds.accion_aprovecharse as accionAprovecharse, 
+      ds.denuncias_previas as denunciasPrevias,
+      ds.solicitud_imagenes as solicitudImagenes,  
+      ds.menor_involucrado as menorInvolucrado,  
+      ds.medios_electronicos as mediosElectronicos
+    FROM denuncia_delitos_sexuales ds
+    WHERE id_denuncia = ?`;
+    const [detallesDelitoSexual] = await queryHandler(query, [id]);
+
+    query = `
+    SELECT  
+    vic.id_denuncia_victima as idDenunciaVictima, 
+    vic.id_denuncia as idDenuncia, 
+    vic.id_interviniente as idInterviniente, 
+    vic.conocimiento_victima as conocimientoVictima, 
+    vic.vinculo_victima as vinculoVictima, 
+    vic.detalle_vinculo as detalleVinculo, 
+    vic.depende_ingresos as dependeIngresos, 
+    vic.hijos_menores as hijosMenores, 
+    vic.riesgo_vida as riesgoVida, 
+    vic.estado as estado
+    FROM denuncia_victima vic
+    WHERE id_denuncia = ?`
+    const [datosVictima] = await queryHandler(query, [id]);  
+
     res.status(200).json({
       message: `Denuncia con el id: ${id}`,
       data: {
@@ -374,6 +412,10 @@ GetController.getDenunciaById = async (req, res) => {
         },
         datosIncidentesViales: { datosGeneralesIncidentesViales, vehiculos },
         datosViolenciaDeGenero: datosViolenciaDeGenero,
+        datosDelitoSexual: {
+          detallesDelitoSexual, 
+          datosVictima
+        } 
       },
     });
   } catch (error) {
