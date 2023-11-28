@@ -35,10 +35,8 @@ export const AnexoDelitosSexuales = ({ datosDelitoSexual }) => {
     const options = ['Si', 'No'];
 
     const actualizarSeleccionSelectButton = (setter, datos) => {
-        setter('No');
-        if (datos === 1)
-            setter('Si');
-    }
+        setter(datos === 1 ? 'Si' : 'No');
+    };
 
     //======================== Multiselects ============================
 
