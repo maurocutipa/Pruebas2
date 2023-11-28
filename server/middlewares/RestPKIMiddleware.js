@@ -5,6 +5,8 @@ const fs = require('fs');
 const path = require('path');
 const { PKI } = require('../utils/pki')
 const crypto = require('crypto')
+const queryHandler = require('../utils/queryHandler')
+
 const {
     PadesSignatureStarter,
     PadesSignatureFinisher,
@@ -19,6 +21,8 @@ const RestPKIMiddleware = {}
 
 RestPKIMiddleware.startSignature = async (req, res) => {
     try {
+        const codigo = PKI.generateVerificationCode()
+
         // Get an instance of the PadesSignatureStarter class, responsible for
         // receiving the signature elements and start the signature process.
         const signatureStarter = new PadesSignatureStarter(PKI.getRestPkiClient());
@@ -41,7 +45,7 @@ RestPKIMiddleware.startSignature = async (req, res) => {
         // representations.
         signatureStarter.measurementUnits = PadesMeasurementUnits.CENTIMETERS;
 
-        const visualRepresentation = await PadesVisualElementsRestPki.getVisualRepresentation()
+        const visualRepresentation = await PadesVisualElementsRestPki.getVisualRepresentation(codigo)
 
         // Set the visual representation to signatureStarter.
         signatureStarter.visualRepresentation = visualRepresentation;
@@ -67,6 +71,7 @@ RestPKIMiddleware.startSignature = async (req, res) => {
         // Render the signature page.
         res.status(200).json({
             token: result.token,
+            codigo
         });
     } catch (error) {
         showError(error)
@@ -91,11 +96,14 @@ RestPKIMiddleware.finishSignature = async (req, res) => {
         const signerCert = result.certificate;
 
         //generate random name
-        const filename = crypto.randomBytes(8).toString('hex') + '.pdf'
+        const filename = `${crypto.randomBytes(8).toString('hex')}${req.body.filename? `_${req.body.filename}`:''}.pdf` //
 
         //TODO: si se trata de un archivo temporal, eliminarlo
         //TODO: si se trata de un archivo existente, moverlo a la carpeta de firmados
         await result.writeToFile(path.join(__dirname, '../uploads/firma-digital/' + filename));
+
+
+        const resQuerie = await queryHandler("INSERT INTO firma_verificar(codigo,ruta,nombreArchivo) VALUES(?,?,?)", [req.body.codigo, '/firma-digital/', filename])
 
         res.status(200).json({
             signedPdf: filename,
@@ -123,6 +131,29 @@ RestPKIMiddleware.verifySignature = async (req, res) => {
 
         res.status(200).json({
             signature
+        })
+    } catch (error) {
+        showError(error)
+        httpErrorHandler(res)
+    }
+}
+
+RestPKIMiddleware.verifySignatureByCode = async (req, res) => {
+    try {
+
+        if(!req.params.codigo)
+            throw new Error('Codigo no encontrado')
+
+        const codigo = req.params.codigo
+
+        const resQuerie = await queryHandler("SELECT ruta,nombreArchivo FROM firma_verificar WHERE codigo = ? LIMIT 1", [codigo])
+
+        if (resQuerie.length == 0)
+            throw new Error('Codigo no encontrado')
+
+        res.status(200).json({
+            ruta: resQuerie[0].ruta,
+            filename: resQuerie[0].nombreArchivo
         })
     } catch (error) {
         showError(error)
