@@ -2,13 +2,11 @@ import { Divider } from 'primereact/divider';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import { MultiSelect } from 'primereact/multiselect';
-import { TabView, TabPanel } from 'primereact/tabview';
 import { VehiculosInvolucradosTable } from './TablasVerDenuncia/IncidentesViales/VehiculosInvolucradosTable';
 import { ObjetosSustraidosTable } from './TablasVerDenuncia/ObjetosSustraidos/ObjetosSustraidosTable';
 import { AnexoViolenciaDeGenero } from './TablasVerDenuncia/AnexoViolenciaDeGenero/AnexoViolenciaDeGenero';
-import { Dialog } from 'primereact/dialog';
-import { PdfViewer } from '@/components/common/PdfViewer';
-import { GET_ADJUNTOS } from '@/constants';
+import { AdjuntosDenuncia } from './TablasVerDenuncia/AdjuntosDenuncia/AdjuntosDenuncia';
+
 import { useEffect, useState } from 'react';
 
 export const DatosDelHecho = ({ datosDenuncia }) => {
@@ -39,10 +37,10 @@ export const DatosDelHecho = ({ datosDenuncia }) => {
   useEffect(() => {
     circunstanciasActuales();
   }, [])
-  const [selectedCircunstancias, setSelectedCircunstancias] = useState([]); 
+  const [selectedCircunstancias, setSelectedCircunstancias] = useState([]);
 
   const datosCircunstancias = [
-    { label: 'Me dañaron cosas', code: 'danoCosas', valor: datosDenuncia.datosDenunciaPropiedad.datosGeneralesDenunciaPropiedad?.danoCosas},
+    { label: 'Me dañaron cosas', code: 'danoCosas', valor: datosDenuncia.datosDenunciaPropiedad.datosGeneralesDenunciaPropiedad?.danoCosas },
     { label: 'Utilizaron armas', code: 'armas', valor: datosDenuncia.datosDenunciaPropiedad.datosGeneralesDenunciaPropiedad?.armas },
     { label: 'Hubo violencia física', code: 'violenciaFisica', valor: datosDenuncia.datosDenunciaPropiedad.datosGeneralesDenunciaPropiedad?.violenciaFisica },
     { label: 'Amenaza', code: 'amenaza', valor: datosDenuncia.datosDenunciaPropiedad.datosGeneralesDenunciaPropiedad?.amenaza },
@@ -58,9 +56,6 @@ export const DatosDelHecho = ({ datosDenuncia }) => {
     });
     setSelectedCircunstancias(circunstanciasTraidas);
   };
-
-  // ========================= Dialog Documentacion ===================================
-  const [visible, setVisible] = useState(false);
 
   return (
     <>
@@ -138,78 +133,21 @@ export const DatosDelHecho = ({ datosDenuncia }) => {
 
       <Divider />
 
-      <h3>Adjuntos / Evidencias</h3>
-      <h4>Descripción: </h4>
-      <p>{denuncia.detalleAdjunto}</p>
-      <h4>Adjuntos: </h4>
-      <ul>
-        <Button label="Ver Documentos" icon="pi pi-file" onClick={() => setVisible(true)} className='btn-blue-mpa' />
-        <Dialog visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
-          <TabView>
-            <TabPanel header="Documentos">
-              {Object.values(adjuntosDenuncia).map((elemento, indice) => {
-                const extension = elemento.nombreArchivo.split('.').pop().toLowerCase();
-                if (['pdf'].includes(extension)) {
-                  return (
-                    <PdfViewer key={indice} url={`${GET_ADJUNTOS}/${elemento.nombreArchivo}`} />
-                  );
-                }
-                return (
-                  <h2>No se encontraron documentos PDF</h2>
-                );
-              })}
-            </TabPanel>
-            <TabPanel header="Multimedia">
-              {Object.values(adjuntosDenuncia).map((elemento, indice) => {
-                const extension = elemento.nombreArchivo.split('.').pop().toLowerCase();
-                const tipos = ['mp4', 'mov', 'avi', 'jpg', 'png', 'jepg']
-                if (tipos.includes(extension)) {
-                  return (
-                    <div key={indice}>
-                      <iframe src={`${GET_ADJUNTOS}/${elemento.nombreArchivo}`} frameBorder="0"></iframe>
-                      <p>Archivo Multimedia: {elemento.nombreArchivo}</p>
-                    </div>
-                  );
-                }
-                return (
-                  <h1>No se encontraron archivos multimedia</h1>
-                );
-              })}
-            </TabPanel>
-            <TabPanel header="Otros">
-              {Object.values(adjuntosDenuncia).map((elemento, indice) => {
-                const extension = elemento.nombreArchivo.split('.').pop().toLowerCase();
-                const tipos = ['mp4', 'mov', 'avi', 'jpg', 'png', 'jepg', 'pdf'];
-
-                if (adjuntosDenuncia.length !== 0 && tipos.includes(extension) == false) {
-                  return (
-                    <div key={indice}>
-                      <iframe src={`${GET_ADJUNTOS}/${elemento.nombreArchivo}`} frameBorder="0"></iframe>
-                      <p>Archivo: {elemento.nombreArchivo}</p>
-                    </div>
-                  );
-                }
-                return (
-                  <h2>No se encontraron otros tipos de archivos</h2>
-                );
-              })}
-            </TabPanel>
-          </TabView>
-        </Dialog>
-      </ul>
+      {/* Adjuntos de denuncia */}
+      <AdjuntosDenuncia adjuntosDenuncia = {adjuntosDenuncia} detalleAdjunto = {denuncia.detalleAdjunto}/>
 
       <Divider />
 
-      {/* En caso de Violencia de Genero */}
+      {/* En casos especiales */}
       {tipoDenuncia === 7 ? (
-        <AnexoViolenciaDeGenero datosViolenciaDeGenero = {datosDenuncia.datosViolenciaDeGenero}/>
+        <AnexoViolenciaDeGenero datosViolenciaDeGenero={datosDenuncia.datosViolenciaDeGenero} />
       ) : tipoDenuncia === 6 ? (
         <>
           <h3>Vehiculos involucrados:</h3>
-          <VehiculosInvolucradosTable datosIncidentesViales = {datosDenuncia.datosIncidentesViales} />
+          <VehiculosInvolucradosTable datosIncidentesViales={datosDenuncia.datosIncidentesViales} />
         </>
       ) : tipoDenuncia === 3 ? (
-        <ObjetosSustraidosTable datosDenunciaPropiedad = {datosDenuncia.datosDenunciaPropiedad} />
+        <ObjetosSustraidosTable datosDenunciaPropiedad={datosDenuncia.datosDenunciaPropiedad} />
       ) : null}
 
       <Divider />
