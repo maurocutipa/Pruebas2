@@ -20,4 +20,7 @@ router.post('/sign-existing',/* TODO: obtener path del archivo y firmar  */ Rest
 //VERIFICAR FIRMA
 router.post('/verify-signature', uploadFileMem, RestPKIMiddleware.verifySignature)
 
+//VERIFICAR FIRMA CON CODIGO
+router.get('/verify-signature/:codigo', RestPKIMiddleware.verifySignatureByCode)
+
 module.exports = router

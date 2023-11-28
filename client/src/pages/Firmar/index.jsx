@@ -14,7 +14,7 @@ export const Firmar = () => {
     //create a file ref
     const fileRef = useRef(null)
     const fileCheckRef = useRef(null)
-    
+
     let pki = new LacunaWebPKI();
 
     useEffect(() => {
@@ -30,19 +30,19 @@ export const Firmar = () => {
     }
 
     const firmar = () => {
-        if(!token || !cert) return;
+        if (!token || !cert) return;
         pki.signWithRestPki({
             token: token,
             thumbprint: cert
         }).success(() => {
-            api.post('http://localhost:4000/api/restpki/finish-signature', {token: token}).then(res => {
+            api.post('http://localhost:4000/api/restpki/finish-signature', { token: token }).then(res => {
                 //console.log(res);
                 console.log(res);
             })
         });
     }
 
-    
+
 
     const reloadCerts = () => {
         pki.listCertificates().success(function (certs) {
@@ -68,9 +68,9 @@ export const Firmar = () => {
             })
         }
     }
-    
+
     const verificarFirma = () => {
-        if(fileCheckRef.current.files[0]){
+        if (fileCheckRef.current.files[0]) {
             const data = new FormData()
             data.append('fileFirma', fileCheckRef.current.files[0])
             axios.post('http://localhost:4000/api/restpki/verify-signature', data, {
@@ -78,7 +78,7 @@ export const Firmar = () => {
                     'Content-Type': 'multipart/form-data'
                 }
             }).then(res => {
-                
+
                 setSigners(res.data.signature._signers)
                 console.log(res.data.signature._signers);
             })
@@ -89,7 +89,12 @@ export const Firmar = () => {
 
     return (
         <div>
-            <ModalFirmaDigital visible={visibleModal} setVisible={setVisibleModal} />
+            <ModalFirmaDigital visible={visibleModal} setVisible={setVisibleModal} temporal={true}>
+                <div>
+                    <h1>Modal</h1>
+                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Et cum, fugit maiores illo deserunt veniam, suscipit voluptatum, corporis soluta ipsa ullam. Illum, porro mollitia molestias architecto temporibus nesciunt laborum incidunt.</p>
+                </div>
+            </ModalFirmaDigital>
             <h1>FIRMA DIGITAL</h1>
             <div>
                 <h1>VALIDAR FIRMA DIGITAL</h1>

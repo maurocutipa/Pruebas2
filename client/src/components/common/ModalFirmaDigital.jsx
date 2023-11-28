@@ -18,6 +18,9 @@ import axios from 'axios';
 const firmaDigitalInitialState = {
 	fileFirma: null,
 	certificado: null,
+	codigo: null,
+	token: null,
+	blocked: false
 };
 
 const items = [
@@ -32,30 +35,36 @@ const items = [
 	},
 ];
 
-export const ModalFirmaDigital = ({ visible, setVisible, firmaData }) => {
+export const ModalFirmaDigital = ({ visible, setVisible, firmaData, children, temporal }) => {
 
-	const [firmaDigitalForm, setFirmaDigitalForm] = useState({...firmaDigitalInitialState, fileFirma: firmaData});
+	const { user } = useAppSelector((state) => state.auth);
+	const [firmaDigitalState, setFirmaDigitalState] = useState({ ...firmaDigitalInitialState, fileFirma: firmaData });
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [certificados, setCertificados] = useState([]);
-	const [token, setToken] = useState('');
-
-	const [blocked, setBlocked] = useState(false);
 
 	const fileRef = useRef(null);
 
 	const pki = new LacunaWebPKI()
 
-	const { user } = useAppSelector((state) => state.auth);
+
 
 	const accept = () => {
-		if (!token || !firmaDigitalForm.certificado) return;
+		console.log(firmaDigitalState);
+		if (!firmaDigitalState.token || !firmaDigitalState.certificado || !firmaDigitalState.codigo) return;
+
+		setFirmaDigitalState(prev => ({ ...prev, blocked: true }))
+
 		pki.signWithRestPki({
-			token: token,
-			thumbprint: firmaDigitalForm.certificado
+			token: firmaDigitalState.token,
+			thumbprint: firmaDigitalState.certificado
 		}).success(() => {
-			axios.post('http://localhost:4000/api/restpki/finish-signature', { token: token }).then(() => {
-				setBlocked(false);
-				setActiveIndex((prev) => prev + 1);
+			axios.post('http://localhost:4000/api/restpki/finish-signature', {
+				token: firmaDigitalState.token,
+				codigo: firmaDigitalState.codigo
+			}).then(() => {
+				setFirmaDigitalState(prev => ({ ...prev, blocked: false }))
+				setActiveIndex((prev) => prev + 1)
+				onHide();
 			})
 		});
 	};
@@ -63,26 +72,25 @@ export const ModalFirmaDigital = ({ visible, setVisible, firmaData }) => {
 
 
 	const handleInputChange = (ev) => {
-		setFirmaDigitalForm({
-			...firmaDigitalForm,
+		setFirmaDigitalState(prev => ({
+			...prev,
 			[ev.target.name]: ev.target.value,
-		});
+		}));
 	};
 
 	const onHide = () => {
 		setActiveIndex(0);
-		setFirmaDigitalForm(firmaDigitalInitialState);
+		setFirmaDigitalState(firmaDigitalInitialState);
 		setVisible(false);
 	};
 
 	const handleNextIndex = () => {
-		if (activeIndex >= 2) {
+		if (activeIndex >= 2 || (activeIndex === 1 && !firmaDigitalState.certificado)) {
 			return;
 		}
-		setActiveIndex((prev) => prev + 1);
-		console.log(activeIndex);
 		if (activeIndex + 1 === 1) startFirma();
 
+		setActiveIndex((prev) => prev + 1);
 	};
 
 	const handlePrevIndex = () => {
@@ -94,21 +102,22 @@ export const ModalFirmaDigital = ({ visible, setVisible, firmaData }) => {
 	};
 
 	const handleUploadFile = (e) => {
-		setFirmaDigitalForm({
-			...firmaDigitalForm,
+		setFirmaDigitalState({
+			...firmaDigitalState,
 			fileFirma: e.target.files[0],
 		});
 	};
 
 
 	const startFirma = () => {
-		setBlocked(true);
-		if (firmaDigitalForm.fileFirma) {
+		setFirmaDigitalState(prev => ({ ...prev, blocked: true }));
+		if (firmaDigitalState.fileFirma) {
 			const data = new FormData();
-			data.append('fileFirma', firmaDigitalForm.fileFirma);
+			data.append('fileFirma', firmaDigitalState.fileFirma);
 			axios.post('http://localhost:4000/api/restpki/start-signature', data).then((res) => {
-				setToken(res.data.token);
-				setBlocked(false);
+				setFirmaDigitalState(prev => ({ ...prev, token: res.data.token }));
+				setFirmaDigitalState(prev => ({ ...prev, blocked: false }));
+				setFirmaDigitalState(prev => ({ ...prev, codigo: res.data.codigo }))
 			});
 		}
 	}
@@ -121,10 +130,6 @@ export const ModalFirmaDigital = ({ visible, setVisible, firmaData }) => {
 			accept,
 		});
 	};
-
-	const finalizarFirma = () => {
-		onHide();
-	}
 
 	const getCertificados = () => {
 		pki.init({
@@ -140,7 +145,7 @@ export const ModalFirmaDigital = ({ visible, setVisible, firmaData }) => {
 
 	return (
 		<>
-			<BlockUI blocked={blocked} fullScreen template={
+			<BlockUI blocked={firmaDigitalState.blocked} fullScreen template={
 				<ProgressSpinner style={{ width: '10em', height: '10em' }} strokeWidth="3" />
 			} />
 			<Dialog
@@ -165,11 +170,11 @@ export const ModalFirmaDigital = ({ visible, setVisible, firmaData }) => {
 								/>
 							</div>
 
-							<div className='mb-5'>
+							{temporal && (<div className='mb-5'>
 								<label htmlFor='competencia'>Documento a firmar</label>
 								<br />
 								<input type="file" name="asdasd" id="asdasdasd" ref={fileRef} onChange={handleUploadFile} />
-							</div>
+							</div>)}
 						</section>
 					)}
 
@@ -182,7 +187,7 @@ export const ModalFirmaDigital = ({ visible, setVisible, firmaData }) => {
 									id='certificado'
 									name='certificado'
 									className='w-full mt-2'
-									value={firmaDigitalForm.certificado}
+									value={firmaDigitalState.certificado}
 									onChange={handleInputChange}
 									options={certificados}
 									optionLabel='label'
@@ -190,13 +195,13 @@ export const ModalFirmaDigital = ({ visible, setVisible, firmaData }) => {
 								/>
 
 								<div className='mt-5'>
-									<Button
+									{/* <Button
 										size='small'
 										label='Firmar Archivos'
 										className='btn-blue-mpa mr-2'
 										type='button'
 										onClick={completeFirma}
-									/>
+									/> */}
 
 									<Button
 										size='small'
@@ -213,16 +218,13 @@ export const ModalFirmaDigital = ({ visible, setVisible, firmaData }) => {
 					{activeIndex === 2 && (
 						<section className='mx-2 my-6'>
 							<div className='mb-5'>
-								<div className=''>
-									<h3>Resumen</h3>
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui, fugiat! Fuga, ipsam. Quidem ducimus, expedita nam iure recusandae amet exercitationem rem, magni fugit a aspernatur? Quia ex minus maiores exercitationem!</p>
-								</div>
+								{children}
 							</div>
 						</section>
 					)}
 
-					<div className='flex justify-content-between'>
-						<div>
+					<div className='flex justify-content-end'>
+						{/* <div>
 							{activeIndex !== 0 && (
 								<Button
 									icon='pi pi-chevron-left'
@@ -234,7 +236,7 @@ export const ModalFirmaDigital = ({ visible, setVisible, firmaData }) => {
 									onClick={handlePrevIndex}
 								/>
 							)}
-						</div>
+						</div> */}
 
 						<div>
 							{activeIndex !== 2 && (
@@ -250,10 +252,10 @@ export const ModalFirmaDigital = ({ visible, setVisible, firmaData }) => {
 							)}
 							{activeIndex === 2 && (
 								<Button
-									label='Finalizar Pase'
+									label='Firmar y Finalizar'
 									className='btn-blue-mpa'
 									type='button'
-									onClick={finalizarFirma}
+									onClick={completeFirma}
 								/>
 							)}
 						</div>
