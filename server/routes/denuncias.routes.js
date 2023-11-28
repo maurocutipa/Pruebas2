@@ -57,73 +57,72 @@ router.post(
 );
 
 router.post(
-  '/genero-update',
+  '/genero-update/:id',
   validateUpdateGenero,
   DenunciasController.updateDenunciaGenero
 );
 
 router.post(
-  '/familiar-update',
+  '/familiar-update/:id',
   validateUpdateFamiliar,
   DenunciasController.updateDenunciaFamiliar
 );
 
 router.post(
-  '/busqueda-persona-update',
-  validateUpdateBusquedaPersona,
-  DenunciasController.updateDenunciaBusquedaPersona
-);
-
-router.post(
-  '/abigeato-update',
+  '/abigeato-update/:id',
   validateUpdateAbigeato,
   DenunciasController.updateDenunciaAbigeato
 );
 
 router.post(
-  '/abigeato-detalle-update',
+  '/abigeato-detalle-update/:id',
   validateUpdateAbigeatoDetalles,
   DenunciasController.updateDenunciaAbigeatoDetalles
 );
 
 router.post(
-  '/propiedad-update',
+  '/propiedad-update/:id',
   validateUpdatePropiedad,
   DenunciasController.updateDenunciaPropiedad
 );
 
 router.post(
-  '/delitos-personas-update',
+  '/delitos-personas-update/:id',
   validateUpdateDelitoPersona,
   DenunciasController.updateDenunciaDelitosPersonas
 );
 
 router.post(
-  '/delitos-sexuales-update',
+  '/delitos-sexuales-update/:id',
   validateUpdateDelitoSexual,
   DenunciasController.updateDenunciaDelitosSexuales
 );
 
 router.post(
-  '/danos-update',
+  '/danos-update/:id',
   validateUpdateDanos,
   DenunciasController.updateDenunciaDanos
 );
 router.post(
-  '/incidente-vial-update',
+  '/incidente-vial-update/:id',
   validateUpdateIncidentesViales,
   DenunciasController.updateDenunciaIncidenteVial
 );
 router.post(
-  '/incidente-vial-vehiculo-update',
+  '/incidente-vial-vehiculo-update/:id',
   validateUpdateIncidentesVialesVehiculos,
   DenunciasController.updateDenunciaIncidenteVialVehiculo
 );
 router.post(
-  '/maltrato-animal-update',
+  '/maltrato-animal-update/:id',
   validateUpdateMaltratoAnimal,
   DenunciasController.updateDenunciaMaltratoAnimal
 );
 
+router.post(
+  '/busqueda-persona-hecho-update/:id',
+  validateUpdateBusquedaPersona,
+  DenunciasController.updateDenunciaBusquedaPersonaHecho
+);
 
 module.exports = router;
