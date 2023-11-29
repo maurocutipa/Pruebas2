@@ -2,15 +2,18 @@ const { Router } = require('express');
 const path = require('path');
 const RestPKIMiddleware = require('../middlewares/RestPKIMiddleware')
 const { uploadFile, uploadFileMem } = require('../config/restpki.storage')
+const ParseMiddleware = require('../middlewares/ParseDataMiddleware')
 
 const router = Router();
 
 //COMIENZA EL PROCESO DE FIRMA
-router.post('/start-signature', uploadFileMem, RestPKIMiddleware.startSignature)
+router.post('/start-signature', uploadFileMem, ParseMiddleware, RestPKIMiddleware.startSignature)
 
 //TERMINA EL PROCESO DE FIRMA
 router.post('/finish-signature', RestPKIMiddleware.finishSignature)
 
+
+//TODO: USE NEW CONTROLLERS IN PKI-EXPRESS
 //REALIZA UNA FIRMA PARA UN ARCHIVO TEMPORAL
 router.post('/temp-signature', uploadFileMem, RestPKIMiddleware.startSignature)
 
