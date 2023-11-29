@@ -1,11 +1,7 @@
 const { check, body } = require("express-validator")
 const validateHelper = require('../../utils/validateHelper')
 
-const validateCreateBusquedaPersona = [
-    // Interviniente
-    body("idInterviniente").exists().not().isEmpty(),
-    // Denuncia
-    body("idDenuncia").exists().not().isEmpty(),
+const validateUpdateBusquedaPersona = [
 
     // Conyugue
     body("nombreConyugue").optional(),
@@ -51,35 +47,35 @@ const validateCreateBusquedaPersona = [
     body("desaparcicion").optional(),
     body("violenciaInstitucional").optional(),
     body("otro").optional(),
-    body("otroDetalle").if(body("otro").equals("1")).exists().not().isEmpty(),
+    body("otroDetalle").optional(),
 
     /* Datos del Hecho */
-    body("latitudBusqueda").exists().not().isEmpty(),
-    body("longitudBusqueda").exists().not().isEmpty(),
-    body("fechaDesaparicion").exists().not().isEmpty(),
-    body("lugarDesaparicion").exists().not().isEmpty(),
-    body("contextoDesaparicion").exists().not().isEmpty(),
-    body("relatoHecho").exists().not().isEmpty(),
-    body("vestimentaDesaparicion").exists().not().isEmpty(),
-    body("efectosPersonales").exists().not().isEmpty(),
-    body("cambiosRecientes").exists().not().isEmpty(),
-    body("personaInteres").exists().not().isEmpty(),
-    body("busquedaTrabajo").exists().not().isEmpty(),
+    body("latitudBusqueda").optional(),
+    body("longitudBusqueda").optional(),
+    body("fechaDesaparicion").optional(),
+    body("lugarDesaparicion").optional(),
+    body("contextoDesaparicion").optional(),
+    body("relatoHecho").optional(),
+    body("vestimentaDesaparicion").optional(),
+    body("efectosPersonales").optional(),
+    body("cambiosRecientes").optional(),
+    body("personaInteres").optional(),
+    body("busquedaTrabajo").optional(),
 
     /* Caracteristicas Fisicas */
-    body("caracteristicasGenerales").exists().not().isEmpty(),
-    body("altura").exists().not().isEmpty(),
-    body("enfermedades").exists().not().isEmpty(),
-    body("fracturas").exists().not().isEmpty(),
-    body("rasgosOdontologicos").exists().not().isEmpty(),
-    body("observaciones").exists().not().isEmpty(),
-    body("fichasDentales").exists().not().isEmpty(),
-    body("fichasDactiloscopicas").exists().not().isEmpty(),
-    body("fotoCaracteristicas").exists().not().isEmpty(),
+    body("caracteristicasGenerales").optional(),
+    body("altura").optional(),
+    body("enfermedades").optional(),
+    body("fracturas").optional(),
+    body("rasgosOdontologicos").optional(),
+    body("observaciones").optional(),
+    body("fichasDentales").optional(),
+    body("fichasDactiloscopicas").optional(),
+    body("fotoCaracteristicas").optional(),
 
     (req, res, next) => {
         validateHelper(req, res, next)
     }
 ]
 
-module.exports =  validateCreateBusquedaPersona
+module.exports =  validateUpdateBusquedaPersona

@@ -40,7 +40,7 @@ const html = (firmaDenunciante, firmaFuncionario) => `
   <body>
     <div class="flex">
       <div class="flex-image">
-        <div class="border">
+        <div class="">
           <img
             src=${firmaDenunciante || ''}
             alt='FIRMA DENUNCIANTE'
@@ -52,7 +52,7 @@ const html = (firmaDenunciante, firmaFuncionario) => `
       </div>
 
       <div class="flex-image">
-        <div class="border ml">
+        <div class="ml">
           <img
             src=${firmaFuncionario || ''}
             alt='FIRMA DENUNCIANTE'
@@ -66,7 +66,11 @@ const html = (firmaDenunciante, firmaFuncionario) => `
   </body>
 `;
 
-export const PdfPreview = ({ firmaDenunciante, firmaFuncionario }) => {
+export const PdfPreview = ({
+  firmaDenunciante,
+  firmaFuncionario,
+  comprobanteURL,
+}) => {
   const Pdf = () => (
     <Document>
       <Page size={'A4'} style={styles.body}>
@@ -83,18 +87,19 @@ export const PdfPreview = ({ firmaDenunciante, firmaFuncionario }) => {
 
   if (instance.error) return <div>{instance.error}</div>;
 
-  return <PdfMerged instance={instance} />;
+  return <PdfMerged instance={instance} comprobanteURL={comprobanteURL} />;
 };
 
-const PdfMerged = ({ instance }) => {
+const PdfMerged = ({ instance, comprobanteURL }) => {
   const [url, setUrl] = useState(null);
 
   useEffect(() => {
     const abortController = new AbortController();
 
     const mergePdf = async () => {
-      const link =
-        'https://www.sib.gob.ar/portal/wp-content/uploads/2020/08/Cuento-Los-Parques-Nacionales-nuestros-por-naturaleza.pdf';
+      const link = comprobanteURL
+        ? comprobanteURL
+        : 'https://www.sib.gob.ar/portal/wp-content/uploads/2020/08/Cuento-Los-Parques-Nacionales-nuestros-por-naturaleza.pdf';
 
       const res = await fetch(link, { signal: abortController.signal });
       const blob = await res.blob();
@@ -103,7 +108,6 @@ const PdfMerged = ({ instance }) => {
       await merger.add(blob);
       await merger.add(instance.blob);
 
-      console.log('PAASA');
       const mergedPdf = await merger.saveAsBlob();
       const url = URL.createObjectURL(mergedPdf);
       setUrl(url);
