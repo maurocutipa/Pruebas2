@@ -13,7 +13,10 @@ import {
   crearDenunciaLegajoThunk,
   getAccionTomadaThunk,
 } from '@/store/denuncias/denunciaLegajo/denunciaLegajo.thunks';
-import { resetState } from '@/store/denuncias/denunciaLegajo/denunciaLegajo.slice';
+import {
+  resetState,
+  generarDataParaPdf,
+} from '@/store/denuncias/denunciaLegajo/denunciaLegajo.slice';
 import { PdfPreview } from '@/components/pages/BandejaDenuncias/ConvertirDenunciaALegajo/PdfPreview';
 
 export const ConvertirDenunciaALegajo = () => {
@@ -39,6 +42,12 @@ export const ConvertirDenunciaALegajo = () => {
 
   const handleConvertirALegajo = async () => {
     setShowPdf(true);
+    dispatch(
+      generarDataParaPdf({
+        delitos: data.delitos,
+        fiscalias: data.delegacionesFiscales,
+      })
+    );
   };
 
   const execAction = async () => {

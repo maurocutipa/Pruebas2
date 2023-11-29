@@ -31,6 +31,11 @@ const initialState = {
   legajoData: {
     denunciados: [],
   },
+  dataParaPdf: {
+    fiscalia: '',
+    resumenHechos: [],
+    delitos: [],
+  },
   seTomoAccion: false,
 };
 
@@ -94,6 +99,27 @@ export const denunciaLegajoSlice = createSlice({
     agregarDelito: (state, { payload }) => {
       state.denunciaALegajoForm.delitos.push(payload);
     },
+    generarDataParaPdf: (state, { payload }) => {
+      state.dataParaPdf.resumenHechos =
+        state.denunciaALegajoForm.resumenHechos.map((r) => ({
+          descripcion: r.descripcion,
+          denunciado: findDenunciado(state.legajoData.denunciados, r.denunciado)
+            .nombreCompleto,
+        }));
+
+      state.dataParaPdf.delitos = state.denunciaALegajoForm.delitos.map(
+        (d) => ({
+          denunciado: findDenunciado(state.legajoData.denunciados, d.denunciado)
+            .nombreCompleto,
+          delito: findDelito(payload.delitos, d.delito).nombre,
+        })
+      );
+
+      state.dataParaPdf.fiscalia = findFiscalia(
+        payload.fiscalias,
+        state.denunciaALegajoForm.fiscalia
+      ).delegacionFiscal;
+    },
     resetState: () => initialState,
   },
   extraReducers: (builder) => {
@@ -114,6 +140,22 @@ export const denunciaLegajoSlice = createSlice({
   },
 });
 
+export const findDenunciado = (denunciados, id) => {
+  return denunciados.find((denunciado) => denunciado.id === id);
+};
+
+export const findDelito = (delitos, id) => {
+  return delitos.find((delito) => delito.idDelito === id);
+};
+
+export const findFiscalia = (fiscalias, id) => {
+  return fiscalias.find((fiscalia) => fiscalia.idDelegacionFiscal === id);
+};
+
+// export const generateDataParaPdf = () => {
+
+// }
+
 export const {
   setResumenHechosForm,
   modificarResumenHecho,
@@ -124,6 +166,7 @@ export const {
   agregarResumenHecho,
   agregarDelito,
   agregarFiscalia,
+  generarDataParaPdf,
   resetState,
 } = denunciaLegajoSlice.actions;
 
