@@ -64,9 +64,14 @@ export const AdjuntosDenuncia = ({ adjuntosDenuncia, detalleAdjunto }) => {
                                 }
                                 return null;
                             })}
-                            {Object.values(adjuntosDenuncia).some(elemento => ['mp4', 'mov', 'avi', 'jpg', 'png', 'jpeg', 'pdf'].includes(elemento.nombreArchivo.split('.').pop().toLowerCase())) && (
-                                <h2>No se encontraron otros tipos de archivos</h2>
-                            )}
+                            {(
+                                Object.values(adjuntosDenuncia).some(elemento =>
+                                    ['mp4', 'mov', 'avi', 'jpg', 'png', 'jpeg', 'pdf'].includes(elemento.nombreArchivo.split('.').pop().toLowerCase())
+                                ) ||
+                                adjuntosDenuncia.length === undefined
+                            ) && (
+                                    <h2>No se encontraron otros tipos de archivos</h2>
+                                )}
                         </TabPanel>
                     </TabView>
 
