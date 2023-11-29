@@ -7,13 +7,20 @@ const { PKI } = require('../utils/pki')
 const crypto = require('crypto')
 const queryHandler = require('../utils/queryHandler')
 
-const {
+/* const {
     PadesSignatureStarter,
     PadesSignatureFinisher,
     PadesMeasurementUnits,
     StandardSignaturePolicies,
     PadesSignatureExplorer
-} = require('restpki-client');
+} = require('restpki-client'); */
+
+const {
+    PadesSignatureStarter,
+    StandardSignaturePolicies,
+    SignatureFinisher
+} = require('pki-express');
+
 const { PadesVisualElementsRestPki } = require('../utils/pki/pades-visualization');
 
 const RestPKIMiddleware = {}
@@ -23,54 +30,41 @@ RestPKIMiddleware.startSignature = async (req, res) => {
     try {
         const codigo = PKI.generateVerificationCode()
 
+        const certThumb = req.body.certThumb;
+        const certContent = req.body.certContent;
+
+
         // Get an instance of the PadesSignatureStarter class, responsible for
         // receiving the signature elements and start the signature process.
-        const signatureStarter = new PadesSignatureStarter(PKI.getRestPkiClient());
+        const signatureStarter = new PadesSignatureStarter();
+
+        PKI.setPkiDefaults(signatureStarter);
+
+        signatureStarter.signaturePolicy = StandardSignaturePolicies.PADES_BASIC_WITH_LTV;
 
         // Set PDF to be signed.
-        if (req.typeSignature == 'exist')
-            signatureStarter.setPdfToSignFromPath(req.file.path)
-        else
-            signatureStarter.setPdfToSignFromContentBase64(req.file.buffer.toString('base64'))
+        await signatureStarter.setPdfToSignFromBase64(req.file.buffer.toString('base64'));
 
 
-        // Set the signature policy.
-        signatureStarter.signaturePolicy = StandardSignaturePolicies.PADES_BASIC;
-
-        // Set the security context to be used to determine trust in the certificate
-        // chain. We have encapsulated the security context choice on util.js.
-        signatureStarter.securityContext = PKI.getSecurityContextId();
-
-        // Set the unit of measurements used to edit the PDF marks and visual
-        // representations.
-        signatureStarter.measurementUnits = PadesMeasurementUnits.CENTIMETERS;
+        await signatureStarter.setCertificateFromBase64(certContent);
 
         const visualRepresentation = await PadesVisualElementsRestPki.getVisualRepresentation(codigo)
 
         // Set the visual representation to signatureStarter.
-        signatureStarter.visualRepresentation = visualRepresentation;
+        await signatureStarter.setVisualRepresentation(visualRepresentation)
 
-        // Call the startWithWebPki() method, which initiates the signature.
-        // This yields the token, a 43-character case-sensitive URL-safe
-        // string, which identifies this signature process. We'll use this
-        // value to call the signWithRestPki() method on the WebPKI component
-        // (see public/js/signature-form.js) and also to complete the signature
-        // after the form is submitted (see post method). This should not be
-        // mistaken with the API access token.
-        const result = await signatureStarter.startWithWebPki();
+        const { toSignHash, digestAlgorithm, transferFile } = await signatureStarter.start()
 
-        // The token acquired can only be used for a single signature attempt.
-        // In order to retry the signature it is necessary to get a new token.
-        // This can be a problem if the user uses the back button of the
-        // browser, since the browser might show a cached page that we rendered
-        // previously, with a now stale token. To prevent this from happening,
-        // we set some response headers specifying that the page should not be
-        // cached.
-        //PKI.setExpiredPage(res);
 
-        // Render the signature page.
+        //rename file with transferFile code
+        const filename = `${transferFile}.pdf` //
+        fs.writeFileSync(path.join(__dirname, '../uploads/firma-digital/', filename), req.file.buffer)
+
         res.status(200).json({
-            token: result.token,
+            toSignHash,
+            digestAlgorithm,
+            transferFile,
+            certThumb,
             codigo
         });
     } catch (error) {
@@ -81,45 +75,55 @@ RestPKIMiddleware.startSignature = async (req, res) => {
 
 RestPKIMiddleware.finishSignature = async (req, res) => {
     try {
-        // Get an instance of the PadesSignatureFinisher class, responsible for
-        // completing the signature process.
-        const signatureFinisher = new PadesSignatureFinisher(PKI.getRestPkiClient());
 
-        // Set the token.
-        signatureFinisher.token = req.body.token;
+        const transferFile = req.body.transferFile
+        const signature = req.body.signature
 
 
-        const result = await signatureFinisher.finish();
+        const signatureFinisher = new SignatureFinisher();
 
-        // The "certificate" property of the SignatureResult object contains
-        // information about the certificate used by the user to sign the file.
-        const signerCert = result.certificate;
+        PKI.setPkiDefaults(signatureFinisher);
+
+
+        const pathFile = path.join(__dirname, '../uploads/firma-digital/', `${transferFile}.pdf`)
+
+        await signatureFinisher.setFileToSignFromPath(pathFile);
+
+    
+        await signatureFinisher.setTransferFileFromPath(transferFile);
+
+        signatureFinisher.signature = signature;
 
         //generate random name
-        const filename = `${crypto.randomBytes(8).toString('hex')}${req.body.filename ? `_${req.body.filename}` : ''}.pdf` //
+        const filename = `${crypto.randomBytes(8).toString('hex')}.pdf` //
 
+        signatureFinisher.outputFile = path.join(__dirname, '../uploads/firma-digital/', filename)
 
-        await result.writeToFile(path.join(__dirname, '../uploads/firma-digital/' + filename));
-
-        if (req.body.typeSignature == 'temporal') {
+        /* if (req.body.typeSignature == 'temporal') {
             const filePath = path.join(__dirname, '../uploads/firma-digital/temp/7b5af4e061e472c4.pdf')
             fs.unlinkSync(filePath)
             res.send('Firma temporal creada')
             return
-        }
-        
+        } */
+
+        const certificate = await signatureFinisher.complete(true)
+
         const resQuerie = await queryHandler("INSERT INTO firma_verificar(codigo,ruta,nombreArchivo) VALUES(?,?,?)", [req.body.codigo, '/firma-digital/', filename])
+
+        fs.unlinkSync(path.join(__dirname, '../uploads/firma-digital/', `${req.body.transferFile}.pdf`) )
 
         res.status(200).json({
             signedPdf: filename,
-            signerCert
+            signerCert: certificate,
         })
     } catch (error) {
         showError(error)
         httpErrorHandler(res)
+        fs.unlinkSync(path.join(__dirname, '../uploads/firma-digital/', `${req.body.transferFile}.pdf`) )
     }
 }
 
+//TODO: IMPLEMENT BELLOW FUNCTIONS WITH PKI EXPRESS
 RestPKIMiddleware.verifySignature = async (req, res) => {
     try {
         //TODO: implement
