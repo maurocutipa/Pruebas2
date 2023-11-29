@@ -391,7 +391,47 @@ GetController.getDenunciaById = async (req, res) => {
     vic.estado as estado
     FROM denuncia_victima vic
     WHERE id_denuncia = ?`
-    const [datosVictima] = await queryHandler(query, [id]);  
+    const [datosVictima] = await queryHandler(query, [id]);
+    
+    //=========================== Querys Violencia Intrafamiliar =========================
+
+    query = ` 
+        SELECT 
+          viointra.id_denuncia_violencia_familiar as idDenunciaViolenciaFamiliar,
+          viointra.id_denuncia as idDenuncia,
+          viointra.situacion_1 as situacion1,
+          viointra.situacion_2 as situacion2,
+          viointra.situacion_3 as situacion3,
+          viointra.situacion_4 as situacion4,
+          viointra.tipo_violencia_1 as tipoViolencia1, 
+          viointra.tipo_violencia_2 as tipoViolencia2, 
+          viointra.tipo_violencia_3 as tipoViolencia3, 
+          viointra.tipo_violencia_4 as tipoViolencia4, 
+          viointra.tipo_violencia_5 as tipoViolencia5, 
+          viointra.tipo_violencia_6 as tipoViolencia6, 
+          viointra.perfil_agresor_1 as perfilAgresor1,  
+          viointra.perfil_agresor_2 as perfilAgresor2,  
+          viointra.perfil_agresor_3 as perfilAgresor3,  
+          viointra.perfil_agresor_4 as perfilAgresor4,  
+          viointra.perfil_agresor_5 as perfilAgresor5,  
+          viointra.perfil_agresor_6 as perfilAgresor6,  
+          viointra.victima_1 as victima1,
+          viointra.victima_2 as victima2,
+          viointra.victima_3 as victima3,
+          viointra.victima_4 as victima4,
+          viointra.victima_5 as victima5,
+          viointra.victima_6 as victima6,
+          viointra.victima_7 as victima7,
+          viointra.caracteristicas_1 as caracteristicas1, 
+          viointra.caracteristicas_2 as caracteristicas2, 
+          viointra.caracteristicas_3 as caracteristicas3, 
+          viointra.caracteristicas_4 as caracteristicas4, 
+          viointra.caracteristicas_5 as caracteristicas5, 
+          viointra.caracteristicas_6 as caracteristicas6 
+        FROM denuncia_violencia_familiar viointra
+        WHERE id_denuncia = ?`;
+        const [datosViolenciaIntrafamiliar] = await queryHandler(query, [id]);
+
 
     res.status(200).json({
       message: `Denuncia con el id: ${id}`,
@@ -415,7 +455,8 @@ GetController.getDenunciaById = async (req, res) => {
         datosDelitoSexual: {
           detallesDelitoSexual, 
           datosVictima
-        } 
+        }, 
+        datosViolenciaIntrafamiliar: datosViolenciaIntrafamiliar
       },
     });
   } catch (error) {
