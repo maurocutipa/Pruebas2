@@ -5,15 +5,27 @@ import { Button } from 'primereact/button';
 import { PdfPreviewMemo } from '@/components/pages/BandejaDenuncias/ArchivarDenuncia/PdfPreview';
 import { Editor } from '@/components/pages/BandejaDenuncias/ArchivarDenuncia/Editor';
 import { useDebounce } from 'use-debounce';
+import { archivarDenuncia } from '@/api/legajo.api';
+import { FirmarPdf } from '../../../components/pages/BandejaDenuncias/ArchivarDenuncia/FirmarPdf';
 
 export const ArchivarDenuncia = () => {
   const navigate = useNavigate();
+  const [visible, setVisible] = useState(false);
   const [text, setText] = useState('');
   const { id } = useParams();
   const [htmlContent] = useDebounce(text, 500);
 
-  const handleArchivarDenuncia = () => {
-    console.log(text);
+  const handleArchivarDenuncia = async () => {
+    setVisible(true);
+  };
+
+  const execAction = async () => {
+    try {
+      const body = { idDenuncia: id, motivosArchivo: htmlContent };
+      await archivarDenuncia(body);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -56,9 +68,18 @@ export const ArchivarDenuncia = () => {
           onClick={handleArchivarDenuncia}
           className='btn-blue-mpa'
           size='large'
-          disabled={htmlContent.length < 100}
+          disabled={htmlContent.length < 50}
         />
       </div>
+
+      {visible && (
+        <FirmarPdf
+          visible={visible}
+          setVisible={setVisible}
+          execAction={execAction}
+          htmlContent={htmlContent}
+        />
+      )}
     </div>
   );
 };
