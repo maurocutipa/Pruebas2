@@ -4,6 +4,7 @@ const URLS = {
   getDenunciadosParaLegajo: (id) => `/legajos/get-denunciados/${id}`,
   getAccionTomada: (id) => `/legajos/get-accion-tomada/${id}`,
   crearDenunciaLegajo: (id) => `/legajos/denuncia-legajo/${id}`,
+  getLegajo: (id) => `/legajos/${id}`
 };
 
 export const getDenunciadosParaLegajo = (id) => {
@@ -19,3 +20,9 @@ export const crearDenunciaLegajo = (formData) => {
     withCredentials: true,
   });
 };
+
+export const getLegajo = (id) => {
+  return api.get(URLS.getLegajo(id),{
+    withCredentials: true
+  }) 
+}

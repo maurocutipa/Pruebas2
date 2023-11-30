@@ -156,7 +156,10 @@ export const ModalFirmaDigital = ({
         setFirmaDigitalState((prev) => ({ ...prev, blocked: false }));
         onHide();
         execAction();
-      });
+      }).fail(err => {
+        console.log(err);
+        setFirmaDigitalState((prev) => ({ ...prev, blocked: false }));
+      })
   };
 
   // wrap getCetificados in useCallback to avoid infinite loop
