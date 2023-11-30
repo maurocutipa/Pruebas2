@@ -14,6 +14,7 @@ import { Legajo } from '@/pages/Legajo';
 import { PrivateRoutes } from './auth/PrivateRoutes';
 import { PublicRoutes } from './auth/PublicRoutes';
 import { useAuth } from '@/hooks/useAuth';
+import Denuncia from '../pages/Denuncia/Denuncia';
 
 export const AppRouter = () => {
   const { user, loading } = useAuth();
@@ -58,6 +59,11 @@ export const AppRouter = () => {
             />
 
             <Route path='/legajo/:id' element={<Legajo />} />
+            <Route
+              path='/denuncias'
+              // element={<h1>holaaaa</h1>}
+              element={<Denuncia/>}
+            />
           </Route>
         </Route>
       </Routes>
