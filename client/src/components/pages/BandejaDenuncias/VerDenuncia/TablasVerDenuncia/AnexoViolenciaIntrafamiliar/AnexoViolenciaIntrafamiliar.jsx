@@ -9,6 +9,10 @@ export const AnexoViolenciaIntrafamiliar = ({ datosViolenciaIntrafamiliar }) => 
         actualizarSeleccion(conductasAgresor, 1, setselectedConductasAgresor);
         actualizarSeleccion(victimas, 1, setSelectedVictimas);
         actualizarSeleccion(caracteristicasVictima, 1, setSelectedCaracteristicasVictima);
+        actualizarSeleccionSelectButton(setSelectedSituacion1,datosViolenciaIntrafamiliar?.situacion1);
+        actualizarSeleccionSelectButton(setSelectedSituacion2,datosViolenciaIntrafamiliar?.situacion2);
+        actualizarSeleccionSelectButton(setSelectedSituacion3,datosViolenciaIntrafamiliar?.situacion3);
+        actualizarSeleccionSelectButton(setSelectedSituacion4,datosViolenciaIntrafamiliar?.situacion4);
     }, []);
 
     const siNo = ['Si','No'];
@@ -53,6 +57,10 @@ export const AnexoViolenciaIntrafamiliar = ({ datosViolenciaIntrafamiliar }) => 
     const [selectedCaracteristicasVictima, setSelectedCaracteristicasVictima] = useState([]);
 
     /*Select Buttons (situacion)*/
+    const [selectedSituacion1, setSelectedSituacion1] = useState({});//hacinamiento
+    const [selectedSituacion2, setSelectedSituacion2] = useState({});//titulo o propiedad
+    const [selectedSituacion3, setSelectedSituacion3] = useState({});//vive con agresor
+    const [selectedSituacion4, setSelectedSituacion4] = useState({});//medidas de restriccion o denuncias previas
 
     const actualizarSeleccion = (opciones, valorActual, setter) => {
         const opcionesSeleccionadas = opciones.filter(opcion => opcion.valor === valorActual);
@@ -69,55 +77,84 @@ export const AnexoViolenciaIntrafamiliar = ({ datosViolenciaIntrafamiliar }) => 
             <div className="border-1 border-400 p-4">
                 <div>
                     <div>
-                        <h2 className='text-lightblue-mpa'>Situacion familiar</h2>
+                        <h3 className='text-lightblue-mpa'>Situacion familiar</h3>
                     </div>
-                    <div>
-                        <h3 className='text-lightblue-mpa'>Tipo de violencia</h3>
-                        <MultiSelect
-                        placeholder="Seleccione una o varias"
-                        options={tiposViolencia}
-                        onChange={(e) => {
-                          setSelectedTiposViolencia(e.value);
-                        }}
-                        value={selectedTiposViolencia}
-                        className="w-8"
-                        />
+                    <div className="formgrid grid mb-2">
+                        <div className="field col-12 lg:col-6">
+                            <span className='form-label'>¿La víctima convive con el agresor?</span>
+                            <SelectButton value={selectedSituacion3} onChange={(e) => setSelectedSituacion3(e.value)} options={siNo} />
+                        </div>
+                        <div className="field col-12 lg:col-6">
+                            <span className='form-label'>¿Hubieron medidas de restricción previas o denuncias contra el agresor?</span>
+                            <SelectButton value={selectedSituacion4} onChange={(e) => setSelectedSituacion4(e.value)} options={siNo} />
+                        </div>
                     </div>
-                    <div>
-                        <h3 className='text-lightblue-mpa'>Perfil del agresor</h3>
-                        <MultiSelect
-                            placeholder="Seleccione una o varias"
-                            options={conductasAgresor}
-                            onChange={(e) => {
-                            setselectedConductasAgresor(e.value);
-                            }}
-                            value={selectedConductasAgresor}
-                            className="w-8"
-                        />
+                    <div className="formgrid grid mb-2">
+                        <div className="field col-12 lg:col-6">
+                            <span className='form-label'>¿El agresor posee título de propiedad de la vivienda en la que vive la víctima?</span>
+                            <SelectButton value={selectedSituacion2} onChange={(e) => setSelectedSituacion2(e.value)} options={siNo} />
+                        </div>
+                        <div className="field col-12 lg:col-6">
+                            <span className='form-label'>¿La víctima vive en situación de hacinamiento?</span>
+                            <SelectButton value={selectedSituacion1} onChange={(e) => setSelectedSituacion1(e.value)} options={siNo} />
+                        </div>
+                    </div>
+                    <div className="formgrid grid mb-2">
+                        <div className="field col-12 lg:col-6">
+                            <h3 className='text-lightblue-mpa'>Tipo de violencia</h3>
+                            <span>Seleccione si ha sufrido alguno o algunos de estos hechos</span>
+                            <MultiSelect
+                                placeholder="Seleccione una o varias"
+                                options={tiposViolencia}
+                                onChange={(e) => {
+                                    setSelectedTiposViolencia(e.value);
+                                }}
+                                value={selectedTiposViolencia}
+                                className="w-full mt-2"
+                            />
+                        </div>
+                        <div className="field col-12 lg:col-6">
+                            <h3 className='text-lightblue-mpa'>Perfil del agresor</h3>
+                            <span>Seleccione si ha sufrido alguno o algunos de estos hechos</span>
+                            <MultiSelect
+                                placeholder="Seleccione una o varias"
+                                options={conductasAgresor}
+                                onChange={(e) => {
+                                    setselectedConductasAgresor(e.value);
+                                }}
+                                value={selectedConductasAgresor}
+                                className="w-full mt-2"
+                            />
+                        </div>
                     </div>
                     <div>
                         <h3 className='text-lightblue-mpa'>Vulnerabilidad de la víctima</h3>
-                        <MultiSelect
-                            placeholder="Seleccione una o varias"
-                            options={victimas}
-                            onChange={(e) => {
-                            setSelectedVictimas(e.value);
-                            }}
-                            value={selectedVictimas}
-                            className="w-8"
-                        />
-                        <MultiSelect
-                            placeholder="Seleccione una o varias"
-                            options={caracteristicasVictima}
-                            onChange={(e) => {
-                            setSelectedCaracteristicasVictima(e.value);
-                            }}
-                            value={selectedCaracteristicasVictima}
-                            className="w-8"
-                        />   
-                    </div>
-                    <div>
-
+                        <div className="formgrid grid mb-2">
+                            <div className="field col-12 lg:col-6">    
+                                <span>La víctima es:</span>
+                                <MultiSelect
+                                    placeholder="Seleccione una o varias"
+                                    options={victimas}
+                                    onChange={(e) => {
+                                        setSelectedVictimas(e.value);
+                                    }}
+                                    value={selectedVictimas}
+                                    className="w-full mt-2"
+                                />
+                            </div>
+                            <div className="field col-12 lg:col-6"> 
+                                <span>Seleccione, si corresponde, otras características que posea la víctima</span>       
+                                <MultiSelect
+                                    placeholder="Seleccione una o varias"
+                                    options={caracteristicasVictima}
+                                    onChange={(e) => {
+                                        setSelectedCaracteristicasVictima(e.value);
+                                    }}
+                                    value={selectedCaracteristicasVictima}
+                                    className="w-full mt-2"
+                                />
+                            </div>
+                        </div>   
                     </div>
                 </div>
             </div>
