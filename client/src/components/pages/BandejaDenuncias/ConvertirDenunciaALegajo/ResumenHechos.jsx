@@ -15,6 +15,7 @@ import {
   agregarResumenHecho,
   modificarResumenHecho,
   agregarFiscalia,
+  findDenunciado,
 } from '@/store/denuncias/denunciaLegajo/denunciaLegajo.slice';
 import * as Yup from 'yup';
 import { generateUUID } from '@/utils/generateUUID';
@@ -178,9 +179,7 @@ export const ResumenHechos = ({
           header='Denunciados'
           pt={{ headerCell: { className: 'w-4' } }}
           body={(resumen) => {
-            const [denunciado] = denunciados.filter(
-              (denunciado) => resumen.denunciado === denunciado.id
-            );
+            const denunciado = findDenunciado(denunciados, resumen.denunciado);
 
             return denunciado.nombreCompleto;
           }}

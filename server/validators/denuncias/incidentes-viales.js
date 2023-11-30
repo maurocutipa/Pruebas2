@@ -1,23 +1,21 @@
 const { body } = require("express-validator")
 const validateHelper = require('../../utils/validateHelper')
 
-const validateCreateIncidentesViales = [
-    body("idDenuncia").
-        exists().not().isEmpty().isNumeric(),
+const validateUpdateIncidentesViales = [
+    
     body("cantVehiculos").
-        exists().not().isEmpty().isNumeric(),
+        optional().isNumeric(),
     (req, res, next) => {
         validateHelper(req, res, next)
     }
 ]
 
-const validateCreateIncidentesVialesVehiculos = [
-  body("*.idDenunciaIncidentesViales").
-      exists().not().isEmpty().isNumeric(),
+const validateUpdateIncidentesVialesVehiculos = [
+
   body("*.idDenunciaAutomovilesTipo").
-      exists().not().isEmpty().isNumeric(),
+      optional().isNumeric(),
   body("*.idDenunciaAutomovilesMarca").
-      exists().not().isEmpty().isNumeric(),
+      optional().isNumeric(),
   body("*.modelo").
       optional(),
   body("*.dominio").
@@ -39,4 +37,4 @@ const validateCreateIncidentesVialesVehiculos = [
   }
 ]
 
-module.exports =  {validateCreateIncidentesViales, validateCreateIncidentesVialesVehiculos}
+module.exports =  {validateUpdateIncidentesViales, validateUpdateIncidentesVialesVehiculos}

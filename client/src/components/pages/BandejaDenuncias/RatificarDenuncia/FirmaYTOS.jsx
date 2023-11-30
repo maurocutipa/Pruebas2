@@ -1,20 +1,15 @@
 /* eslint-disable react/prop-types */
-import { useRef, useState } from 'react';
-import { Button } from 'primereact/button';
+import { useRef } from 'react';
 import { Card } from 'primereact/card';
-import { CampoFirma } from './CampoFirma';
+import { FirmaPad } from '@/components/common/FirmaPad';
 
 export const FirmaYTOS = ({
-  id,
   firmaDenunciante,
   firmaFuncionario,
   estaRatificada,
 }) => {
   const firmaDenuncianteRef = useRef(null);
   const firmaFuncionarioRef = useRef(null);
-
-  const [firmaDenuncianteVisible, setFirmaDenuncianteVisible] = useState(false);
-  const [firmafuncionarioVisible, setFirmaFuncionarioVisible] = useState(false);
 
   return (
     <Card className='shadow-1 px-7 mt-6'>
@@ -92,25 +87,17 @@ export const FirmaYTOS = ({
                 src={firmaDenunciante}
                 alt='FIRMA DENUNCIANTE | DEBE CARGAR LA FIRMA'
                 style={{ height: '290px', width: '99%' }}
+                ref={firmaDenuncianteRef}
               />
             </div>
             <div className='mt-2'>
               <div className='font-bold'>Denunciante</div>
               <div className='mt-2'>Firma y D.N.I.</div>
-              <Button
-                className='mt-2 btn-blue-mpa'
-                label='Firmar'
-                size='small'
-                disabled={estaRatificada}
-                onClick={() => setFirmaDenuncianteVisible(true)}
-              />
-              <CampoFirma
+
+              <FirmaPad
                 type='denunciante'
-                title='Firma del Denunciante'
-                id={id}
                 signatureRef={firmaDenuncianteRef}
-                visible={firmaDenuncianteVisible}
-                setVisible={setFirmaDenuncianteVisible}
+                disabled={estaRatificada}
               />
             </div>
           </div>
@@ -122,6 +109,7 @@ export const FirmaYTOS = ({
             >
               <img
                 src={firmaFuncionario}
+                ref={firmaFuncionarioRef}
                 alt='FIRMA FUNCIONARIO | DEBE CARGAR LA FIRMA'
                 style={{ height: '290px', width: '99%' }}
               />
@@ -130,20 +118,11 @@ export const FirmaYTOS = ({
             <div className='mt-2'>
               <div className='font-bold'>Funcionario Interviniente</div>
               <div className='mt-2'>Firma y D.N.I.</div>
-              <Button
-                className='mt-2 btn-blue-mpa'
-                disabled={estaRatificada}
-                label='Firmar'
-                size='small'
-                onClick={() => setFirmaFuncionarioVisible(true)}
-              />
-              <CampoFirma
+
+              <FirmaPad
                 type='funcionario'
-                title='Firma del Funcionario'
-                id={id}
                 signatureRef={firmaFuncionarioRef}
-                visible={firmafuncionarioVisible}
-                setVisible={setFirmaFuncionarioVisible}
+                disabled={estaRatificada}
               />
             </div>
           </div>

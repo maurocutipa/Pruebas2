@@ -6,6 +6,7 @@ import dataSlice from './data/data.slice';
 import denunciasSlice from './denuncias/denuncias.slice';
 import denunciaLegajoSlice from './denuncias/denunciaLegajo/denunciaLegajo.slice';
 import ratificarDenunciaSlice from './denuncias/ratificarDenuncia/ratificarDenuncia.slice';
+import legajosSlice from './legajo/legajos.slice';
 
 export const store = configureStore({
   reducer: {
@@ -17,5 +18,9 @@ export const store = configureStore({
     denuncias: denunciasSlice,
     denunciaLegajo: denunciaLegajoSlice,
     ratificarDenuncia: ratificarDenunciaSlice,
+    /**
+     * Legajos Slices
+     */
+    legajos: legajosSlice,
   },
 });

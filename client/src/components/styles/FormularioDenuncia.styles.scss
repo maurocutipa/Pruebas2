@@ -1,0 +1,36 @@
+#file {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    display: block;
+    opacity: 0;
+}
+
+
+.file-style {
+    display: block;
+    margin: auto;
+    cursor: pointer;
+    text-align: center;
+    font-size: 1rem;
+    color: #495057;
+    background: #ffffff;
+    padding: 0.75rem 0.75rem;
+    border: 2px dashed #ced4da;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+    border-radius: 6px;
+}
+
+.file-style-invalid{
+    @extend .file-style;
+    border-color: #e24c4c;
+}
+
+.file-style-drag {
+    @extend .file-style;
+    color: rgba(255, 255, 255, 0.87);
+    background: #4968DE;
+    border-color:#4968DE;
+}

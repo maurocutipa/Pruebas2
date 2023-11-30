@@ -36,9 +36,9 @@ const remisiones = [
 ];
 
 const ratificaciones = [
-  { idRatificacion: 'SI', ratificacion: 'SI'},
-  { idRatificacion: 'NO', ratificacion: 'NO'},
-]
+  { idRatificacion: 'SI', ratificacion: 'SI' },
+  { idRatificacion: 'NO', ratificacion: 'NO' },
+];
 
 const initialState = {
   loading: true,
@@ -67,7 +67,7 @@ export const dataSlice = createSlice({
           realizaciones,
           estados,
           remisiones,
-          ratificaciones
+          ratificaciones,
         };
       })
       .addCase(getDelitosThunk.fulfilled, (state, { payload }) => {

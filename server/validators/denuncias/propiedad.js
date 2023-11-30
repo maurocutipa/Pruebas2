@@ -1,9 +1,7 @@
 const { check, body } = require("express-validator")
 const validateHelper = require('../../utils/validateHelper')
 
-const validateCreatePropiedad = [
-    body("idDenuncia").
-        exists().not().isEmpty(),
+const validateUpdatePropiedad = [
     body("danoCosas").
         optional().isBoolean(),
     body("armas").
@@ -17,24 +15,24 @@ const validateCreatePropiedad = [
     body("otra").
         optional().isBoolean(),
     body("cantTelefonos").
-        optional(),
+        optional().isNumeric(),
     body("cantAutomoviles").
-        optional(),
+        optional().isNumeric(),
     body("cantBicicletas").
-        optional(),
+        optional().isNumeric(),
     body("cantAutopartes").
-        optional(),
+        optional().isNumeric(),
     body("cantDocumentacion").
-        optional(),
+        optional().isNumeric(),
     body("cantTarjetas").
-        optional(),
+        optional().isNumeric(),
     body("cantCheques").
-        optional(),
+        optional().isNumeric(),
     body("cantOtros").
-        optional(),
+        optional().isNumeric(),
     (req, res, next) => {
         validateHelper(req, res, next)
     }
 ]
 
-module.exports = validateCreatePropiedad
+module.exports = validateUpdatePropiedad

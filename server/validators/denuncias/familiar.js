@@ -1,98 +1,95 @@
 const { check, body } = require("express-validator")
 const validateHelper = require('../../utils/validateHelper')
 
-const validateCreateFamiliar = [
-    body("idDenuncia").
-        exists().
-        not().isEmpty().
-        isNumeric(),
+const validateUpdateFamiliar = [
+
     body("situacion1").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("situacion2").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("situacion3").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("situacion4").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("tipoViolencia1").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("tipoViolencia2").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("tipoViolencia3").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("tipoViolencia4").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("tipoViolencia5").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("tipoViolencia6").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("perfilAgresor1").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("perfilAgresor2").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("perfilAgresor3").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("perfilAgresor4").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("perfilAgresor5").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("perfilAgresor6").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("victima1").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("victima2").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("victima3").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("victima4").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("victima5").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("victima6").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("victima7").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("caracteristicas1").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("caracteristicas2").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("caracteristicas3").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("caracteristicas4").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("caracteristicas5").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     body("caracteristicas6").
         optional().
-        isNumeric({min:0,max:1}),
+        isBoolean(),
     
     (req, res, next) => {
         validateHelper(req, res, next)
@@ -100,4 +97,4 @@ const validateCreateFamiliar = [
 ]
 
 
-module.exports = validateCreateFamiliar
+module.exports = validateUpdateFamiliar

@@ -202,6 +202,7 @@ export const DenunciasTable = () => {
               id={denuncia.idDenuncia}
               setVisible={setVisible}
               isRatificada={!!denuncia.ratificacion}
+              idLegajo={denuncia.idLegajo}
             />
           )}
         />
