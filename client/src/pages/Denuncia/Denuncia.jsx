@@ -4,6 +4,8 @@ import { Divider } from 'primereact/divider';
 import { Button } from 'primereact/button';
 import { Timeline } from 'primereact/timeline';
 
+import {useAppSelector} from '@/store/hooks'
+
 import '../../components/styles/Denuncias.styles.scss';
 
 import FormularioDenunciante from '../../components/pages/Denuncias/FormularioDenunciante';
@@ -52,6 +54,9 @@ const OtrosFormContext = React.createContext([]);
 const DenunciaContext = React.createContext(0);
 
 export default function Denuncia() {
+  const {data} = useAppSelector(state =>state.data);
+  console.log(data);
+
   const [tosValue, setTosValue] = useState(false);
   const [flagrancia, setFlagrancia] = useState(0);
   const [victimasRelaciones, setVictimasRelaciones] = useState([]);
@@ -912,7 +917,7 @@ export default function Denuncia() {
                   <div className="field col-12">
                     <label className='form-label'>Seccional</label>
                     {/* <Dropdown className='w-full' placeholder='Seleccione una Seccional' options={seccionales} optionLabel='name' optionValue='value' value={seccional} onChange={e => setSeccional(e.target.value)}></Dropdown> */}
-                    <Dropdown className='w-full' placeholder='Seleccione una Seccional' options={tiposDenunciaInterna} optionLabel='tipo' optionValue='id' value={seccional} onChange={e => setSeccional(e.target.value)}></Dropdown>
+                    <Dropdown className='w-full' placeholder='Seleccione una Seccional' filter options={data.seccionales} optionLabel='seccional' optionValue='idSeccional' value={seccional} onChange={e => setSeccional(e.target.value)}></Dropdown>
                   </div>
                   <div className="field col-12">
                     <label className='form-label'>Funcion y Grado</label>
@@ -986,8 +991,8 @@ export default function Denuncia() {
           <IncidentesVialesContext.Provider value={{ automoviles, setAutomoviles }}>
             <DelitosContraPersonasContext.Provider value={{ lesiones, homicidio, femicidio, setLesiones, setHomicidio, setFemicidio }}>
               <OtrosFormContext.Provider value={{ delitoSexual, setDelitoSexual, validacion, setValidacion, maltratoAnimal, setMaltratoAnimal, danos, setDanos,validaDanos,setValidaDanos}}>
-                <div id='container'>{devolverPaso()}</div>
-                 {/* <div id='container'>{devolverDenunciaInterna()}</div>  */}
+                {/* <div id='container'>{devolverPaso()}</div> */}
+                 <div id='container'>{devolverDenunciaInterna()}</div> 
               </OtrosFormContext.Provider>
             </DelitosContraPersonasContext.Provider>
           </IncidentesVialesContext.Provider>
