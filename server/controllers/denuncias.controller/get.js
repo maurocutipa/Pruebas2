@@ -225,7 +225,7 @@ GetController.getDenunciaById = async (req, res) => {
       FROM denuncia_propiedad p
       WHERE id_denuncia = ?;
     `;
-    [datosGeneralesDenunciaPropiedad] = await queryHandler(query, [id]);
+    const [datosGeneralesDenunciaPropiedad] = await queryHandler(query, [id]);
 
     if (datosGeneralesDenunciaPropiedad !== undefined) {
       query = `
@@ -392,7 +392,8 @@ GetController.getDenunciaById = async (req, res) => {
     FROM denuncia_victima vic
     WHERE id_denuncia = ?`
     const [datosVictima] = await queryHandler(query, [id]);
-    
+    //=========================== Fin Querys para delitos Sexuales =======================
+
     //=========================== Querys Violencia Intrafamiliar =========================
 
     query = ` 
@@ -430,8 +431,43 @@ GetController.getDenunciaById = async (req, res) => {
           viointra.caracteristicas_6 as caracteristicas6 
         FROM denuncia_violencia_familiar viointra
         WHERE id_denuncia = ?`;
-        const [datosViolenciaIntrafamiliar] = await queryHandler(query, [id]);
+    const [datosViolenciaIntrafamiliar] = await queryHandler(query, [id]);
 
+    //========================== Fin querys violencia intrafamiliar ======================
+
+    //=================================== Querys abigeato ===============================
+    let detallesDenunciaAbigeato , detallesEspeciesDenunciaAbigeato= {}; 
+    query = `
+        SELECT 
+          abi.id_denuncia_abigeato as idDenunciaAbigeato, 
+          abi.id_denuncia as idDenuncia, 
+          abi.violencia_fisica as violenciaFisica
+          FROM denuncia_abigeato abi
+          WHERE id_denuncia = ?`
+    const [datosGeneralesDenunciaAbigeato] = await queryHandler(query, [id]); 
+    
+    if (datosGeneralesDenunciaAbigeato !== undefined) {
+      query = `
+      SELECT 
+        abid.id_denuncia_abigeato_detalles as idDenunciaAbigeatoDetalles, 
+        abid.id_denuncia_abigeato as idDenunciaAbigeato, 
+        abid.id_denuncia_abigeato_detalles_especies as idDenunciaAbigeatoDetallesEspecies, 
+        abid.cantidad as cantidad, 
+        abid.detalle as detalle
+      FROM denuncia_abigeato_detalles abid
+      WHERE abid.id_denuncia_abigeato = ?`;
+      [detallesDenunciaAbigeato] = await queryHandler(query, [datosGeneralesDenunciaAbigeato.idDenunciaAbigeato]);
+
+      query = `
+      SELECT 
+        abide.id_denuncia_abigeato_detalles as idDenunciaAbigeatoDetalles, 
+        abide.id_denuncia_abigeato_detalles_especies as idDenunciaAbigeatoEspecies, 
+        abide.cantidad as cantidad, 
+        abide.detalle as detalle
+      FROM denuncia_abigeato_detalles abide
+      WHERE abide.id_denuncia_abigeato = ?`;
+    }
+    [detallesEspeciesDenunciaAbigeato] = await queryHandler(query, [datosGeneralesDenunciaAbigeato.idDenunciaAbigeato]);
 
     res.status(200).json({
       message: `Denuncia con el id: ${id}`,
@@ -453,10 +489,15 @@ GetController.getDenunciaById = async (req, res) => {
         datosIncidentesViales: { datosGeneralesIncidentesViales, vehiculos },
         datosViolenciaDeGenero: datosViolenciaDeGenero,
         datosDelitoSexual: {
-          detallesDelitoSexual, 
+          detallesDelitoSexual,
           datosVictima
-        }, 
-        datosViolenciaIntrafamiliar: datosViolenciaIntrafamiliar
+        },
+        datosViolenciaIntrafamiliar: datosViolenciaIntrafamiliar, 
+        datosDenunciaAbigeato: {
+          datosGeneralesDenunciaAbigeato, 
+          detallesDenunciaAbigeato, 
+          detallesEspeciesDenunciaAbigeato
+        }
       },
     });
   } catch (error) {
