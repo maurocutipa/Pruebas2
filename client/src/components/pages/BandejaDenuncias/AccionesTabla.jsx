@@ -9,7 +9,7 @@ import { useAppDispatch } from '@/store/hooks';
 import { deleteDenunciaThunk } from '@/store/denuncias/denuncias.thunks';
 import { setIdDenuncia } from '@/store/denuncias/denuncias.slice';
 
-export const AccionesTabla = ({ id, setVisible, isRatificada }) => {
+export const AccionesTabla = ({ id, setVisible, isRatificada, idLegajo }) => {
   const navigate = useNavigate();
   const menuLeft = useRef(null);
   const dispatch = useAppDispatch();
@@ -42,6 +42,10 @@ export const AccionesTabla = ({ id, setVisible, isRatificada }) => {
     dispatch(setIdDenuncia(id));
   };
 
+  const verLegajo = () => {
+    navigate(`/legajo/${idLegajo}`);
+  };
+
   const menuitems = [
     {
       label: 'Acciones',
@@ -62,6 +66,13 @@ export const AccionesTabla = ({ id, setVisible, isRatificada }) => {
           label: 'Eliminar denuncia',
           command: () => eliminarDenuncia(),
         },
+        ...(() => {
+          if (idLegajo) return [{
+            label: 'Ver legajo',
+            command: () => verLegajo(),
+          }]
+          return []
+        })()
       ],
     },
   ];

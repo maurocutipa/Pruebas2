@@ -1,37 +1,35 @@
 const { check, body } = require("express-validator")
 const validateHelper = require('../../utils/validateHelper')
 
-const validateCreateDelitoPersona = [
-    body("idDenuncia").exists().not().isEmpty(),
-    body("femicidio").optional().isNumeric({min:0, max:1}),
-    body("lesiones").optional().isNumeric({min:0, max:1}),
-    body("homicidio").optional().isNumeric({min:0, max:1}),
+const validateUpdateDelitoPersona = [
+    body("femicidio").optional().isBoolean(),
+    body("lesiones").optional().isBoolean(),
+    body("homicidio").optional().isBoolean(),
     (req, res, next) => {
         validateHelper(req, res, next)
     }
 ]
 
-const validateCreateDelitoSexual = [
-    body("idDenuncia").exists().not().isEmpty(),
+const validateUpdateDelitoSexual = [
     // hecho
-    body("hechoAcercamiento").optional().isNumeric({min:0,max:1}),
-    body("hechoContactoTecnologico").optional().isNumeric({min:0,max:1}),
-    body("hechoBeso").optional().isNumeric({min:0,max:1}),
-    body("hechoTocamiento").optional().isNumeric({min:0,max:1}),
-    body("hechoIntroduccion").optional().isNumeric({min:0,max:1}),
+    body("hechoAcercamiento").optional().isBoolean(),
+    body("hechoContactoTecnologico").optional().isBoolean(),
+    body("hechoBeso").optional().isBoolean(),
+    body("hechoTocamiento").optional().isBoolean(),
+    body("hechoIntroduccion").optional().isBoolean(),
     // accion
-    body("accionViolencia").optional().isNumeric({min:0,max:1}),
-    body("accionDrogas").optional().isNumeric({min:0,max:1}),
-    body("accionVulnerabilidad").optional().isNumeric({min:0,max:1}),
-    body("accionArma").optional().isNumeric({min:0,max:1}),
+    body("accionViolencia").optional().isBoolean(),
+    body("accionDrogas").optional().isBoolean(),
+    body("accionVulnerabilidad").optional().isBoolean(),
+    body("accionArma").optional().isBoolean(),
     // adicional
-    body("denunciasPrevias").exists().not().isEmpty().isNumeric({min:0, max:1}),
-    body("solicitudImagenes").exists().not().isEmpty().isNumeric({min:0, max:1}),
-    body("mediosElectronicos").exists().not().isEmpty().isNumeric({min:0, max:1}),
-    body("menorInvolucrado").exists().not().isEmpty().isNumeric({min:0, max:1}),
+    body("denunciasPrevias").optional().isBoolean(),
+    body("solicitudImagenes").optional().isBoolean(),
+    body("mediosElectronicos").optional().isBoolean(),
+    body("menorInvolucrado").optional().isBoolean(),
     (req, res, next) => {
         validateHelper(req, res, next)
     }
 ]
 
-module.exports =  {validateCreateDelitoPersona, validateCreateDelitoSexual}
+module.exports =  {validateUpdateDelitoPersona, validateUpdateDelitoSexual}

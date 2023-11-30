@@ -4,13 +4,16 @@ const {
   getDenunciadosParaLegajo,
   crearDenunciaLegajo,
   getAccionTomada,
+  getLegajoById,
 } = require('../controllers/legajos.controller');
 const verifyJWT = require('../middlewares/verifyJWT');
 
 const router = Router();
 
 //MAIN MIDDLEWARES
-router.use('/', verifyJWT);
+//router.use('/', verifyJWT);
+
+router.get('/:id', getLegajoById)
 
 router.get('/get-denunciados/:id', getDenunciadosParaLegajo);
 router.post('/denuncia-legajo/:id', crearDenunciaLegajo);

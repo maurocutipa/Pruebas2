@@ -67,6 +67,9 @@ export const denunciasSlice = createSlice({
           },
           datosViolenciaIntrafamiliar: {
             ...payload.data.datosViolenciaIntrafamiliar,
+          }, 
+          datosDenunciaAbigeato: {
+            ...payload.data.datosDenunciaAbigeato,
           }
         };
       });

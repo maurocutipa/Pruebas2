@@ -9,6 +9,8 @@ import { AdjuntosDenuncia } from './TablasVerDenuncia/AdjuntosDenuncia/AdjuntosD
 import { AnexoDelitosSexuales } from './TablasVerDenuncia/AnexoDelitosSexuales/AnexoDelitosSexuales';
 
 import { useEffect, useState } from 'react';
+import { AnexoAbigeato } from './TablasVerDenuncia/AnexoAbigeato/AnexoAbigeato';
+import { AnexoViolenciaIntrafamiliar } from './TablasVerDenuncia/AnexoViolenciaIntrafamiliar/AnexoViolenciaIntrafamiliar';
 
 export const DatosDelHecho = ({ datosDenuncia }) => {
   const denuncia = datosDenuncia.denuncia;
@@ -151,7 +153,11 @@ export const DatosDelHecho = ({ datosDenuncia }) => {
         <ObjetosSustraidosTable datosDenunciaPropiedad={datosDenuncia.datosDenunciaPropiedad} />
       ) : tipoDenuncia === 8 ? (
         <AnexoDelitosSexuales datosDelitoSexual={datosDenuncia.datosDelitoSexual}/>
-      ) : (null)}
+      ) : tipoDenuncia === 9 ?(
+        <AnexoViolenciaIntrafamiliar datosViolenciaIntrafamiliar={datosDenuncia.datosViolenciaIntrafamiliar}/>
+      ) : tipoDenuncia === 14 ? (
+        <AnexoAbigeato/>
+      ) : null}
 
       <Divider />
 

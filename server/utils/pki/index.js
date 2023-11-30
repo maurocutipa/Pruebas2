@@ -1,5 +1,5 @@
 const { RestPkiClient, StandardSecurityContexts } = require('restpki-client');
-//const { TimestampAuthority } = require('pki-express');
+const { TimestampAuthority } = require('pki-express');
 const fs = require('fs');
 const crypto = require('crypto');
 const Config = require('@config/restpki');
@@ -66,29 +66,24 @@ class PKI {
      *
      * @param operator The operator instance to be configured.
      */
-    /* static setPkiDefaults(operator) {
-        // Get configuration from config/{env}.js file. It will choose the
-        // desirable configuration according to the environment of the
-        // application.
-        const CONFIG = Config.getInstance().get('pkiExpress');
-
+    static setPkiDefaults(operator) {
         // Set the operator to trust in a custom trusted root, you need to
         // inform the operator class. We will add each trusted root from
         // configuration file. In this sample, we assumed that all trusted roots
         // are in the resources/ folder. You are free to pass any path.
-        const { trustedRoots } = CONFIG;
-        trustedRoots.forEach((root) => {
+        const { trustedRoots } = Config.pkiExpress;
+       /*  trustedRoots.forEach((root) => {
             operator.addTrustedRootSync(StorageMock.getResourcePath(root));
-        });
+        }); */
 
         // Set operator to "OFFLINE MODE" (default: false):
-        operator.offline = CONFIG.offline;
+        operator.offline = Config.pkiExpress.offline;
 
         // Set the operator to use a timestamp authority when performing an
         // timestamp operation. In this sample, we will use the REST PKI by
         // default to emit a timestamp. It only be filled if the REST PKI was
         // provided.
-        const REST_PKI_CONFIG = Config.getInstance().get('restPki');
+        const REST_PKI_CONFIG = Config
         if (REST_PKI_CONFIG.accessToken) {
             // Get an instance of the TimestampAuthority class, responsible to
             // inform the url and authentication logic to be used when contacting
@@ -107,8 +102,8 @@ class PKI {
         // accept the test certificate provided by Lacuna Software.
         //
         // THIS SHOULD NEVER BE USED ON PRODUCTION ENVIRONMENT!
-        operator.trustLacunaTestRoot = Config.getInstance().get('trustLacunaTestRoot');
-    } */
+        operator.trustLacunaTestRoot = Config.trustLacunaTestRoot
+    }
 
     // endregion
 

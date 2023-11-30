@@ -1,4 +1,4 @@
-import api from '.';
+import {internalApi} from '.';
 
 const URLS = {
   getDenunciaData: '/denuncias/get-datos-filtros',
@@ -6,9 +6,9 @@ const URLS = {
 };
 
 export const getDenunciaData = () => {
-  return api.get(URLS.getDenunciaData);
+  return internalApi.get(URLS.getDenunciaData);
 };
 
 export const getDelitos = () => {
-  return api.get(URLS.getDelitos);
+  return internalApi.get(URLS.getDelitos);
 };
