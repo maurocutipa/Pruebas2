@@ -456,7 +456,7 @@ GetController.getDenunciaById = async (req, res) => {
         abid.detalle as detalle
       FROM denuncia_abigeato_detalles abid
       WHERE abid.id_denuncia_abigeato = ?`;
-      [detallesDenunciaAbigeato] = await queryHandler(query, [datosGeneralesDenunciaAbigeato.idDenunciaAbigeato]);
+      detallesDenunciaAbigeato = await queryHandler(query, [datosGeneralesDenunciaAbigeato.idDenunciaAbigeato]);
 
       query = `
       SELECT 
