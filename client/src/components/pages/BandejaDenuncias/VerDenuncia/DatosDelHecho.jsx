@@ -6,8 +6,10 @@ import { VehiculosInvolucradosTable } from './TablasVerDenuncia/IncidentesViales
 import { ObjetosSustraidosTable } from './TablasVerDenuncia/ObjetosSustraidos/ObjetosSustraidosTable';
 import { AnexoViolenciaDeGenero } from './TablasVerDenuncia/AnexoViolenciaDeGenero/AnexoViolenciaDeGenero';
 import { AdjuntosDenuncia } from './TablasVerDenuncia/AdjuntosDenuncia/AdjuntosDenuncia';
+import { AnexoDelitosSexuales } from './TablasVerDenuncia/AnexoDelitosSexuales/AnexoDelitosSexuales';
 
 import { useEffect, useState } from 'react';
+import { AnexoViolenciaIntrafamiliar } from './TablasVerDenuncia/AnexoViolenciaIntrafamiliar/AnexoViolenciaIntrafamiliar';
 
 export const DatosDelHecho = ({ datosDenuncia }) => {
   const denuncia = datosDenuncia.denuncia;
@@ -148,6 +150,10 @@ export const DatosDelHecho = ({ datosDenuncia }) => {
         </>
       ) : tipoDenuncia === 3 ? (
         <ObjetosSustraidosTable datosDenunciaPropiedad={datosDenuncia.datosDenunciaPropiedad} />
+      ) : tipoDenuncia === 8 ? (
+        <AnexoDelitosSexuales datosDelitoSexual={datosDenuncia.datosDelitoSexual}/>
+      ) : tipoDenuncia === 9 ?(
+        <AnexoViolenciaIntrafamiliar datosViolenciaIntrafamiliar={datosDenuncia.datosViolenciaIntrafamiliar}/>
       ) : null}
 
       <Divider />
