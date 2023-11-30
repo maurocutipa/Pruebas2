@@ -369,7 +369,7 @@ UpdateController.updateDenunciaMaltratoAnimal = async (req, res) => {
 };
 
 
-UpdateController.updateDenunciaBusquedaPersonaHecho = async (req, res) => {
+UpdateController.updateDenunciaBusquedaPersona = async (req, res) => {
   try {
 
       const data = matchedData(req);
@@ -380,7 +380,7 @@ UpdateController.updateDenunciaBusquedaPersonaHecho = async (req, res) => {
 
       console.log(data)
       
-      const query = `UPDATE denuncia_busqueda_persona_hecho SET ${keys.map((key) => `${key} = ?`).join(', ')} WHERE id_denuncia_busqueda_persona_hecho = ${id}`;
+      const query = `UPDATE denuncia_busqueda_persona SET ${keys.map((key) => `${key} = ?`).join(', ')} WHERE id_denuncia_busqueda_persona = ${id}`;
       const resQuery = await queryHandler(query, values);
 
       res.status(200).json({
