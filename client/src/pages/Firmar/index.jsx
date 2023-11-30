@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react"
 import { LacunaWebPKI } from 'web-pki'
-import api from '@/api'
+import {internalApi} from '@/api'
 import axios from "axios"
 import { ModalFirmaDigital } from "../../components/common/ModalFirmaDigital"
 export const Firmar = () => {
@@ -35,7 +35,7 @@ export const Firmar = () => {
             token: token,
             thumbprint: cert
         }).success(() => {
-            api.post('http://localhost:4000/api/restpki/finish-signature', { token: token }).then(res => {
+            internalApi.post('http://localhost:4000/api/restpki/finish-signature', { token: token }).then(res => {
                 //console.log(res);
                 console.log(res);
             })

@@ -1,4 +1,5 @@
-import api from '.';
+// import api from '.';
+import { internalApi, publicApi } from '.';
 
 const URLS = {
   getAll: '/denuncias/get-all',
@@ -8,32 +9,54 @@ const URLS = {
   deleteDenuncia: (id) => `/denuncias/delete/${id}`,
   ratificarDenuncia: (id) => `/denuncias/ratificar-denuncia/${id}`,
   estaRatificada: (id) => `/denuncias/esta-ratificada/${id}`,
+  //parte web
+  form: '/denuncias/create',
+  formDenunciaIntrafamiliar: '/denuncias/familiar-create',
+  consultarDenuncia: '/denuncias/consultar'
 };
 
 export const getAllDenuncias = (body) => {
-  return api.post(URLS.getAll, body);
+  return internalApi.post(URLS.getAll, body);
 };
 
 export const getDatosDeFiltros = () => {
-  return api.get(URLS.getDatosDeFiltros);
+  return internalApi.get(URLS.getDatosDeFiltros);
 };
 
 export const getDenunciaById = (id) => {
-  return api.get(URLS.getDenunciaById(id));
+  return internalApi.get(URLS.getDenunciaById(id));
 };
 
 export const deleteDenuncia = (id) => {
-  return api.delete(URLS.deleteDenuncia(id));
+  return internalApi.delete(URLS.deleteDenuncia(id));
 };
 
 export const ratificarDenuncia = (id) => {
-  return api.patch(URLS.ratificarDenuncia(id));
+  return internalApi.patch(URLS.ratificarDenuncia(id));
 };
 
 export const getResumenDenuncia = (id) => {
-  return api.get(URLS.getResumenDenuncia(id));
+  return internalApi.get(URLS.getResumenDenuncia(id));
 };
 
 export const estaRatificada = (id) => {
-  return api.get(URLS.estaRatificada(id));
+  return internalApi.get(URLS.estaRatificada(id));
 };
+
+//parte web
+
+export const crearDenuncia = (body) => {
+  return publicApi.post(URLS.form, body, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+};
+
+export const crearDenunciaIntrafamiliar = (body) => {
+  return publicApi.post(URLS.formDenunciaIntrafamiliar, body, { 'Content-Type': 'application/json' });
+}
+
+export const consultarDenuncia = (body) => {
+  return publicApi.post(URLS.consultarDenuncia, body, { 'Content-Type': 'application/json' })
+}

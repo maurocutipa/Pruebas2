@@ -1,4 +1,4 @@
-import api from '.';
+import {internalApi} from '.';
 
 const URLS = {
   getDenunciadosParaLegajo: (id) => `/legajos/get-denunciados/${id}`,
@@ -7,15 +7,15 @@ const URLS = {
 };
 
 export const getDenunciadosParaLegajo = (id) => {
-  return api.get(URLS.getDenunciadosParaLegajo(id));
+  return internalApi.get(URLS.getDenunciadosParaLegajo(id));
 };
 
 export const getAccionTomada = (id) => {
-  return api.get(URLS.getAccionTomada(id));
+  return internalApi.get(URLS.getAccionTomada(id));
 };
 
 export const crearDenunciaLegajo = (formData) => {
-  return api.post(URLS.crearDenunciaLegajo(formData.idDenuncia), formData, {
+  return internalApi.post(URLS.crearDenunciaLegajo(formData.idDenuncia), formData, {
     withCredentials: true,
   });
 };
