@@ -6,12 +6,12 @@ import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { classNames } from 'primereact/utils';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,memo} from 'react';
 import { useDenunciaContext } from '../../../../pages/Denuncia/Denuncia';
 import { SelectButton } from 'primereact/selectbutton';
 import { Checkbox } from 'primereact/checkbox';
-export default function BusquedaDePersonas(props) {
-    const [paso, setPaso] = useState(1);
+export const BusquedaDePersonas = memo((props) => {
+    const [pasoForm, setPasoForm] = useState(1);
     const [dialog, setDialog] = useState(false);
     const tiposDocumentos = ['DNI', 'Pasaporte', 'Cedula', 'Otro'];
     const identidades = ['MUJER', 'HOMBRE', 'MUJER TRANS', 'VARON TRANS', 'PERSONA NO BINARIA', 'OTRO'];
@@ -103,36 +103,43 @@ export default function BusquedaDePersonas(props) {
         },
         validate: (data) => {
             let errors = {};
-            if (!data.tipoIdentificacion)
-                errors.tipoIdentificacion = 'El tipo de Identificacion es requerido.';
-            if (!data.numeroIdentificacion)
-                errors.numeroIdentificacion = 'El numero de Identificacion es requerido.';
-            if (!data.exhibeIdentificacion)
-                errors.exhibeIdentificacion = 'Exhibe Identificacion es requerido.';
-            if (!data.nombre)
-                errors.nombre = 'El Nombre es requerido.';
-            if (!data.apellido)
-                errors.apellido = 'El Apellido es requerido.';
-            // if (!data.alias)
-            //     errors.alias = 'El alias es requerido.';
-            if (!data.identidadAutopercibida)
-                errors.identidadAutopercibida = 'La Identidad autopercibida es requerida.';
-            if (!data.fechaNacimiento)
-                errors.fechaNacimiento = 'La Fecha de Nacimiento es requerida.';
-            if (!data.idPais)
-                errors.idPais = 'La Nacionalidad es requerida.';
-            if (!data.domicilio)
-                errors.domicilio = 'El domicilio es requerido.';
+            if (pasoForm == 1) {
+                if (!data.tipoIdentificacion)
+                    errors.tipoIdentificacion = 'El tipo de Identificacion es requerido.';
+                if (!data.numeroIdentificacion)
+                    errors.numeroIdentificacion = 'El numero de Identificacion es requerido.';
+                if (!data.exhibeIdentificacion)
+                    errors.exhibeIdentificacion = 'Exhibe Identificacion es requerido.';
+                if (!data.nombre)
+                    errors.nombre = 'El Nombre es requerido.';
+                if (!data.apellido)
+                    errors.apellido = 'El Apellido es requerido.';
+                // if (!data.alias)
+                //     errors.alias = 'El alias es requerido.';
+                if (!data.identidadAutopercibida)
+                    errors.identidadAutopercibida = 'La Identidad autopercibida es requerida.';
+                if (!data.fechaNacimiento)
+                    errors.fechaNacimiento = 'La Fecha de Nacimiento es requerida.';
+                if (!data.idPais)
+                    errors.idPais = 'La Nacionalidad es requerida.';
+                if (!data.domicilio)
+                    errors.domicilio = 'El domicilio es requerido.';
+            }
             return errors;
         },
         onSubmit: (data) => {
-            data.fechaNacimiento = new Date(data.fechaNacimiento).toLocaleDateString('en-GB');
-            var datosDenuncia = new { ...data }
+            if (pasoForm != 5) {
+                setPasoForm(pasoForm + 1)
+            }
+            else {
+                data.fechaNacimiento = new Date(data.fechaNacimiento).toLocaleDateString('en-GB');
+                var datosDenuncia = new { ...data }
 
-            datosDenuncia.id = props.denunciasBusqueda.lenght + 1;
-            props.setDenunciasBusqueda([...props.denunciasBusqueda, datosDenuncia]);
-            form.resetForm();
-            setDialog(false);
+                datosDenuncia.id = props.denunciasBusqueda.lenght + 1;
+                props.setDenunciasBusqueda([...props.denunciasBusqueda, datosDenuncia]);
+                form.resetForm();
+                setDialog(false);
+            }
         }
     });
 
@@ -224,31 +231,33 @@ export default function BusquedaDePersonas(props) {
     }
 
 
-    return (
-        //Busqueda de Personas
-        <div className='mx-4'>
-            <h2>Datos Personales de las persona Buscada</h2>
-            <Button label='Mostrar form' onClick={e => setDialog(true)}></Button>
-            <Dialog visible={dialog} header="Datos Persona desaparecida" draggable={false} blockScroll={true} breakpoints={{ '641px': '100vw', '960px': '95vw' }} onHide={() => setDialog(false)}>
-                <form onSubmit={form.submit}>
+    const cambiarPaso = () => {
+        if (pasoForm > 1)
+            setPasoForm(pasoForm - 1)
+    }
+    const returnPasoForm = () => {
+        switch (pasoForm) {
+            case 1:
+                return (
                     <div id="datosPersonales">
                         <h2>Datos Personales de la Persona Buscada</h2>
                         <div className="formgrid grid">
                             {campo('field col-12 md:col-4', 'tipoIdentificacion', 'Tipo de Identificacion', 'Seleccione una Opcion...', 'Dropdown', tiposDocumentos)}
                             {campo('field col-12 md:col-4', 'numeroIdentificacion', 'Numero de Identificacion', 'Ingrese el numero de la Identificacion', 'InputText', [])}
-                            {/* Exhibe Identificacion field col-12 md:col-4*/}
-
-                            {campoSelect('field', 'exhibeIdentificacion', 'Exhibe Identificacion?')}
+                            {campoSelect('field col-12 md:col-4', 'exhibeIdentificacion', 'Exhibe Identificacion?')}
 
                             {campo('field col-12 md:col-6', 'nombre', 'Nombre', 'Ingrese el Nombre', 'InputText', [])}
                             {campo('field col-12 md:col-6', 'apellido', 'Apellido', 'Ingrese el Apellido', 'InputText', [])}
-                            {campo('field col-12 md:col-7', 'alias', 'Alias', 'Ingrese el Alias', 'InputText', [])}
-                            {campo('field col-12 md:col-3', 'identidadAutopercibida', 'Identidad Autopercibida', 'Seleccione una Opcion...', 'Dropdown', identidades)}
+                            {campo('field col-12 md:col-5', 'alias', 'Alias', 'Ingrese el Alias', 'InputText', [])}
+                            {campo('field col-12 md:col-7', 'identidadAutopercibida', 'Identidad Autopercibida', 'Seleccione una Opcion...', 'Dropdown', identidades)}
                             {campo('field col-12 md:col-4', 'fechaNacimiento', 'Fecha de Nacimiento', 'Ingrese una Fecha', 'Calendar', [])}
                             {campo('field col-12 md:col-4', 'idPais', 'Nacionalidad', 'Seleccione una Nacionalidad...', 'DropdownValue', nacionalidades)}
                             {campo('field col-12 md:col-4', 'domicilio', 'Domicilio', 'Ingrese un Domicilio', 'InputText', [])}
                         </div>
                     </div>
+                    )
+                    case 2:
+                        return (
                     <div id="informacionGeneral">
                         <div id="informacionPareja">
                             <h2 className='underline'>*En caso de estar en pareja</h2>
@@ -309,6 +318,9 @@ export default function BusquedaDePersonas(props) {
                             </div>
                         </div>
                     </div>
+                    )
+                    case 3:
+                        return (
                     <div id='tipoDenuncia'>
                         <h2 className='underline'>Tipo de Denuncia</h2>
                         <div className="form-grid grid">
@@ -322,6 +334,9 @@ export default function BusquedaDePersonas(props) {
                             {campo('col-12 md:col', 'otroDetalle', 'Detalles', 'Ingrese el Detalle', 'InputText', [])}
                         </div>
                     </div>
+                )
+                case 4:
+                    return (
                     <div id='datosHecho'>
                         <h2 className='underline'>Datos del Hecho</h2>
                         <div className="form-grid grid">
@@ -337,6 +352,9 @@ export default function BusquedaDePersonas(props) {
                             {campo('field col-12', 'busquedaTrabajo', '¿Estaba Buscando Trabajo?', '¿La persona estaba buscando trabajo?', 'TextArea', [])}
                         </div>
                     </div>
+                )
+                case 5:
+                    return (
                     <div id="caracteristicasFisicas">
 
                         <h2 className='underline'>Caracteristicas Fisicas</h2>
@@ -357,10 +375,33 @@ export default function BusquedaDePersonas(props) {
 
                         </div>
                     </div>
+                )
+            }
+        }
+    
+        const siguientePaso = () => {
+            if (form.isValid)
+                setPasoForm(pasoForm + 1)
+            else
+                console.log(form.errors)
+        }
+    
+        return (
+            //Busqueda de Personas
+            <div className='mx-4'>
+                <h2>Datos Personales de las persona Buscada</h2>
+                <Button label='Mostrar form' onClick={e => setDialog(true)}></Button>
+                <Dialog visible={dialog} header="Datos Persona desaparecida" draggable={false} blockScroll={true} breakpoints={{ '641px': '100vw', '960px': '95vw' }} onHide={() => setDialog(false)}>
+                    <Button icon='pi pi-angle-left' label='Regresar al Paso Anterior' link
+                        onClick={(e) => cambiarPaso()} disabled={pasoForm < 2} hidden={pasoForm < 2} />
+    
+                    <form onSubmit={form.handleSubmit}>
+                        {returnPasoForm()}
+                        <Button type='button' disabled={!form.isValid} onClick={e => siguientePaso()}></Button>
                 </form>
             </Dialog>
         </div>
 
 
     )
-}
+})

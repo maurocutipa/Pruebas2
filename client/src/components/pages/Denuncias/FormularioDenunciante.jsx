@@ -28,7 +28,7 @@ export default function FormularioDenunciante(props) {
   const [dialogTestigo, setDialogTestigo] = useState(false);
   const [dialogDatosPersona, setDialogDatosPersona] = useState(false);
   const [action, setAction] = useState('');
-  const [existeTestigo, setExisteTestigo] = useState(1); //form testigo
+  const [existeTestigo, setExisteTestigo] = useState('Si'); //form testigo
 
   const [denunciantes, setDenunciantes] = useState([]);
   const [victimas, setVictimas] = useState([]);
@@ -62,6 +62,8 @@ export default function FormularioDenunciante(props) {
 
   useEffect(() => {
     setPersonasDenunciadas(props.denunciados)
+
+    setExisteTestigo(props.existeTestigoStr)
     setPersonasTestigos(props.testigos)
 
     updateTablaDenunciantes(props.victimas, props.denunciantes)
@@ -453,7 +455,8 @@ export default function FormularioDenunciante(props) {
               }}
               options={siNoSabe}
               className='w-full md:w-4 lg:w-3'
-              unselectable={false}
+              // unselectable={false}
+              // allowEmpty={true}
               pt={{ button: ({ context }) => ({ className: context.selected ? 'btn-blue-mpa' : undefined, }), }}
             />
           </div>
