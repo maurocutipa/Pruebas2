@@ -128,7 +128,10 @@ export const ResumenHechos = ({
 
           <div className='grid mt-4'>
             <div className='col-12'>
-              <label htmlFor='descripcion'>Descripción</label>
+              <label htmlFor='descripcion'>
+                Descripción del hecho jurídicamente relevante vinculado al
+                denunciado
+              </label>
               <InputTextarea
                 id='descripcion'
                 name='descripcion'
@@ -142,6 +145,7 @@ export const ResumenHechos = ({
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.descripcion}
+                placeholder='Descripción del: ¿Que? ¿Como? ¿Cuando? ¿Donde? ¿Quienes?. Hasta 500 caracteres'
               />
               <InvalidFieldMessage name='descripcion' formik={formik} />
             </div>

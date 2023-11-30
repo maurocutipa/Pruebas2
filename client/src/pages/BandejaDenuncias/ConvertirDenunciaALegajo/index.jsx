@@ -18,6 +18,7 @@ import {
   generarDataParaPdf,
 } from '@/store/denuncias/denunciaLegajo/denunciaLegajo.slice';
 import { PdfPreview } from '@/components/pages/BandejaDenuncias/ConvertirDenunciaALegajo/PdfPreview';
+import { Detenidos } from '../../../components/pages/BandejaDenuncias/ConvertirDenunciaALegajo/Detenidos';
 
 export const ConvertirDenunciaALegajo = () => {
   const toast = useRef(null);
@@ -103,6 +104,8 @@ export const ConvertirDenunciaALegajo = () => {
               delitos={data.delitos}
               delitosAsignados={denunciaALegajoForm.delitos}
             />
+
+            <Detenidos denunciados={legajoData.denunciados} />
           </div>
 
           <div className='flex justify-content-between mt-8 mb-2'>

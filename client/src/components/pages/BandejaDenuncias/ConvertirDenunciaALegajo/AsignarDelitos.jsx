@@ -52,7 +52,7 @@ export const AsignarDelito = ({ denunciados, delitos, delitosAsignados }) => {
 
   return (
     <Card className='shadow-1 px-7 py-3 mt-6'>
-      <h2>Asignar delitos</h2>
+      <h2>Calificación provisional del Delito</h2>
 
       <form onSubmit={formik.handleSubmit}>
         <div className='grid mt-6'>
