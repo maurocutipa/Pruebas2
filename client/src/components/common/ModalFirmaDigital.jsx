@@ -128,7 +128,7 @@ export const ModalFirmaDigital = ({
     const newState = await startFirma();
 
     setFirmaDigitalState((prev) => ({...prev, ...newState, blocked: true}))
-
+    console.log(newState);
     if (
       !newState.certThumb ||
       !newState.toSignHash ||
@@ -139,14 +139,13 @@ export const ModalFirmaDigital = ({
 
     pki
       .signHash({
-        token: newState.token,
         thumbprint: newState.certThumb,
         hash: newState.toSignHash,
         digestAlgorithm: newState.digestAlgorithm,
       })
       .success(async (signature) => {
+        console.log(signature); 
         const body = {
-          token: newState.token,
           codigo: newState.codigo,
           signature,
           transferFile: newState.transferFile,
