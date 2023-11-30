@@ -11,7 +11,7 @@ export const AnexoViolenciaDeGenero = ({ datosViolenciaDeGenero }) => {
     actualizarSeleccion(tiposViolencia, 1, setSelectedTipos);
     actualizarSeleccion(perfilAgresor, 1, setSelectedPerfil);
     actualizarSeleccion(vulnerabilidades, 1, setSelectedVulnerabilidades);
-    setRiesgo(datosViolenciaDeGenero.valoracion)
+    setRiesgo(datosViolenciaDeGenero.valoracion); 
   }, []);
 
   const situaciones = [

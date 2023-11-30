@@ -17,10 +17,14 @@ import { finishSignature, startSignature } from '@/api/firmaDigital.api';
 
 const firmaDigitalInitialState = {
   fileFirma: null,
-  certificado: null,
   codigo: null,
   token: null,
   blocked: false,
+  certThumb: null,
+  certContent: null,
+  toSignHash: null,
+  digestAlgorithm: null,
+  transferFile: null,
 };
 
 const items = [
@@ -55,39 +59,18 @@ export const ModalFirmaDigital = ({
 
   const pki = new LacunaWebPKI();
 
-  const accept = () => {
-    if (
-      !firmaDigitalState.token ||
-      !firmaDigitalState.certificado ||
-      !firmaDigitalState.codigo
-    )
-      return;
 
-    setFirmaDigitalState((prev) => ({ ...prev, blocked: true }));
-
-    pki
-      .signWithRestPki({
-        token: firmaDigitalState.token,
-        thumbprint: firmaDigitalState.certificado,
-      })
-      .success(async () => {
-        const body = {
-          token: firmaDigitalState.token,
-          codigo: firmaDigitalState.codigo,
-        };
-
-        await finishSignature(body);
-        setFirmaDigitalState((prev) => ({ ...prev, blocked: false }));
-        onHide();
-        execAction();
-      });
-  };
 
   const handleInputChange = (ev) => {
-    setFirmaDigitalState((prev) => ({
-      ...prev,
-      [ev.target.name]: ev.target.value,
-    }));
+    pki.readCertificate(ev.target.value).success(function (certEncoded) {
+      setFirmaDigitalState((prev) => ({
+        ...prev,
+        certThumb: ev.target.value,
+        certContent: certEncoded,
+      }));
+
+    });
+
   };
 
   const onHide = () => {
@@ -99,13 +82,9 @@ export const ModalFirmaDigital = ({
   const handleNextIndex = async () => {
     if (
       activeIndex >= 2 ||
-      (activeIndex === 1 && !firmaDigitalState.certificado)
+      (activeIndex === 1 && !firmaDigitalState.certThumb)
     ) {
       return;
-    }
-
-    if (activeIndex + 1 === 1) {
-      await startFirma();
     }
 
     setActiveIndex((prev) => prev + 1);
@@ -119,20 +98,19 @@ export const ModalFirmaDigital = ({
   };
 
   const startFirma = async () => {
-    setFirmaDigitalState((prev) => ({ ...prev, blocked: true }));
-
     if (firmaDigitalState.fileFirma) {
       const data = new FormData();
 
-      data.append('fileFirma', firmaDigitalState.fileFirma.blob);
+      data.append('fileFirma', firmaDigitalState.fileFirma);
+      data.append('data', JSON.stringify(
+        {
+          certThumb: firmaDigitalState.certThumb,
+          certContent: firmaDigitalState.certContent,
+        }
+      ))
 
       const resp = await startSignature(data);
-      const newState = {
-        token: resp.token,
-        blocked: false,
-        codigo: resp.codigo,
-      };
-      setFirmaDigitalState((prev) => ({ ...prev, ...newState }));
+      return resp;
     }
   };
 
@@ -145,6 +123,42 @@ export const ModalFirmaDigital = ({
     });
   };
 
+  const accept = async () => {
+
+    const newState = await startFirma();
+
+    setFirmaDigitalState((prev) => ({...prev, ...newState, blocked: true}))
+
+    if (
+      !newState.certThumb ||
+      !newState.toSignHash ||
+      !newState.digestAlgorithm ||
+      !newState.transferFile ||
+      !newState.codigo
+    ) return;
+
+    pki
+      .signHash({
+        token: newState.token,
+        thumbprint: newState.certThumb,
+        hash: newState.toSignHash,
+        digestAlgorithm: newState.digestAlgorithm,
+      })
+      .success(async (signature) => {
+        const body = {
+          token: newState.token,
+          codigo: newState.codigo,
+          signature,
+          transferFile: newState.transferFile,
+        };
+
+        await finishSignature(body);
+        setFirmaDigitalState((prev) => ({ ...prev, blocked: false }));
+        onHide();
+        execAction();
+      });
+  };
+
   // wrap getCetificados in useCallback to avoid infinite loop
   const getCertificados = useCallback(() => {
     pki.init({
@@ -152,7 +166,6 @@ export const ModalFirmaDigital = ({
         pki
           .listCertificates({ filter: pki.filters.isWithinValidity })
           .success((certs) => {
-            console.log(certs);
             setCertificados(
               certs?.map((c) => ({
                 label: c.subjectName,
@@ -232,7 +245,7 @@ export const ModalFirmaDigital = ({
                   id='certificado'
                   name='certificado'
                   className='w-full mt-2'
-                  value={firmaDigitalState.certificado}
+                  value={firmaDigitalState.certThumb}
                   onChange={handleInputChange}
                   options={certificados}
                   optionLabel='label'
@@ -269,6 +282,9 @@ export const ModalFirmaDigital = ({
                   type='button'
                   link
                   onClick={handleNextIndex}
+                  disabled={
+                    activeIndex === 1 && !firmaDigitalState.certThumb
+                  }
                 />
               )}
               {activeIndex === 2 && (
