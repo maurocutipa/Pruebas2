@@ -41,6 +41,21 @@ const Header_ = () => {
         );
       },
     },
+
+    {
+      template: () => {
+        return (
+          <Link to={'/denuncias'}>
+            <Button
+              className='link'
+              label='Denuncias'
+              icon='pi pi-inbox'
+              iconPos='left'
+            />
+          </Link>
+        );
+      },
+    },
   ];
 
   const start = (

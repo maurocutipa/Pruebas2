@@ -1,4 +1,4 @@
-import api from '.';
+import {internalApi} from '.';
 
 const URLS = {
   startSignature: '/restpki/start-signature',
@@ -7,7 +7,7 @@ const URLS = {
 
 export const startSignature = async (formData) => {
   try {
-    const { data } = await api.post(URLS.startSignature, formData);
+    const { data } = await internalApi.post(URLS.startSignature, formData);
 
     return data;
   } catch (error) {
@@ -17,7 +17,7 @@ export const startSignature = async (formData) => {
 
 export const finishSignature = async (body) => {
   try {
-    const { data } = await api.post(URLS.finishSignature, body);
+    const { data } = await internalApi.post(URLS.finishSignature, body);
 
     return data;
   } catch (error) {

@@ -1,20 +1,27 @@
-import api from '.';
+import {internalApi,publicApi} from '.';
 
 const URLS = {
   login: '/auth/login',
   logout: '/auth/logout',
   refresh: '/auth/refresh',
+  //parte web
+  captcha: '/captcha/captcha-status',
 };
 
 // @body: email: string, password: string
 export const login = (body) => {
-  return api.post(URLS.login, body, { withCredentials: true });
+  return internalApi.post(URLS.login, body, { withCredentials: true });
 };
 
 export const logout = () => {
-  return api.post(URLS.logout, {}, { withCredentials: true });
+  return internalApi.post(URLS.logout, {}, { withCredentials: true });
 };
 
 export const refresh = () => {
-  return api.get(URLS.refresh, { withCredentials: true });
+  return internalApi.get(URLS.refresh, { withCredentials: true });
+};
+
+//parte web
+export const captcha = (body) => {
+  return publicApi.post(URLS.captcha, body);
 };
