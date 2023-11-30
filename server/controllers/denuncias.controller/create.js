@@ -9,6 +9,24 @@ CreateController = {}
 
 //CREAR DENUNCIAS
 
+CreateController.createDenuncia = async (req, res) => {
+    try {
+        console.log(req.files);
+        console.log(req.body);
+        const data = matchedData(req);
+        const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
+
+        res.status(200).json({
+            ok: true,
+            message: 'Denuncia creada',
+            data: {data: req.body}
+        });
+    } catch (error) {
+        showError(error);
+        httpErrorHandler(res);
+    }
+}
+
 CreateController.createDenunciaGeneral = async (req, res) => {
     try {
         const data = matchedData(req);
