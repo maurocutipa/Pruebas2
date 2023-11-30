@@ -58,7 +58,7 @@ export const TelefonosTable = ({ telefonos, eliminarTelefono }) => {
 
   return (
     <>
-      <Button label='Chota' onClick={e=> console.log(marcas)}></Button>
+      {/* <Button label='Chota' onClick={e=> console.log(marcas)}></Button> */}
       <DataTable value={telefonos} tableStyle={{ minWidth: '50rem' }} className='shadow-3'>
         {columns.map((col) => (
           <Column key={col.field} field={col.field} header={col.header} body={col.field === 'acciones' ? accionesTemplate : col.field === 'idDenunciaCelularesMarca'? marcasTemplate:null}

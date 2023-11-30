@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext,memo } from 'react';
 import { Checkbox } from 'primereact/checkbox';
 import { Divider } from 'primereact/divider';
 import { Button } from 'primereact/button';
 import { Timeline } from 'primereact/timeline';
 
-import {useAppSelector} from '@/store/hooks'
+import { useAppSelector } from '@/store/hooks'
 
 import '../../components/styles/Denuncias.styles.scss';
 
@@ -19,7 +19,7 @@ import { DatosAbigeato } from '../../models/DatosAbigeato';
 import { Dropdown } from 'primereact/dropdown';
 import { SelectButton } from 'primereact/selectbutton';
 import { InputText } from 'primereact/inputtext';
-import BusquedaDePersonas from '../../components/pages/Denuncias/DenunciasEspeciales/BusquedaDePersonas';
+import { BusquedaDePersonas } from '../../components/pages/Denuncias/DenunciasEspeciales/BusquedaDePersonas';
 import { getBarrios, getDepartamentos, getLocalidades, getNacionalidades, getProvincias } from '../../api/adicional.api';
 
 const tiposDenuncia = [
@@ -54,8 +54,7 @@ const OtrosFormContext = React.createContext([]);
 const DenunciaContext = React.createContext(0);
 
 export default function Denuncia() {
-  const {data} = useAppSelector(state =>state.data);
-  console.log(data);
+  const { data } = useAppSelector(state => state.data);
 
   const [tosValue, setTosValue] = useState(false);
   const [flagrancia, setFlagrancia] = useState(0);
@@ -68,6 +67,8 @@ export default function Denuncia() {
 
   //Modificar Primer formulario
   const [victimas, setVictimas] = useState([]);
+  const [existeTestigoStr, setExisteTestigoStr] = useState('Si');
+
   const [denunciados, setDenunciados] = useState([]);
   const [testigos, setTestigos] = useState([]);
   const [funcionGrado, setFuncionGrado] = useState('');
@@ -247,7 +248,7 @@ export default function Denuncia() {
     {
       status: 'Anexo Violencia Intrafamiliar',
       icon: 'pi pi-users',
-      color: 'bg-black', 
+      color: 'bg-black',
     },
     { status: 'Confirmacion', icon: 'pi pi-check', color: 'bg-black' },
   ];
@@ -308,7 +309,7 @@ export default function Denuncia() {
     return (
       <span
         className={`flex align-items-center justify-content-center text-white border-circle z-1 shadow-1 ${item.color} px-4 mx-2`}
-        style={{height: '60px'}}
+        style={{ height: '60px' }}
       >
         <i className={item.icon}></i>
       </span>
@@ -383,6 +384,7 @@ export default function Denuncia() {
     den.anonimo = anonimo;
     den.datosTestigo = conoceTestigos;
     den.datosDenunciado = conoceDenunciado;
+    setExisteTestigoStr(existeTestigo);
     if (existeTestigo == 'Si')
       den.testigo = 1;
     else
@@ -572,6 +574,7 @@ export default function Denuncia() {
                 denunciantes={denunciantes}
                 denunciados={denunciados}
                 testigos={testigos}
+                existeTestigo={denuncia.existeTestigo}
               />
             </div>
           </div>
@@ -936,7 +939,6 @@ export default function Denuncia() {
         if (tipoValue != 18) {
           return (
             <div id='paso2'>
-              {tipoValue}
               <div id='form' className='mx-3 mb-5 mt-3'>
                 <Button
                   icon='pi pi-angle-left'
@@ -968,31 +970,252 @@ export default function Denuncia() {
                   denunciantes={denunciantes}
                   denunciados={denunciados}
                   testigos={testigos}
+                  existeTestigoStr={existeTestigoStr}
+                  setExisteTestigoStr={setExisteTestigoStr}
                 />
               </div>
             </div>
           );
         } else {
           // Formulario Busqueda de Personas
-          return (<BusquedaDePersonas></BusquedaDePersonas>)
+          return (<div><TraerForm /></div>)
         }
       case 3:
-
+        return (
+          <div id='paso3'>
+            <div id='form' className='mx-3 mb-5 mt-3'>
+              <Button
+                icon='pi pi-angle-left'
+                label='Regresar al Paso Anterior'
+                className='text-lightblue-mpa'
+                link
+                onClick={(e) => setPaso(paso - 1)}
+              />
+              <div className='hidden md:block mx-7'>
+                <Timeline
+                  value={
+                    tipoValue == 5
+                      ? eventViolenciaGenero3
+                      : tipoValue == 7
+                        ? eventViolenciaIntrafamiliar3
+                        : event3
+                  }
+                  layout='horizontal'
+                  align='bottom'
+                  marker={customizedMarker}
+                  content={(item) => item.status}
+                />
+              </div>
+              <FormularioDenuncia
+                finalizarDatosDenuncia={finalizarDatosDenuncia}
+                changePaso={changePaso}
+                denuncia={denuncia}
+                delitoSexual={delitoSexual}
+                setDelitoSexual={setDelitoSexual}
+                maltratoAnimal={maltratoAnimal}
+                setMaltratoAnimal={setMaltratoAnimal}
+                abigeato={abigeato}
+                setAbigeato={setAbigeato}
+              />
+            </div>
+          </div>
+        );
       case 4:
+        if (tipoValue == 5) {
+          //el tipo de denuncia es Violencia De Género
+          return (
+            <div id='paso4ViolenciaDeGenero'>
+              <div id='form' className='mx-3 mb-5 mt-3'>
+                <Button
+                  icon='pi pi-angle-left'
+                  label='Regresar al Paso Anterior'
+                  className='text-lightblue-mpa'
+                  link
+                  onClick={(e) => setPaso(paso - 1)}
+                />
+                <div className='hidden md:block mx-7'>
+                  <Timeline
+                    value={eventViolenciaGenero4}
+                    layout='horizontal'
+                    align='bottom'
+                    marker={customizedMarker}
+                    content={(item) => item.status}
+                  />
+                </div>
+                <ViolenciaDeGenero
+                  changePaso={changePaso}
+                  anexoViolenciaGenero={anexoViolenciaGenero}
+                  setAnexoViolenciaGenero={setAnexoViolenciaGenero}
+                />
+              </div>
+            </div>
+          );
+        } else if (tipoValue == 7) {
+          //violencia intrafamiliar
+          return (
+            <div id='paso4ViolenciaIntrafamiliar'>
+              <div id='form' className='mx-3 mb-5 mt-3'>
+                <Button
+                  icon='pi pi-angle-left'
+                  label='Regresar al Paso Anterior'
+                  className='text-lightblue-mpa'
+                  link
+                  onClick={(e) => setPaso(paso - 1)}
+                />
+                <div className='hidden md:block mx-7'>
+                  <Timeline
+                    value={eventViolenciaIntrafamiliar4}
+                    layout='horizontal'
+                    align='bottom'
+                    marker={customizedMarker}
+                    content={(item) => item.status}
+                  />
+                </div>
+                <ViolenciaIntrafamiliar
+                  changePaso={changePaso}
+                  paso={paso}
+                  anexoViolenciaIntrafamiliar={anexoViolenciaIntrafamiliar}
+                  setAnexoViolenciaIntrafamiliar={
+                    setAnexoViolenciaIntrafamiliar
+                  }
+                />
+              </div>
+            </div>
+          );
+        } else {
+          //no es violencia de genero ni intrafamiliar (muestra revision)
+          return (
+            <div id='paso4Revision'>
+              <div id='form' className='mx-3 mb-5 mt-3'>
+                <Button
+                  icon='pi pi-angle-left'
+                  label='Regresar al Paso Anterior'
+                  className='text-lightblue-mpa'
+                  link
+                  onClick={(e) => setPaso(paso - 1)}
+                />
+                <div className='hidden md:block md:mx-7'>
+                  <Timeline
+                    value={event4}
+                    layout='horizontal'
+                    align='bottom'
+                    marker={customizedMarker}
+                    content={(item) => item.status}
+                  />
+                </div>
+                <Revision
+                  //anonimo={anonimo} 
+                  strDenuncia={str}
+                  tipoDenuncia={tipoValue}
+                  denuncia={denuncia} //anonimo se envia dentro de denuncia
+                  intervinientes={intervinientes}
+                  denunciantes={denunciantes}
+                  victimasRelaciones={victimasRelaciones}
+                  fotosDni={fotosDni}
+                  paso={paso}
+                  changePaso={changePaso}
+                  adjuntos={adjuntos}
+                />
+              </div>
+            </div>
+          );
+        }
+      case 5:
+        if (tipoValue == 5) {
+          return (
+            <div id='paso5Revision'>
+              <div id='form' className='mx-3 mb-5 mt-3'>
+                <Button
+                  icon='pi pi-angle-left'
+                  label='Regresar al Paso Anterior'
+                  className='text-lightblue-mpa'
+                  link
+                  onClick={(e) => setPaso(paso - 1)}
+                />
+                <div className='hidden md:block md:mx-7'>
+                  <Timeline
+                    value={eventViolenciaGenero5}
+                    layout='horizontal'
+                    align='bottom'
+                    marker={customizedMarker}
+                    content={(item) => item.status}
+                  />
+                </div>
+                <Revision
+                  //anonimo={null}
+                  strDenuncia={str}
+                  tipoDenuncia={tipoValue}
+                  denuncia={denuncia} //anonimo se envia dentro de denuncia
+                  intervinientes={intervinientes}
+                  denunciantes={denunciantes}
+                  victimasRelaciones={victimasRelaciones}
+                  fotosDni={fotosDni}
+                  anexoViolenciaGenero={anexoViolenciaGenero}
+                  paso={paso}
+                  changePaso={changePaso}
+                  adjuntos={adjuntos}
+                />
+              </div>
+            </div>
+          );
+        } else if (tipoValue == 7) {
+          return (
+            <div id='paso5Revision'>
+              <div id='form' className='mx-3 mb-5 mt-3'>
+                <Button
+                  icon='pi pi-angle-left'
+                  label='Regresar al Paso Anterior'
+                  link
+                  onClick={(e) => setPaso(paso - 1)}
+                />
+                <div className='hidden md:block md:mx-7'>
+                  <Timeline
+                    value={eventViolenciaIntrafamiliar5}
+                    layout='horizontal'
+                    align='bottom'
+                    marker={customizedMarker}
+                    content={(item) => item.status}
+                  />
+                </div>
+                <Revision
+                  //anonimo={anonimo}
+                  strDenuncia={str}
+                  tipoDenuncia={tipoValue}
+                  denuncia={denuncia} //anonimo se envia dentro de denuncia
+                  intervinientes={intervinientes}
+                  denunciantes={denunciantes}
+                  victimasRelaciones={victimasRelaciones}
+                  fotosDni={fotosDni}
+                  denunciaIntrafamiliar={anexoViolenciaIntrafamiliar}
+                  paso={paso}
+                  changePaso={changePaso}
+                  adjuntos={adjuntos}
+                />
+              </div>
+            </div>
+          );
+        } else {
+          return <div>Error</div>;
+        }
 
-
+      default:
+        return <div>Error</div>;
     }
   }
 
+  const TraerForm = memo(() => {
+    return (<BusquedaDePersonas></BusquedaDePersonas>)
+  })
+
   return (
     <>
-      <DenunciaContext.Provider value={{ tipoValue, str, nacionalidades, provincias, departamentos, localidades, barrios}}>
+      <DenunciaContext.Provider value={{ tipoValue, str, nacionalidades, provincias, departamentos, localidades, barrios }}>
         <RoboHurtoContext.Provider value={{ telefonos, automoviles, bicicletas, autopartes, documentos, cheques, tarjetas, otros, selectedOptionsRoboHurto, setTelefonos, setAutomoviles, setBicicletas, setAutopartes, setDocumentos, setCheques, setTarjetas, setOtros, setSelectedOptionsRoboHurto }}>
           <IncidentesVialesContext.Provider value={{ automoviles, setAutomoviles }}>
             <DelitosContraPersonasContext.Provider value={{ lesiones, homicidio, femicidio, setLesiones, setHomicidio, setFemicidio }}>
-              <OtrosFormContext.Provider value={{ delitoSexual, setDelitoSexual, validacion, setValidacion, maltratoAnimal, setMaltratoAnimal, danos, setDanos,validaDanos,setValidaDanos}}>
+              <OtrosFormContext.Provider value={{ delitoSexual, setDelitoSexual, validacion, setValidacion, maltratoAnimal, setMaltratoAnimal, danos, setDanos, validaDanos, setValidaDanos }}>
                 {/* <div id='container'>{devolverPaso()}</div> */}
-                 <div id='container'>{devolverDenunciaInterna()}</div> 
+                <div id='container'>{devolverDenunciaInterna()}</div>
               </OtrosFormContext.Provider>
             </DelitosContraPersonasContext.Provider>
           </IncidentesVialesContext.Provider>
