@@ -3,6 +3,7 @@ import {useParams} from 'react-router-dom'
 
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { getLegajoThunk } from '@/store/legajo/legajos.thunks';
+import { HeaderLegajo } from '../../components/pages/Legajo/HeaderLegajo';
 
 export const Legajo = () => {
 
@@ -19,7 +20,7 @@ export const Legajo = () => {
 
   return (
     <div className='px-8 py-4'>
-      <h1 className='text-center mb-6'>Legajo: {currentLegajo?.idLegajo}</h1>
+      <HeaderLegajo />
     </div>
   );
 };
