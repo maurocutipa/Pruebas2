@@ -125,7 +125,7 @@ router.post(
 router.post(
   '/busqueda-persona-hecho-update/:id',
   validateUpdateBusquedaPersona,
-  DenunciasController.updateDenunciaBusquedaPersonaHecho
+  DenunciasController.updateDenunciaBusquedaPersona
 );
 
 module.exports = router;
