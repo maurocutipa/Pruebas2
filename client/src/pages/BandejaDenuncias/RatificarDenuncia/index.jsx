@@ -90,7 +90,6 @@ export const RatificarDenuncia = () => {
                 />
 
                 <FirmaYTOS
-                  id={id}
                   firmaDenunciante={firmaDenunciante}
                   firmaFuncionario={firmaFuncionario}
                   estaRatificada={estaRatificada}
