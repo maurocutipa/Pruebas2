@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useAppSelector } from '@/store/hooks';
 import ReCAPTCHA from 'react-google-recaptcha';
 import MapView from './pages/Denuncias/templates/MapView';
 import { Button } from 'primereact/button';
@@ -19,6 +20,8 @@ import { captcha } from '../api/auth.api';
 import { useNavigate } from 'react-router-dom';
 
 export default function FormularioDenunciante(props) {
+  const { data } = useAppSelector(state => state.data);
+
   const navigate = useNavigate();
 
   const [dialogEnviando, setDialogEnviando] = useState(false);
@@ -360,6 +363,10 @@ export default function FormularioDenunciante(props) {
               ...props.denuncia?.delitoSexual,
               ...props.denuncia?.maltratoAnimal,
               idTipoDenuncia: props.strDenuncia,
+
+              flagrancia:props.flagrancia,
+              seccional:props.seccional,
+              funcionGrado:props.funcionGrado,
             };
             denunciaCompleta = {
               denuncia: datDen,
@@ -744,16 +751,26 @@ export default function FormularioDenunciante(props) {
             </div>
 
             <div className='mb-4'>
-              <div className='flex justify-content-center flex-wrap'>
-                <div className='flex align-items-center justify-content-center text-lg w-full md:w-6 mb-2 md:mb-0'>
+              <div className="grid">
+                <div className="col-12 md:col-6 text-lg">
                   <span className='font-bold'>Fecha:&nbsp;</span>
-                  {new Date().toLocaleDateString() +
-                    ' ' +
-                    new Date().toLocaleTimeString()}
+                  {new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()}
                 </div>
-                <div className='flex align-items-center justify-content-center text-lg w-full md:w-6'>
+                <div className="col-12 md:col-6 text-lg">
                   <span className='font-bold'>Tipo:&nbsp;</span>
                   {props.strDenuncia}
+                </div>
+                <div className="col-12 md:col-6 text-lg">
+                <span className='font-bold'>Flagrancia:&nbsp;</span>
+                  {props.flagrancia===1?'Si':'No'}
+                </div>
+                <div className="col-12 md:col-6 text-lg">
+                <span className='font-bold'>Seccional:&nbsp;</span>
+                  {data.seccionales.find(sec => sec.idSeccional===props.seccional).seccional}
+                </div>
+                <div className="col-12 md:col-6 text-lg">
+                  <span className='font-bold'>Funcion y grado:&nbsp;</span>
+                  {props.funcionGrado}
                 </div>
               </div>
             </div>

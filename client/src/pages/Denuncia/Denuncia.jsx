@@ -4,7 +4,7 @@ import { Divider } from 'primereact/divider';
 import { Button } from 'primereact/button';
 import { Timeline } from 'primereact/timeline';
 
-import { useAppSelector } from '@/store/hooks'
+import { useAppSelector } from '@/store/hooks';
 
 import '../../components/styles/Denuncias.styles.scss';
 
@@ -917,12 +917,12 @@ export default function Denuncia() {
                   </div>
                   <div className='field col'>
                     <span className='form-label'>Flagrancia</span>
-                    <SelectButton id="flagrancia" name="flagrancia" value={flagrancia} onChange={(e) => setFlagrancia(e.value)} options={siNo} className='w-full md:w-10' unselectable={false} optionLabel="name" pt={{ button: ({ context }) => ({ className: context.selected ? 'btn-blue-mpa' : undefined, }), }} />
+                    <SelectButton id="flagrancia" name="flagrancia" value={flagrancia} onChange={(e) => {setFlagrancia(e.value)}} options={siNo} className='w-full md:w-10' unselectable={false} optionLabel="name" pt={{ button: ({ context }) => ({ className: context.selected ? 'btn-blue-mpa' : undefined, }), }} />
                   </div>
                   <div className="field col-12">
                     <label className='form-label'>Seccional</label>
                     {/* <Dropdown className='w-full' placeholder='Seleccione una Seccional' options={seccionales} optionLabel='name' optionValue='value' value={seccional} onChange={e => setSeccional(e.target.value)}></Dropdown> */}
-                    <Dropdown className='w-full' placeholder='Seleccione una Seccional' filter options={data.seccionales} optionLabel='seccional' optionValue='idSeccional' value={seccional} onChange={e => setSeccional(e.target.value)}></Dropdown>
+                    <Dropdown className='w-full' placeholder='Seleccione una Seccional' filter options={data.seccionales} optionLabel='seccional' optionValue='idSeccional' value={seccional} onChange={e => {setSeccional(e.target.value)}}></Dropdown>
                   </div>
                   <div className="field col-12">
                     <label className='form-label'>Funcion y Grado</label>
@@ -1117,6 +1117,10 @@ export default function Denuncia() {
                   paso={paso}
                   changePaso={changePaso}
                   adjuntos={adjuntos}
+
+                  flagrancia={flagrancia}
+                  seccional={seccional}
+                  funcionGrado={funcionGrado}
                 />
               </div>
             </div>
@@ -1156,6 +1160,10 @@ export default function Denuncia() {
                   paso={paso}
                   changePaso={changePaso}
                   adjuntos={adjuntos}
+
+                  flagrancia={flagrancia}
+                  seccional={seccional}
+                  funcionGrado={funcionGrado}
                 />
               </div>
             </div>
@@ -1192,6 +1200,10 @@ export default function Denuncia() {
                   paso={paso}
                   changePaso={changePaso}
                   adjuntos={adjuntos}
+
+                  flagrancia={flagrancia}
+                  seccional={seccional}
+                  funcionGrado={funcionGrado}
                 />
               </div>
             </div>
