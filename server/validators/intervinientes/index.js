@@ -9,6 +9,7 @@ const {
   validateUpdateInterviniente,
   validateUpdateIntervinienteVitima,} = require("./intervinientes.update")
 
+const validateMain = require("./main")
   
 module.exports = {
   validateCreateInterviniente,
@@ -17,4 +18,5 @@ module.exports = {
   validateUpload,
   validateUpdateInterviniente,
   validateUpdateIntervinienteVitima,
+  validateMain
 }

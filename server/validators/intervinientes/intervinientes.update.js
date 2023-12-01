@@ -1,5 +1,5 @@
 const { check, body } = require("express-validator")
-const validateHelper = require('../utils/validateHelper')
+const validateHelper = require('@utils/validateHelper')
 
 const validateUpdateInterviniente = [
     body("nombre").
