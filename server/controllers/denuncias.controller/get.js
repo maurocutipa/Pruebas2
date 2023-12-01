@@ -490,10 +490,43 @@ GetController.getDenunciaById = async (req, res) => {
         ma.abuso_animal as abusoAnimal, 
         ma.abuso_funcionario as abusoFuncionario
         FROM denuncia_maltrato_animal ma
-        WHERE ma.id_denuncia = ?
-    `
+        WHERE ma.id_denuncia = ?`
     const [datosDenunciaMaltratoAnimal] = await queryHandler(query, [id]);
     // =========================== Fin Querys Maltrato Animal =============================
+
+    // ========================= Querys Delitos contra la persona =========================
+    query = `
+      SELECT
+        dp.id_denuncia_delitos_personas as idDenunciaDelitosPersonas, 
+        dp.id_denuncia as idDenuncia, 
+        dp.femicidio as femicidio, 
+        dp.lesiones as lesiones, 
+        dp.homicidio as homicidio
+        FROM denuncia_delitos_personas dp
+        WHERE dp.id_denuncia = ?`
+    const [datosDenunciaDelitosPersonas] = await queryHandler(query, [id]); 
+    // ========================= Fin de querys delitos contra personas =====================
+
+    // ====================================== Querys daños =================================
+    query = `
+      SELECT 
+        dan.id_denuncia_danos as idDenunciaDanos, 
+        dan.id_denuncia as idDenuncia, 
+        dan.dano_animal as danoAnimal, 
+        dan.dano_cosa_material as danoCosaMaterial, 
+        dan.dano_inmueble as danoInmueble, 
+        dan.dano_sistema_informatico as danoSistemaInformatico, 
+        dan.consecuencia_dano as consecuenciaDano, 
+        dan.consecuencia_destruccion as consecuenciaDestruccion, 
+        dan.consecuencia_detalles_otro as consecuenciaDetallesOtro, 
+        dan.consecuencia_inutilizacion as consecuenciaInutilizacion, 
+        dan.consecuencia_desaparicion as consecuenciaDesaparicion,
+        dan.consecuencia_otro as consecuenciaOtro,
+        dan.pertenencia as pertenencia
+        FROM denuncia_danos dan
+        WHERE dan.id_denuncia = ?`
+    const [datosDenunciaDanos] = await queryHandler(query, [id]); 
+    // =================================== Fin Querys daños =================================
 
     res.status(200).json({
       message: `Denuncia con el id: ${id}`,
@@ -525,6 +558,8 @@ GetController.getDenunciaById = async (req, res) => {
           detallesEspeciesDenunciaAbigeato
         },
         datosDenunciaMaltratoAnimal: datosDenunciaMaltratoAnimal,
+        datosDenunciaDelitosPersonas: datosDenunciaDelitosPersonas,
+        datosDenunciaDanos: datosDenunciaDanos
       },
     });
   } catch (error) {
