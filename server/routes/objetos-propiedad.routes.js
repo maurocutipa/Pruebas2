@@ -21,13 +21,26 @@ const router = Router();
 //MAIN MIDDLEWARES
 router.use('/',verifyJWT, /* doubleCsrfProtection, csrfErrorHandler, */)
 
-router.post('/telefonos', validateTelefonos, ObjetosPropiedadController.createTelefonos)
-router.post('/automoviles', validateAutomoviles, ObjetosPropiedadController.createAutomoviles)
-router.post('/bicicletas', validateBicicletas, ObjetosPropiedadController.createBicicletas)
-router.post('/cheques', validateCheques, ObjetosPropiedadController.createCheques)
-router.post('/documentacion', validateDocumentacion, ObjetosPropiedadController.createDocumentacion)
-router.post('/otro', validateOtro, ObjetosPropiedadController.createOtro)
-router.post('/tarjetas', validateTarjetas, ObjetosPropiedadController.createTarjetas)
-router.post('/autopartes', validateAutopartes, ObjetosPropiedadController.createAutopartes)
+//crear 
+router.post('/telefono-create', validateTelefonos, ObjetosPropiedadController.createTelefonos)
+router.post('/automovile-create', validateAutomoviles, ObjetosPropiedadController.createAutomoviles)
+router.post('/bicicleta-create', validateBicicletas, ObjetosPropiedadController.createBicicletas)
+router.post('/cheque-create', validateCheques, ObjetosPropiedadController.createCheques)
+router.post('/documentacion-create', validateDocumentacion, ObjetosPropiedadController.createDocumentacion)
+router.post('/otro-create', validateOtro, ObjetosPropiedadController.createOtro)
+router.post('/tarjeta-create', validateTarjetas, ObjetosPropiedadController.createTarjetas)
+router.post('/autoparte-create', validateAutopartes, ObjetosPropiedadController.createAutopartes)
+
+//editar
+
+router.post('/telefono-update/:id',validateTelefonos,ObjetosPropiedadController.updateTelefonos)
+router.post('/automovile-update', validateAutomoviles, ObjetosPropiedadController.updateAutomoviles)
+router.post('/bicicleta-update', validateBicicletas, ObjetosPropiedadController.updateBicicletas)
+router.post('/cheque-update', validateCheques, ObjetosPropiedadController.updateCheques)
+router.post('/documentacion-update', validateDocumentacion, ObjetosPropiedadController.updateDocumentacion)
+router.post('/otro-update', validateOtro, ObjetosPropiedadController.updateOtro)
+router.post('/tarjeta-update', validateTarjetas, ObjetosPropiedadController.updateTarjetas)
+router.post('/autoparte-update', validateAutopartes, ObjetosPropiedadController.updateAutopartes)
+
 
 module.exports = router;
