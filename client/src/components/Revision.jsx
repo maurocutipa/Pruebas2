@@ -429,8 +429,9 @@ export default function FormularioDenunciante(props) {
 
             // const response = await api.0<
             axios
-              .post('http://192.200.0.53:3000/api/denuncias/create', dataPost, {
+              .post('http://localhost:4000/api/denuncias/create', dataPost, {
                 headers: { 'Content-Type': 'multipart/form-data' },
+                withCredentials: true
               })
               .then((res) => {
                 if (props.denunciaIntrafamiliar != null) {
