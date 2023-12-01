@@ -37,7 +37,7 @@ CreateController.createDenuncia = async (req, res) => {
 
     const newBody = new FormData();
     files.forEach((file) => {
-      newBody.append('file', file);
+      newBody.append(file.fieldname, file);
     });
     newBody.append('data', JSON.stringify(req.body));
 
