@@ -8,6 +8,9 @@ const showError = require('@utils/showError')
 
 const IntervinienteController = {}
 
+
+//-------------crear intervininete en ver denuncia
+
 IntervinienteController.createInterviniente  = async (req, res) => {
     try {
     
@@ -98,6 +101,51 @@ IntervinienteController.uploadFile = async (req,res) => {
     }
 }
 
+//---------------update intervininete en ver denuncia
 
+IntervinienteController.updateInterviniente  = async (req, res) => {
+    try {
+    
+        const data = matchedData(req)
+        const keys = Object.keys(data).map(key => convertToSnakeCase(key))
+        const values = Object.values(data)
+        
+        const { id } = req.params;
+
+        console.log(data)
+        
+        const query = `UPDATE interviniente SET ${keys.map((key) => `${key} = ?`).join(', ')} WHERE id = ${id}`;
+       
+        const queryResult = await queryHandler(query,values);
+
+        res.status(200).json({
+            message: 'Interviniente actualizado correctamente',
+            id: queryResult.insertId
+        })
+    } catch (error) {
+        showError(error)
+        httpErrorHandler(res,500,'500 Serve Error', false);
+    }
+}
+
+IntervinienteController.updateIntervinienteVictima  = async (req, res) => {
+    try {
+    
+        const data = matchedData(req)
+        const keys = Object.keys(data).map(key => convertToSnakeCase(key))
+        const values = Object.values(data)
+        
+        const query = `UPDATE denuncia_victima SET ${keys.map((key) => `${key} = ?`).join(', ')} WHERE id = ${id}`;
+
+        const queryResult = await queryHandler(query,values);
+
+        res.status(200).json({
+            message: 'relacion victima actualizado correctamente',
+        })
+    } catch (error) {
+        showError(error)
+        httpErrorHandler(res,500,'500 Serve Error', false);
+    }
+}
 
 module.exports = IntervinienteController;

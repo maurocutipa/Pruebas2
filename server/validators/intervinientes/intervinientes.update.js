@@ -55,8 +55,6 @@ const validateUpdateInterviniente = [
 ]
 
 const validateUpdateIntervinienteVitima = [
-  body("idDenuncia").optional().isNumeric(),
-  body("idInterviniente").optional().isNumeric(),
   body("conocimientoVictima").optional().isBoolean(),
   body("vinculoVictima").optional().isIn(['Padre','Madre','Hijo/a','Hermano/a','Pareja','ExPareja','Familiar','Compañero','Otro']),
   body("detalleVinculo").optional(),
