@@ -1,4 +1,4 @@
-import {publicApi} from '.';
+import {internalApi, publicApi} from '.';
 
 const URLS = {
   getProvincias: '/adicional/provincias',
@@ -6,6 +6,7 @@ const URLS = {
   getNacionalidades: '/adicional/nacionalidades',
   getBarrios: (id) => `/adicional/barrios/${id}`,
   getLocalidades: (id) => `/adicional/localidades/${id}`,
+  getPadronElectoral: (numDni) => `/padron/dni/${numDni}`
 };
 
 export const getProvincias = () => {
@@ -26,4 +27,8 @@ export const getBarrios = (id) => {
 
 export const getLocalidades = (id) => {
   return publicApi.get(URLS.getLocalidades(id));
+};
+
+export const getPadronElectoral = (numDni) => {
+  return internalApi.get(URLS.getPadronElectoral(numDni));
 };

@@ -8,7 +8,7 @@ import { classNames } from "primereact/utils";
 import MapTemplate from "./MapTemplate";
 
 import { useEffect } from "react";
-import { getBarrios, getDepartamentos, getLocalidades, getNacionalidades, getProvincias } from "../../../../api/adicional.api";
+import { getBarrios, getDepartamentos, getLocalidades, getNacionalidades, getProvincias,getPadronElectoral} from "../../../../api/adicional.api";
 import { useFormik } from "formik";
 import { PersonaDenunciante } from "../../../../models";
 import { Divider } from "primereact/divider";
@@ -385,11 +385,9 @@ export const FormVictimaDenunciante = (props) => {
                 input = <Dropdown inputId={id} name={id}
                     value={form.values[id]}
                     options={array}
-                    onBlur={form.handleBlur}
+                    onBlur={(e)=>{form.handleBlur(e)}}
                     placeholder="Selecciona una opcion"
-                    onChange={(e) => {
-                        form.setFieldValue(id, e.value);
-                    }}
+                    onChange={(e)=>{form.setFieldValue(id, e.value)}}
                     className={classNames('w-full', { 'p-invalid': isFormFieldInvalid(id) })} />
                 break;
             case "DropdownValue":
@@ -413,7 +411,16 @@ export const FormVictimaDenunciante = (props) => {
             case "InputText":
                 input = <InputText id={id} name={id}
                     value={form.values[id]}
-                    onBlur={form.handleBlur}
+                    onBlur={(e)=>{
+                        form.handleBlur(e);
+                        if(id==='numeroIdentificacion'){
+                            console.log(e);
+
+                            getPadronElectoral(8205840).then(({ data }) => {
+                                console.log(data);
+                            });
+                        }
+                    }}
                     onChange={(e) => { form.setFieldValue(id, e.target.value); }}
                     className={classNames('w-full', { 'p-invalid': isFormFieldInvalid(id) })} />
                 break;
