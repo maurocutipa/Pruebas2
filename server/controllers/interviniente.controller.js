@@ -3,7 +3,11 @@ const queryHandler = require('../utils/queryHandler');
 const safeConcatQuery = require('../utils/safeConcatQuery');
 const convertToSnakeCase = require('../utils/convertToSnakeCase')
 const { matchedData } = require('express-validator');
+const dayjs = require('dayjs')
 const showError = require('@utils/showError')
+const axios = require('axios')
+const { interntalAPI } = require('@config/http')
+const oneToManyHelper = require('@utils/oneToManyHelper')
 
 
 const IntervinienteController = {}
@@ -11,9 +15,54 @@ const IntervinienteController = {}
 
 //-------------crear intervininete en ver denuncia
 
+IntervinienteController.mainIntervinienteCreate = async (req, res, next) => {
+    try {
+        
+        let {interviniente,victimaRelacion,idDenuncia} = matchedData(req)
+        //formateo de fechas y horas
+        interviniente.fechaNacimiento = dayjs(interviniente.fechaNacimiento).format('YYYY-MM-DD')
+
+        //nose porque no anda
+
+        const intData = await interntalAPI.post('/intervinientes/interviniente-create', interviniente)
+ 
+        console.log(intData.data.id)
+
+        /*
+        const vicRel = await interntalAPI.post('/intervinientes/interviniente-victima-create', {
+            ...victimaRelacion,
+            idDenuncia,
+            idInterviniente: intData.data.id
+        })
+
+        const denIntData = await interntalAPI.post('/intervinientes/interviniente-denuncia-create', {
+            idDenuncia,
+            idInterviniente: intData.data.id,
+        })
+
+        */
+
+        res.status(200).json({
+            message: 'Interviniente creado completo',
+            id: queryResult.insertId
+        })
+
+    
+    } catch (error) {
+        if (error instanceof axios.AxiosError) {
+            showError(error.response.statusText + ' ' + error.request.path)
+            res.status(error.response.status).json(error.response.data)
+        }
+        else {
+            showError(error)
+            httpErrorHandler(res, 500, "500 SERVER ERROR", false, error.message)
+        }
+    }
+}
+
 IntervinienteController.createInterviniente  = async (req, res) => {
     try {
-    
+
         const data = matchedData(req)
         const keys = Object.keys(data).map(key => convertToSnakeCase(key))
         const values = Object.values(data)
