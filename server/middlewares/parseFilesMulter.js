@@ -2,6 +2,6 @@ const multer = require('multer');
 
 const memStorage = multer.memoryStorage()
 
-const uploadfile = multer({ storage: memStorage }).any()
+const uploadfileMem = multer({ storage: memStorage }).any()
 
-module.exports = { uploadFileMem }
+module.exports = { uploadfileMem }

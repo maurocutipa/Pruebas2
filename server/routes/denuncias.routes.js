@@ -33,6 +33,7 @@ const {
 
 const verifyJWT = require('../middlewares/verifyJWT');
 const { uploadFileMem } = require('../config/restpki.storage');
+const { uploadfileMem } = require('../middlewares/parseFilesMulter');
 
 //MAIN MIDDLEWARES
 //router.use('/', verifyJWT /* doubleCsrfProtection, csrfErrorHandler, */);
@@ -48,7 +49,7 @@ router.delete('/delete/:id', DenunciasController.deleteDenuncia);
 router.patch('/ratificar-denuncia/:id', DenunciasController.ratificarDenuncia);
 router.get('/esta-ratificada/:id', DenunciasController.estaRatificada);
 
-router.post('/create', uploadFileMem ,ParseDataMiddleware, DenunciasController.createDenuncia)
+router.post('/create', uploadfileMem ,ParseDataMiddleware, DenunciasController.createDenuncia)
 
 
 //-----------------------------------EDITAR DENUNCIAS-----------------------------------------------
