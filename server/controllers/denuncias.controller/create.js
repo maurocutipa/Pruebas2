@@ -13,6 +13,7 @@ CreateController = {};
 CreateController.createDenuncia = async (req, res) => {
   try {
     //console.log(req.body);
+    const denuncia = req.body.denuncia;
 
     // a function to convert buffer to file
     // const files = req.files.map((f) => {
@@ -27,7 +28,18 @@ CreateController.createDenuncia = async (req, res) => {
       const blob = new Blob([f.buffer], { type: f.mimetype });
       return blob;
     }); */
+    let query = `
+        SELECT 
+            CONCAT(u.nombre, ' ', u.apellido) AS nombreCompleto
+        FROM usuarios u
+        WHERE id_usuario = ?
+    `;
 
+    const [usuario] = await queryHandler(query, [req.idUsuario]);
+
+    console.log(usuario.nombreCompleto);
+
+    return;
 
     const newBody = new FormData();
     req.files?.forEach((file) => {
@@ -38,11 +50,32 @@ CreateController.createDenuncia = async (req, res) => {
     });
     newBody.append('data', JSON.stringify(req.body));
 
-    await interntalAPI.post('/denuncias/create', newBody, {
+    const { data } = await interntalAPI.post('/denuncias/create', newBody, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
 
-    // a function to convert buffer to file
+    query = `
+        UPDATE denuncia
+        SET id_seccional = ?,
+            realizacion = 'PRE',
+            id_usuario = ?,
+            funcion_grado = ?,
+            flagrancia = ?,
+            firma_denunciante = ?,
+            firma_autoridad = ?
+        WHERE id_denuncia = ?
+    `;
+    const values = [
+      denuncia.seccional,
+      req.idUsuario,
+      denuncia.funcionGrado,
+      denuncia.flagrancia,
+      0,
+      0,
+      data.idDenuncia,
+    ];
+    const resp = await queryHandler(query, values);
+    console.log(resp);
 
     res.status(200).json({
       ok: true,
