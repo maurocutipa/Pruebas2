@@ -1,7 +1,10 @@
 const { Router } = require('express');
 
 const DenunciasController = require('../controllers/denuncias.controller');
-const { mainDenunciaCreate, mainDenunciaUpdate } = require('../controllers/main.controller');
+const {
+  mainDenunciaCreate,
+  mainDenunciaUpdate,
+} = require('../controllers/main.controller');
 const {
   doubleCsrfProtection,
   csrfErrorHandler,
@@ -17,7 +20,7 @@ const {
   validateUpdateGeneral,
   validateUpdateGenero,
   validateUpdateBusquedaPersona,
-  validateUpdateAbigeato, 
+  validateUpdateAbigeato,
   validateUpdateAbigeatoDetalles,
   validateUpdatePropiedad,
   validateUpdateDelitoPersona,
@@ -32,11 +35,10 @@ const {
 } = require('../validators/denuncias');
 
 const verifyJWT = require('../middlewares/verifyJWT');
-const { uploadFileMem } = require('../config/restpki.storage');
 const { uploadfileMem } = require('../middlewares/parseFilesMulter');
 
 //MAIN MIDDLEWARES
-//router.use('/', verifyJWT /* doubleCsrfProtection, csrfErrorHandler, */);
+router.use('/', verifyJWT /* doubleCsrfProtection, csrfErrorHandler, */);
 
 router.post('/get-all', DenunciasController.getDenuncias);
 router.get('/get-datos-filtros', DenunciasController.getDatosDeFiltros);
@@ -49,8 +51,12 @@ router.delete('/delete/:id', DenunciasController.deleteDenuncia);
 router.patch('/ratificar-denuncia/:id', DenunciasController.ratificarDenuncia);
 router.get('/esta-ratificada/:id', DenunciasController.estaRatificada);
 
-router.post('/create', uploadfileMem ,ParseDataMiddleware, DenunciasController.createDenuncia)
-
+router.post(
+  '/create',
+  uploadfileMem,
+  ParseDataMiddleware,
+  DenunciasController.createDenuncia
+);
 
 //-----------------------------------EDITAR DENUNCIAS-----------------------------------------------
 

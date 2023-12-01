@@ -14,6 +14,7 @@ CreateController.createDenuncia = async (req, res) => {
   try {
     // console.log(req.files);
     //console.log(req.body);
+    const denuncia = req.body.denuncia;
 
     // a function to convert buffer to file
     // const files = req.files.map((f) => {
@@ -41,11 +42,31 @@ CreateController.createDenuncia = async (req, res) => {
     });
     newBody.append('data', JSON.stringify(req.body));
 
-    await interntalAPI.post('/denuncias/create', newBody, {
+    const { data } = await interntalAPI.post('/denuncias/create', newBody, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
 
-    // a function to convert buffer to file
+    let query = `
+        UPDATE denuncia
+        SET id_seccional = ?,
+            realizacion = 'PRE',
+            id_usuario = ?,
+            funcion_grado = ?,
+            flagrancia = ?,
+            firma_denunciante = ?,
+            firma_autoridad = ?
+        WHERE id_denuncia = ?
+    `;
+    const values = [
+      denuncia.seccional,
+      req.idUsuario,
+      denuncia.funcionGrado,
+      denuncia.flagrancia,
+      0,
+      0,
+      data.idDenuncia,
+    ];
+    await queryHandler(query, values);
 
     res.status(200).json({
       ok: true,
