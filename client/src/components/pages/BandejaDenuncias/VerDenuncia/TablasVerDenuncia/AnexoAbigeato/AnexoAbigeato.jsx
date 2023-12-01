@@ -6,10 +6,8 @@ export const AnexoAbigeato = ({datosAnexoAbigeato}) => {
 
   const { datosGeneralesDenunciaAbigeato, detallesDenunciaAbigeato } = datosAnexoAbigeato; 
 
-
   useEffect(() => {
     actualizarDropdown(setViolenciaFisica,datosGeneralesDenunciaAbigeato.violenciaFisica);
-
   }, [])
 
   const siNo = [
@@ -23,6 +21,7 @@ export const AnexoAbigeato = ({datosAnexoAbigeato}) => {
   const actualizarDropdown = (setter, datos) => {
     setter(datos);
   };
+  
   return (
     <>
       <h2>Anexo Abigeato</h2>
