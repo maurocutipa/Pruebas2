@@ -12,6 +12,8 @@ import { useEffect, useState } from 'react';
 import { AnexoAbigeato } from './TablasVerDenuncia/AnexoAbigeato/AnexoAbigeato';
 import { AnexoViolenciaIntrafamiliar } from './TablasVerDenuncia/AnexoViolenciaIntrafamiliar/AnexoViolenciaIntrafamiliar';
 import { AnexoMaltratoAnimal } from './TablasVerDenuncia/AnexoMaltratoAnimal/AnexoMaltratoAnimal';
+import { AnexoDanos } from './TablasVerDenuncia/AnexoDanos/AnexoDanos';
+import { AnexoDelitoPersonas } from './TablasVerDenuncia/AnexoDelitoPersonas/AnexoDelitoPersonas';
 
 export const DatosDelHecho = ({ datosDenuncia }) => {
   const denuncia = datosDenuncia.denuncia;
@@ -152,12 +154,16 @@ export const DatosDelHecho = ({ datosDenuncia }) => {
         </>
       ) : tipoDenuncia === 3 ? (
         <ObjetosSustraidosTable datosDenunciaPropiedad={datosDenuncia.datosDenunciaPropiedad} />
+      ) : tipoDenuncia === 4 ? (
+        <AnexoDelitoPersonas datosDenunciaDelitoPersonas={datosDenuncia.datosDenunciaDelitosPersonas}/>
       ) : tipoDenuncia === 8 ? (
         <AnexoDelitosSexuales datosDelitoSexual={datosDenuncia.datosDelitoSexual}/>
       ) : tipoDenuncia === 9 ?(
         <AnexoViolenciaIntrafamiliar datosViolenciaIntrafamiliar={datosDenuncia.datosViolenciaIntrafamiliar}/>
       ) : tipoDenuncia === 14 ? (
         <AnexoAbigeato datosAnexoAbigeato={datosDenuncia.datosDenunciaAbigeato}/>
+      ) : tipoDenuncia === 15 ?(
+        <AnexoDanos datosDenunciaDanos={datosDenuncia.datosDenunciaDanos}/>
       ) : tipoDenuncia === 16 ?(
         <AnexoMaltratoAnimal datosDenunciaMaltratoAnimal={datosDenuncia.datosDenunciaMaltratoAnimal}/>
       ) : null}
