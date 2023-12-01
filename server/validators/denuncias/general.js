@@ -2,10 +2,15 @@ const { check, body } = require("express-validator")
 const validateHelper = require('../../utils/validateHelper')
 
 const validateUpdateGeneral = [
+    
+    body("competencia").
+        optional(),
+    body("flagrancia").
+        optional().isBoolean(),
     body("descripcionQue").
         optional(),
     body("descripcionComo").
-        optional(),
+        optional(),  
     body("certezaFecha").
         optional().isBoolean(),
     body("fechaHecho").
@@ -36,28 +41,16 @@ const validateUpdateGeneral = [
         optional(),
     body("informacionAdicional").
         optional(),
-    body("anonimo").
-        optional().isBoolean(),
     body("datosDenunciado").
         optional().isBoolean(),
     body("testigo").
         optional().isBoolean(),
     body("datosTestigo").
         optional().isBoolean(),
-    body("competencia").
-        optional(),
-    body("idTipoDenuncia").
-        optional().isNumeric(),
-    
-    //nuevos campos 
-    body("idSeccional").
-        optional().isNumeric(),
     body("idUsuario").
         optional().isNumeric(),
     body("funcionGrado").
         optional(),
-    body("flagrancia").
-        optional().isBoolean(),
     body("firmaDenunciante").
         optional().isBoolean(),
     body("firmaAutoridad").

@@ -11,6 +11,9 @@ DeleteController = {}
 
 DeleteController.deleteDenuncia = async (req, res) => {
     // TODO: Validar idDenuncia
+    /* eliminamos las tablas de las denuncias especificas,
+    por si llegasen a afectar estadisticas o filtros????
+    */
     try {
         const query = `UPDATE denuncia SET estado = 0 WHERE id_denuncia = ${req.params.id}`;
         const result = await queryHandler(query);
