@@ -34,13 +34,13 @@ router.post('/autoparte-create', validateAutopartes, ObjetosPropiedadController.
 //editar
 
 router.post('/telefono-update/:id',validateTelefonos,ObjetosPropiedadController.updateTelefonos)
-router.post('/automovile-update', validateAutomoviles, ObjetosPropiedadController.updateAutomoviles)
-router.post('/bicicleta-update', validateBicicletas, ObjetosPropiedadController.updateBicicletas)
-router.post('/cheque-update', validateCheques, ObjetosPropiedadController.updateCheques)
-router.post('/documentacion-update', validateDocumentacion, ObjetosPropiedadController.updateDocumentacion)
-router.post('/otro-update', validateOtro, ObjetosPropiedadController.updateOtro)
-router.post('/tarjeta-update', validateTarjetas, ObjetosPropiedadController.updateTarjetas)
-router.post('/autoparte-update', validateAutopartes, ObjetosPropiedadController.updateAutopartes)
+router.post('/automovile-update/:id', validateAutomoviles, ObjetosPropiedadController.updateAutomoviles)
+router.post('/bicicleta-update/:id', validateBicicletas, ObjetosPropiedadController.updateBicicletas)
+router.post('/cheque-update/:id', validateCheques, ObjetosPropiedadController.updateCheques)
+router.post('/documentacion-update/:id', validateDocumentacion, ObjetosPropiedadController.updateDocumentacion)
+router.post('/otro-update/:id', validateOtro, ObjetosPropiedadController.updateOtro)
+router.post('/tarjeta-update/:id', validateTarjetas, ObjetosPropiedadController.updateTarjetas)
+router.post('/autoparte-update/:id', validateAutopartes, ObjetosPropiedadController.updateAutopartes)
 
 
 module.exports = router;
