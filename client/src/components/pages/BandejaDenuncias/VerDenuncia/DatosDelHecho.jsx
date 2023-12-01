@@ -168,8 +168,10 @@ export const DatosDelHecho = ({ datosDenuncia }) => {
           src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/1200px-PDF_file_icon.svg.png'
           className='w-1 p-1'
         />
-        <Button label='Generar y firmar' size='small' className='m-2 btn-blue-mpa' />
-        <Button label='Subir archivo' size='small' className='m-2 btn-blue-mpa' />
+        <br />
+        <Button label='Validar y Firmar con Pad' size='small' className='m-2 btn-blue-mpa' />
+        <Button label='Imprimir Denuncia' size='small' className='m-2 btn-blue-mpa' />
+        <Button label='Subir Denuncia Firmada en forma Ológrafa' size='small' className='m-2 btn-blue-mpa' />
       </section>
 
       <div className="flex justify-content-between flex-wrap">

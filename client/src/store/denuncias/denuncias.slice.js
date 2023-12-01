@@ -70,7 +70,10 @@ export const denunciasSlice = createSlice({
           }, 
           datosDenunciaAbigeato: {
             ...payload.data.datosDenunciaAbigeato,
-          }
+          }, 
+          datosDenunciaMaltratoAnimal: {
+            ...payload.data.datosDenunciaMaltratoAnimal,
+          } 
         };
       });
   },

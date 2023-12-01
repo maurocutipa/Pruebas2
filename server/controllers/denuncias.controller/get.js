@@ -435,7 +435,7 @@ GetController.getDenunciaById = async (req, res) => {
 
     //========================== Fin querys violencia intrafamiliar ======================
 
-    //=================================== Querys abigeato ===============================
+    //=================================== Querys abigeato ================================
     let detallesDenunciaAbigeato , detallesEspeciesDenunciaAbigeato= {}; 
     query = `
         SELECT 
@@ -448,7 +448,7 @@ GetController.getDenunciaById = async (req, res) => {
     
     if (datosGeneralesDenunciaAbigeato !== undefined) {
       query = `
-      SELECT 
+      SELECT
         abid.id_denuncia_abigeato_detalles as idDenunciaAbigeatoDetalles, 
         abid.id_denuncia_abigeato as idDenunciaAbigeato, 
         abid.id_denuncia_abigeato_detalles_especies as idDenunciaAbigeatoDetallesEspecies, 
@@ -456,7 +456,7 @@ GetController.getDenunciaById = async (req, res) => {
         abid.detalle as detalle
       FROM denuncia_abigeato_detalles abid
       WHERE abid.id_denuncia_abigeato = ?`;
-      [detallesDenunciaAbigeato] = await queryHandler(query, [datosGeneralesDenunciaAbigeato.idDenunciaAbigeato]);
+      detallesDenunciaAbigeato = await queryHandler(query, [datosGeneralesDenunciaAbigeato.idDenunciaAbigeato]);
 
       query = `
       SELECT 
@@ -468,6 +468,32 @@ GetController.getDenunciaById = async (req, res) => {
       WHERE abide.id_denuncia_abigeato = ?`;
       [detallesEspeciesDenunciaAbigeato] = await queryHandler(query, [datosGeneralesDenunciaAbigeato.idDenunciaAbigeato]);
     }
+
+    //================================== Fin Querys Abigeato ================================
+
+    //================================= Querys Maltrato animal ==============================
+    query = `
+      SELECT 
+        ma.id_denuncia_maltrato_animal as idDenunciaMaltratoAnimal, 
+        ma.id_denuncia as idDenuncia, 
+        ma.condicion_animal as condicionAnimal, 
+        ma.atencion_veterinaria as atencionVeterinaria, 
+        ma.relacion_animal as relacionAnimal, 
+        ma.tipo_animal as tipoAnimal, 
+        ma.tomo_conocimiento as tomoConocimiento, 
+        ma.convivencia_indeterminado as convivenviaIndeterminado, 
+        ma.convivencia_adultos_mayores as convivenciaAdultosMayores, 
+        ma.convivencia_ninos as convivenciaNinos, 
+        ma.convivencia_otro as convivenciaOtro, 
+        ma.convivencia_discapacidad as convivenciaDiscapacidad, 
+        ma.violencia_cometida as violenciaCometida, 
+        ma.abuso_animal as abusoAnimal, 
+        ma.abuso_funcionario as abusoFuncionario
+        FROM denuncia_maltrato_animal ma
+        WHERE ma.id_denuncia = ?
+    `
+    const [datosDenunciaMaltratoAnimal] = await queryHandler(query, [id]);
+    // =========================== Fin Querys Maltrato Animal =============================
 
     res.status(200).json({
       message: `Denuncia con el id: ${id}`,
@@ -497,7 +523,8 @@ GetController.getDenunciaById = async (req, res) => {
           datosGeneralesDenunciaAbigeato, 
           detallesDenunciaAbigeato, 
           detallesEspeciesDenunciaAbigeato
-        }
+        },
+        datosDenunciaMaltratoAnimal: datosDenunciaMaltratoAnimal,
       },
     });
   } catch (error) {
