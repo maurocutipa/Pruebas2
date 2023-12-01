@@ -12,7 +12,6 @@ CreateController = {};
 
 CreateController.createDenuncia = async (req, res) => {
   try {
-    // console.log(req.files);
     //console.log(req.body);
 
     // a function to convert buffer to file
@@ -24,20 +23,18 @@ CreateController.createDenuncia = async (req, res) => {
     // });
 
     // a function to convert buffer to blob
-    const blobs = req.files.map((f) => {
+    /* const blobs = req.files.map((f) => {
       const blob = new Blob([f.buffer], { type: f.mimetype });
       return blob;
-    });
-    const files = req.files.map((f) => {
-      const file = new File([f.buffer], f.originalname, {
-        type: f.mimetype,
-      });
-      return file;
-    });
+    }); */
+
 
     const newBody = new FormData();
-    files.forEach((file) => {
-      newBody.append(file.fieldname, file);
+    req.files?.forEach((file) => {
+      const fileToSend = new File([file.buffer], file.originalname, {
+        type: file.mimetype,
+      });
+      newBody.append(file.fieldname, fileToSend);
     });
     newBody.append('data', JSON.stringify(req.body));
 
