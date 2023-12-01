@@ -12,34 +12,39 @@ CreateController = {};
 
 CreateController.createDenuncia = async (req, res) => {
   try {
-    //console.log(req.body);
     const denuncia = req.body.denuncia;
+    let query;
 
-    // a function to convert buffer to file
-    // const files = req.files.map((f) => {
-    //     const file = new File([f.buffer], f.fieldname, {
-    //         type: f.mimetype,
-    //     });
-    //     return file
-    // });
-
-    // a function to convert buffer to blob
-    /* const blobs = req.files.map((f) => {
-      const blob = new Blob([f.buffer], { type: f.mimetype });
-      return blob;
-    }); */
-    let query = `
+    if (
+      denuncia.idTipoDenuncia === 'Busqueda de Personas' ||
+      denuncia.idTipoDenuncia === 'Actuación de Oficio'
+    ) {
+      query = `
         SELECT 
             CONCAT(u.nombre, ' ', u.apellido) AS nombreCompleto
         FROM usuarios u
         WHERE id_usuario = ?
     `;
 
-    const [usuario] = await queryHandler(query, [req.idUsuario]);
+      const [usuario] = await queryHandler(query, [req.idUsuario]);
 
-    console.log(usuario.nombreCompleto);
+      query = `
+        SELECT
+            CONCAT (s.nombre, '-', df.nombre) AS delegacionFiscal,
+            j.nombre AS nombreJurisdiccion
+        FROM seccionales s
+        LEFT JOIN delegaciones_fiscales df ON df.id_delegacion_fiscal = s.id_delegacion
+        LEFT JOIN jurisdicciones j ON j.id_jurisdiccion = s.id_jurisdiccion
+        WHERE id_seccional = ?
+    `;
+      const [seccional] = await queryHandler(query, [denuncia.seccional]);
 
-    return;
+      req.body.receptor = {
+        nombreCompleto: usuario.nombreCompleto,
+        delegacionFiscal: seccional.delegacionFiscal,
+        jurisdiccion: seccional.nombreJurisdiccion,
+      };
+    }
 
     const newBody = new FormData();
     req.files?.forEach((file) => {
