@@ -156,7 +156,7 @@ export const DatosDelHecho = ({ datosDenuncia }) => {
       ) : tipoDenuncia === 9 ?(
         <AnexoViolenciaIntrafamiliar datosViolenciaIntrafamiliar={datosDenuncia.datosViolenciaIntrafamiliar}/>
       ) : tipoDenuncia === 14 ? (
-        <AnexoAbigeato/>
+        <AnexoAbigeato datosAnexoAbigeato={datosDenuncia.datosDenunciaAbigeato}/>
       ) : null}
 
       <Divider />
