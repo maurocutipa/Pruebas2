@@ -101,7 +101,6 @@ UpdateController.updateDenunciaGenero = async (req, res) => {
   }
 };
 
-
 UpdateController.updateDenunciaFamiliar = async (req, res) => {
   try {
 
@@ -206,7 +205,6 @@ UpdateController.updateDenunciaPropiedad= async (req, res) => {
   }
 };
 
-
 UpdateController.updateDenunciaDelitosPersonas = async (req, res) => {
   try {
 
@@ -232,7 +230,6 @@ UpdateController.updateDenunciaDelitosPersonas = async (req, res) => {
       httpErrorHandler(res);
   }
 };
-
 
 UpdateController.updateDenunciaIncidenteVial = async (req, res) => {
   try {
@@ -260,7 +257,6 @@ UpdateController.updateDenunciaIncidenteVial = async (req, res) => {
   }
 };
 
-
 UpdateController.updateDenunciaDelitosSexuales = async (req, res) => {
   try {
 
@@ -286,7 +282,6 @@ UpdateController.updateDenunciaDelitosSexuales = async (req, res) => {
       httpErrorHandler(res);
   }
 };
-
 
 UpdateController.updateDenunciaIncidenteVialVehiculo = async (req, res) => {
   try {
@@ -314,7 +309,6 @@ UpdateController.updateDenunciaIncidenteVialVehiculo = async (req, res) => {
   }
 };
 
-
 UpdateController.updateDenunciaDanos = async (req, res) => {
   try {
 
@@ -341,7 +335,6 @@ UpdateController.updateDenunciaDanos = async (req, res) => {
   }
 };
 
-
 UpdateController.updateDenunciaMaltratoAnimal = async (req, res) => {
   try {
 
@@ -367,7 +360,6 @@ UpdateController.updateDenunciaMaltratoAnimal = async (req, res) => {
       httpErrorHandler(res);
   }
 };
-
 
 UpdateController.updateDenunciaBusquedaPersona = async (req, res) => {
   try {
