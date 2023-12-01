@@ -8,7 +8,7 @@ import { classNames } from "primereact/utils";
 import MapTemplate from "./MapTemplate";
 
 import { useEffect } from "react";
-import { getBarrios, getDepartamentos, getLocalidades, getNacionalidades, getProvincias,getPadronElectoral} from "../../../../api/adicional.api";
+import { getBarrios, getDepartamentos, getLocalidades, getNacionalidades, getProvincias, getPadronElectoral } from "../../../../api/adicional.api";
 import { useFormik } from "formik";
 import { PersonaDenunciante } from "../../../../models";
 import { Divider } from "primereact/divider";
@@ -36,8 +36,8 @@ export const FormVictimaDenunciante = (props) => {
 
     //validaciones extras(quitar si no funcionan o dan algun error)
     const validationSchema = Yup.object().shape({
-        nombre: Yup.string().required('El nombre es requerido').min(3,'Es muy corto el nombre.').matches(/^[^0-9]+$/,'No debe contener numeros'),
-        apellido: Yup.string().required('El apellido es requerido').min(3,'Es muy corto el apellido.').matches(/^[^0-9]+$/,'No debe contener numeros'),
+        nombre: Yup.string().required('El nombre es requerido').min(3, 'Es muy corto el nombre.').matches(/^[^0-9]+$/, 'No debe contener numeros'),
+        apellido: Yup.string().required('El apellido es requerido').min(3, 'Es muy corto el apellido.').matches(/^[^0-9]+$/, 'No debe contener numeros'),
         email: Yup.string().email('Email invalido').required('Este campo es requerido'),
         numeroIdentificacion: Yup.number().typeError('Debe contener solo numeros').required('El nro de indentificacion es requerido'),
         telefonoFijo: Yup.number().typeError('Debe contener solo numeros').required('El telefono fijo es requerido'),
@@ -91,9 +91,9 @@ export const FormVictimaDenunciante = (props) => {
         validate: (data) => {
             let errors = {};
 
-            if(data.conocimientoVictima==1 && data.idIntervinienteTipo==2){
-                if(!data.vinculoVictima){
-                    errors.vinculoVictima='El vínculo es requerido';
+            if (data.conocimientoVictima == 1 && data.idIntervinienteTipo == 2) {
+                if (!data.vinculoVictima) {
+                    errors.vinculoVictima = 'El vínculo es requerido';
                 }
             }
 
@@ -167,15 +167,15 @@ export const FormVictimaDenunciante = (props) => {
                 errors.idIntervinienteTipo = 'La calidad es requerida.';
             }
 
-            if((data.hijosMenores!=0 && data.hijosMenores!=1 && (data.idIntervinienteTipo==1 || data.idIntervinienteTipo==3))  && props.tipo == 6){
+            if ((data.hijosMenores != 0 && data.hijosMenores != 1 && (data.idIntervinienteTipo == 1 || data.idIntervinienteTipo == 3)) && props.tipo == 6) {
                 errors.hijosMenores = 'Este campo es requerido';
             }
 
-            if((data.dependeIngresos!=0 && data.dependeIngresos!=1 && (data.idIntervinienteTipo==1 || data.idIntervinienteTipo==3)) && props.tipo == 6){
+            if ((data.dependeIngresos != 0 && data.dependeIngresos != 1 && (data.idIntervinienteTipo == 1 || data.idIntervinienteTipo == 3)) && props.tipo == 6) {
                 errors.dependeIngresos = 'Este campo es requerido';
             }
 
-            if((data.riesgoVida!=0 && data.riesgoVida!=1 && (data.idIntervinienteTipo==1 || data.idIntervinienteTipo==3)) && props.tipo == 6){
+            if ((data.riesgoVida != 0 && data.riesgoVida != 1 && (data.idIntervinienteTipo == 1 || data.idIntervinienteTipo == 3)) && props.tipo == 6) {
                 errors.riesgoVida = 'Este campo es requerido';
             }
 
@@ -211,8 +211,8 @@ export const FormVictimaDenunciante = (props) => {
             // data.fechaNacimiento = new Date(data.fechaNacimiento).toLocaleDateString('en-GB');
             var personaDenunciante = new PersonaDenunciante();
             Object.assign(personaDenunciante, data);
-            
-            if (personaDenunciante.idProvincia != 1){
+
+            if (personaDenunciante.idProvincia != 1) {
                 personaDenunciante.idBarrio = undefined
                 personaDenunciante.idLocalidad = undefined
             }
@@ -329,14 +329,14 @@ export const FormVictimaDenunciante = (props) => {
 
         //ver como editar foto
         console.log(props.rowData);
-        if(props.rowData.departamento){
+        if (props.rowData.departamento) {
             let dpto = props.rowData.departamento;
-            if(props.rowData.idLocalidad){
+            if (props.rowData.idLocalidad) {
                 getLocalidades(dpto).then(({ data: { data } }) => {
                     setLocalidades(data);
                 });
             }
-            if(props.rowData.idBarrio){
+            if (props.rowData.idBarrio) {
                 getBarrios(dpto).then(({ data: { data } }) => {
                     setBarrios(data);
                 });
@@ -385,9 +385,9 @@ export const FormVictimaDenunciante = (props) => {
                 input = <Dropdown inputId={id} name={id}
                     value={form.values[id]}
                     options={array}
-                    onBlur={(e)=>{form.handleBlur(e)}}
+                    onBlur={(e) => { form.handleBlur(e) }}
                     placeholder="Selecciona una opcion"
-                    onChange={(e)=>{form.setFieldValue(id, e.value)}}
+                    onChange={(e) => { form.setFieldValue(id, e.value) }}
                     className={classNames('w-full', { 'p-invalid': isFormFieldInvalid(id) })} />
                 break;
             case "DropdownValue":
@@ -399,7 +399,7 @@ export const FormVictimaDenunciante = (props) => {
                     onBlur={form.handleBlur}
                     placeholder="Selecciona una opcion"
                     onChange={(e) => {
-                        if(id=='provincia'){
+                        if (id == 'provincia') {
                             getDepartamentos().then(({ data: { data } }) => {
                                 setDepartamentos(data);
                             });
@@ -411,13 +411,20 @@ export const FormVictimaDenunciante = (props) => {
             case "InputText":
                 input = <InputText id={id} name={id}
                     value={form.values[id]}
-                    onBlur={(e)=>{
+                    onBlur={(e) => {
                         form.handleBlur(e);
-                        if(id==='numeroIdentificacion'){
-                            console.log(e);
+                        if (id === 'numeroIdentificacion') {
+                            let numId = e.target.value;
 
-                            getPadronElectoral(8205840).then(({ data }) => {
-                                console.log(data);
+                            getPadronElectoral(numId).then(({ data: { data } }) => {
+                                form.setFieldValue('nombre', data.nombre);
+                                form.setFieldValue('apellido', data.apellido);
+                                form.setFieldValue('domicilio', data.domicilio);
+                                if (data.sexo === 'M')
+                                    form.setFieldValue('identidadAutopercibida', 'HOMBRE');
+                                else
+                                    if (data.sexo === 'F')
+                                        form.setFieldValue('identidadAutopercibida', 'MUJER');
                             });
                         }
                     }}
@@ -443,73 +450,73 @@ export const FormVictimaDenunciante = (props) => {
         )
     }
 
-    const victimaPrueba = (tipoInterviniente)=> {//luego borraaaaaar
+    const victimaPrueba = (tipoInterviniente) => {//luego borraaaaaar
         return {
-          "id": '',
-          "tipoIdentificacion": "DNI",
-          "numeroIdentificacion": "44645191",
-          "nombre": "Lucas",
-          "apellido": "Mesconi",
-          "alias": "Lucas",
-          "identidadAutopercibida": "HOMBRE",
-          "fechaNacimiento": new Date("2002-12-05T03:00:00.000Z"),
-          "idPais": 11,
-          "idProvincia": 1,
-          "idLocalidad": 18,
-          "idBarrio": 29,
-          "domicilio": "jose marmol 2877",
-          "latitud": -24.2072073457456,
-          "longitud": -65.26612945908538,
-          "telefonoFijo": "1234123",
-          "telefonoMovil": "1234123",
-          "email": "mesconilucas2877@gmail.com",
-          "idIntervinienteTipo": tipoInterviniente,
-          "fotosIdentificacion": [
-              0
-          ],
-          "conocimientoVictima": 1,
-          "vinculoVictima": "",
-          "detalleVinculo": "",
-          "tipoPersona": "Fisica",
-          "departamento": 2
-        }
-    }
-
-    const denunciantePrueba = {
             "id": '',
             "tipoIdentificacion": "DNI",
-            "numeroIdentificacion": "123123",
-            "nombre": "asdasd",
-            "apellido": "asdasd",
-            "alias": "12312312",
+            "numeroIdentificacion": "44645191",
+            "nombre": "Lucas",
+            "apellido": "Mesconi",
+            "alias": "Lucas",
             "identidadAutopercibida": "HOMBRE",
             "fechaNacimiento": new Date("2002-12-05T03:00:00.000Z"),
             "idPais": 11,
             "idProvincia": 1,
-            "idLocalidad": 1,
-            "idBarrio": 88,
-            "domicilio": "123123",
-            "latitud": -23.029113246978135,
-            "longitud": -66.10474999798961,
-            "telefonoFijo": "123123",
-            "telefonoMovil": "123123",
-            "email": "123123@123123.com",
-            "idIntervinienteTipo": 2,
+            "idLocalidad": 18,
+            "idBarrio": 29,
+            "domicilio": "jose marmol 2877",
+            "latitud": -24.2072073457456,
+            "longitud": -65.26612945908538,
+            "telefonoFijo": "1234123",
+            "telefonoMovil": "1234123",
+            "email": "mesconilucas2877@gmail.com",
+            "idIntervinienteTipo": tipoInterviniente,
             "fotosIdentificacion": [
                 0
             ],
             "conocimientoVictima": 1,
-            "vinculoVictima": "Padre",
+            "vinculoVictima": "",
             "detalleVinculo": "",
             "tipoPersona": "Fisica",
-            "departamento": 1
+            "departamento": 2
         }
-        
+    }
+
+    const denunciantePrueba = {
+        "id": '',
+        "tipoIdentificacion": "DNI",
+        "numeroIdentificacion": "123123",
+        "nombre": "asdasd",
+        "apellido": "asdasd",
+        "alias": "12312312",
+        "identidadAutopercibida": "HOMBRE",
+        "fechaNacimiento": new Date("2002-12-05T03:00:00.000Z"),
+        "idPais": 11,
+        "idProvincia": 1,
+        "idLocalidad": 1,
+        "idBarrio": 88,
+        "domicilio": "123123",
+        "latitud": -23.029113246978135,
+        "longitud": -66.10474999798961,
+        "telefonoFijo": "123123",
+        "telefonoMovil": "123123",
+        "email": "123123@123123.com",
+        "idIntervinienteTipo": 2,
+        "fotosIdentificacion": [
+            0
+        ],
+        "conocimientoVictima": 1,
+        "vinculoVictima": "Padre",
+        "detalleVinculo": "",
+        "tipoPersona": "Fisica",
+        "departamento": 1
+    }
+
     return (
         <form onSubmit={form.handleSubmit} className="px-4">
             <Button label="víctima prueba" type="button" onClick={e => { form.setValues(victimaPrueba(1)) }}></Button>
             <Button label="denunciante prueba" type="button" onClick={e => { form.setValues(denunciantePrueba) }}></Button>
-            <Button label="victima/denunciante prueba" type="button" onClick={e => { form.setValues(victimaPrueba(3))}}></Button>
+            <Button label="victima/denunciante prueba" type="button" onClick={e => { form.setValues(victimaPrueba(3)) }}></Button>
             <h2 className="mt-0 text-center">Datos de las Victimas / Denunciantes</h2>
             {/* <Button label="Ver datos" type="button" onClick={e => checkForm()}></Button> */}
             <div className="formgrid grid">
@@ -548,7 +555,7 @@ export const FormVictimaDenunciante = (props) => {
                     <Calendar inputId="fechaNacimiento" name="fechaNacimiento"
                         value={form.values.fechaNacimiento} className={classNames('w-full', { 'p-invalid': isFormFieldInvalid('fechaNacimiento') })}
                         onBlur={form.handleBlur}
-                        onChange={(e) => { form.setFieldValue('fechaNacimiento', e.target.value); }} showIcon pt={{ dropdownButton: {root: { className: 'btn-blue-mpa'}}}} />
+                        onChange={(e) => { form.setFieldValue('fechaNacimiento', e.target.value); }} showIcon pt={{ dropdownButton: { root: { className: 'btn-blue-mpa' } } }} />
                     {getFormErrorMessage('fechaNacimiento')}
                 </div>
                 {campo('field col-12 lg:col', 'idPais', 'Nacionalidad', 'DropdownValue', props.nacionalidades)}
@@ -636,35 +643,35 @@ export const FormVictimaDenunciante = (props) => {
             </div>
 
             {
-                props.tipo == 6 && (form.values.idIntervinienteTipo == 1  || form.values.idIntervinienteTipo == 3)  && (
+                props.tipo == 6 && (form.values.idIntervinienteTipo == 1 || form.values.idIntervinienteTipo == 3) && (
                     <>
-                        <Divider/>
+                        <Divider />
                         <div className="formgrid grid">
                             <div className="field col-12 lg:col-4">
                                 <span className="form-label" htmlFor="dependeIngresos">¿Depende de los ingresos que le aporta el autor del hecho para subsistir?</span>
-                                <SelectButton className="field col-12 lg:col" value={form.values.dependeIngresos} onChange={(e) => form.setFieldValue('dependeIngresos', e.value)} options={siNo} unselectable={false} optionLabel="name" pt={{ button: ({ context }) => ({ className: context.selected ? 'btn-blue-mpa' : undefined, }), }}/>
+                                <SelectButton className="field col-12 lg:col" value={form.values.dependeIngresos} onChange={(e) => form.setFieldValue('dependeIngresos', e.value)} options={siNo} unselectable={false} optionLabel="name" pt={{ button: ({ context }) => ({ className: context.selected ? 'btn-blue-mpa' : undefined, }), }} />
                             </div>
                             <div className="field col-12 lg:col-4">
                                 <span className="form-label" htmlFor="hijosMenores">¿Tiene hijos menores de edad?</span>
-                                <SelectButton className="field col-12 lg:col" value={form.values.hijosMenores} onChange={(e) => form.setFieldValue('hijosMenores', e.value)} options={siNo} unselectable={false} optionLabel="name" pt={{ button: ({ context }) => ({ className: context.selected ? 'btn-blue-mpa' : undefined, }), }}/>
+                                <SelectButton className="field col-12 lg:col" value={form.values.hijosMenores} onChange={(e) => form.setFieldValue('hijosMenores', e.value)} options={siNo} unselectable={false} optionLabel="name" pt={{ button: ({ context }) => ({ className: context.selected ? 'btn-blue-mpa' : undefined, }), }} />
                             </div>
                             <div className="field col-12 lg:col-4">
                                 <span className="form-label" htmlFor="riesgoVida">¿Considera que se encuentra en riesgo de vida?</span>
-                                <SelectButton className="field col-12 lg:col" value={form.values.riesgoVida} onChange={(e) => form.setFieldValue('riesgoVida', e.value)} options={siNo} unselectable={false} optionLabel="name" pt={{ button: ({ context }) => ({ className: context.selected ? 'btn-blue-mpa' : undefined, }), }}/>
+                                <SelectButton className="field col-12 lg:col" value={form.values.riesgoVida} onChange={(e) => form.setFieldValue('riesgoVida', e.value)} options={siNo} unselectable={false} optionLabel="name" pt={{ button: ({ context }) => ({ className: context.selected ? 'btn-blue-mpa' : undefined, }), }} />
                             </div>
                         </div>
                     </>
                 )
             }
-            
 
-            <Button type="submit" className='w-full btn-blue-mpa py-3 mt-6' icon='pi pi-upload' label="Confirmar" 
-                /* onClick={(e)=>setTimeout(
-                    function () {
-                    console.log(Object.keys(form.errors)[0]);
-                    const element = document.getElementById(Object.keys(form.errors)[0]);
-                    if(element) element.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
-                }, 100)} si hay errores hace un scroll hacia el primer campo que tenga un error(faltaria cambiar ids de los campos)*/
+
+            <Button type="submit" className='w-full btn-blue-mpa py-3 mt-6' icon='pi pi-upload' label="Confirmar"
+            /* onClick={(e)=>setTimeout(
+                function () {
+                console.log(Object.keys(form.errors)[0]);
+                const element = document.getElementById(Object.keys(form.errors)[0]);
+                if(element) element.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+            }, 100)} si hay errores hace un scroll hacia el primer campo que tenga un error(faltaria cambiar ids de los campos)*/
             />
         </form>
     );
