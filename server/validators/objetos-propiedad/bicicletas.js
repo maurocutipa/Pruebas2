@@ -1,7 +1,12 @@
-const { body } = require("express-validator")
+const { body,check } = require("express-validator")
 const validateHelper = require('@utils/validateHelper')
 
 const validateBicicletas = [
+    
+    body("idDenunciaPropiedad").
+        if(check("id").exists()).
+        not().exists().notEmpty(),
+
     body("idDenunciaBicicletasTipo").
         optional().isNumeric(),
     body("marca").

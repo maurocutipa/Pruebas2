@@ -1,7 +1,12 @@
-const { body } = require("express-validator")
+const { body,check } = require("express-validator")
 const validateHelper = require('@utils/validateHelper')
 
 const validateDocumentacion = [
+
+    body("idDenunciaPropiedad").
+        if(check("id").exists()).
+        not().exists().notEmpty(),
+
     body("tipo").
         optional().isIn(['Cedula de Identidad','Certificado','Certificado de Nacionalidad','Cuil','Cuit','DNI','Libreta Civica','Libreta de Enrolamiento','Otros','Pasaporte']),   
     body("numero").
