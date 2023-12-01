@@ -1,4 +1,3 @@
-import { Badge } from "primereact/badge";
 import { MultiSelect } from "primereact/multiselect";
 import { SelectButton } from "primereact/selectbutton";
 import { useEffect, useState } from "react";

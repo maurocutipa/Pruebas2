@@ -481,7 +481,7 @@ GetController.getDenunciaById = async (req, res) => {
         ma.relacion_animal as relacionAnimal, 
         ma.tipo_animal as tipoAnimal, 
         ma.tomo_conocimiento as tomoConocimiento, 
-        ma.convivencia_indeterminado as convivenviaIndeterminado, 
+        ma.convivencia_indeterminado as convivenciaIndeterminado, 
         ma.convivencia_adultos_mayores as convivenciaAdultosMayores, 
         ma.convivencia_ninos as convivenciaNinos, 
         ma.convivencia_otro as convivenciaOtro, 

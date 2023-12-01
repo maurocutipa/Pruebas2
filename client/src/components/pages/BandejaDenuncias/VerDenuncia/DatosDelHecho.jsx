@@ -11,6 +11,7 @@ import { AnexoDelitosSexuales } from './TablasVerDenuncia/AnexoDelitosSexuales/A
 import { useEffect, useState } from 'react';
 import { AnexoAbigeato } from './TablasVerDenuncia/AnexoAbigeato/AnexoAbigeato';
 import { AnexoViolenciaIntrafamiliar } from './TablasVerDenuncia/AnexoViolenciaIntrafamiliar/AnexoViolenciaIntrafamiliar';
+import { AnexoMaltratoAnimal } from './TablasVerDenuncia/AnexoMaltratoAnimal/AnexoMaltratoAnimal';
 
 export const DatosDelHecho = ({ datosDenuncia }) => {
   const denuncia = datosDenuncia.denuncia;
@@ -157,6 +158,8 @@ export const DatosDelHecho = ({ datosDenuncia }) => {
         <AnexoViolenciaIntrafamiliar datosViolenciaIntrafamiliar={datosDenuncia.datosViolenciaIntrafamiliar}/>
       ) : tipoDenuncia === 14 ? (
         <AnexoAbigeato datosAnexoAbigeato={datosDenuncia.datosDenunciaAbigeato}/>
+      ) : tipoDenuncia === 16 ?(
+        <AnexoMaltratoAnimal datosDenunciaMaltratoAnimal={datosDenuncia.datosDenunciaMaltratoAnimal}/>
       ) : null}
 
       <Divider />
