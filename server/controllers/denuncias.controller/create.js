@@ -13,7 +13,7 @@ CreateController = {};
 CreateController.createDenuncia = async (req, res) => {
   try {
     // console.log(req.files);
-    console.log(req.body);
+    //console.log(req.body);
 
     // a function to convert buffer to file
     // const files = req.files.map((f) => {
@@ -28,16 +28,17 @@ CreateController.createDenuncia = async (req, res) => {
       const blob = new Blob([f.buffer], { type: f.mimetype });
       return blob;
     });
-
     const files = req.files.map((f) => {
-      const file = new File([f.buffer], f.fieldname, {
+      const file = new File([f.buffer], f.originalname, {
         type: f.mimetype,
       });
       return file;
     });
 
     const newBody = new FormData();
-    newBody.append('file', files);
+    files.forEach((file) => {
+      newBody.append('file', file);
+    });
     newBody.append('data', JSON.stringify(req.body));
 
     await interntalAPI.post('/denuncias/create', newBody, {
