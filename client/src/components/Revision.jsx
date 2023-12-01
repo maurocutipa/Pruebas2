@@ -880,25 +880,16 @@ export default function FormularioDenunciante(props) {
                 denuncia, no debe reportarlo nuevamente utilizando este sistema.
               </p>
               <p>
-                3. Esta aplicación te acerca la posibilidad de informar hechos
-                delictivos a la justicia y la misma deberá ser ratificada en la
-                delegación fiscal o fiscalía mas próxima a su ubicación dentro
-                de los 5 (cinco) días hábiles con tu DNI físico, caso contrario
-                el ayudante fiscal o fiscal interviniente podrá archivarla sin
-                más trámite. Consulte las delegaciones fiscales:&nbsp;
-                <a
-                  href='https://mpajujuy.gob.ar/listado-delegaciones'
-                  target='_blank'
-                >
-                  https://mpajujuy.gob.ar/listado-delegaciones
-                </a>{' '}
-                o las fiscalías en siguiente enlace:&nbsp;
-                <a
-                  href='https://mpajujuy.gob.ar/fiscalia/fiscalias-y-unidades-fiscales'
-                  target='_blank'
-                >
-                  https://mpajujuy.gob.ar/fiscalia/fiscalias-y-unidades-fiscales
-                </a>
+              3. Esta aplicación te acerca la posibilidad de informar hechos
+                delictivos al MPA. Dentro de los 5 (cinco) días hábiles de efectuada una denuncia, 
+                el denunciante deberá apersonarse con su documento nacional de identidad en la delegación fiscal 
+                o fiscalía competente mas próxima a su ubicación o domicilio a efectos de validar su identidad y 
+                suscribir la misma (conforme art. 332 del CPP), caso contrario el ayudante fiscal
+                o fiscal interviniente podrá archivarla.
+                Consulte las delegaciones fiscales:&nbsp;
+                <a href="https://mpajujuy.gob.ar/listado-delegaciones" target='_blank'>https://mpajujuy.gob.ar/listado-delegaciones</a> o las fiscalías en
+                siguiente enlace:&nbsp;
+                <a href="https://mpajujuy.gob.ar/fiscalia/fiscalias-y-unidades-fiscales" target='_blank'>https://mpajujuy.gob.ar/fiscalia/fiscalias-y-unidades-fiscales</a>
               </p>
               <p>
                 4. Si hay que darle tratamiento{' '}
