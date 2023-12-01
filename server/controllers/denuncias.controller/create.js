@@ -28,7 +28,18 @@ CreateController.createDenuncia = async (req, res) => {
       const blob = new Blob([f.buffer], { type: f.mimetype });
       return blob;
     }); */
+    let query = `
+        SELECT 
+            CONCAT(u.nombre, ' ', u.apellido) AS nombreCompleto
+        FROM usuarios u
+        WHERE id_usuario = ?
+    `;
 
+    const [usuario] = await queryHandler(query, [req.idUsuario]);
+
+    console.log(usuario.nombreCompleto);
+
+    return;
 
     const newBody = new FormData();
     req.files?.forEach((file) => {
@@ -43,7 +54,7 @@ CreateController.createDenuncia = async (req, res) => {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
 
-    let query = `
+    query = `
         UPDATE denuncia
         SET id_seccional = ?,
             realizacion = 'PRE',
@@ -63,7 +74,8 @@ CreateController.createDenuncia = async (req, res) => {
       0,
       data.idDenuncia,
     ];
-    await queryHandler(query, values);
+    const resp = await queryHandler(query, values);
+    console.log(resp);
 
     res.status(200).json({
       ok: true,
