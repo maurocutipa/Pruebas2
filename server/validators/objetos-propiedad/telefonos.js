@@ -1,21 +1,22 @@
-const { body } = require("express-validator")
+const { body, check } = require("express-validator")
 const validateHelper = require('@utils/validateHelper')
 
 const validateTelefonos = [
-    body().exists().not().isEmpty().isArray(),
-    body("*.idDenunciaPropiedad").
-        exists().not().isEmpty().isNumeric(),
-    body("*.imei").
+    body("idDenunciaPropiedad").
+        if(check("id").exists()).
+        not().exists().notEmpty(),
+
+    body("imei").
         optional().isNumeric(),
-    body("*.idDenunciaCelularesMarca").
-        exists().not().isEmpty().isNumeric(),
-    body("*.modelo").
+    body("idDenunciaCelularesMarca").
+        optional().isNumeric(),
+    body("modelo").
         optional(),   
-    body("*.numero").
+    body("numero").
         optional().isNumeric(),
-    body("*.empresa").
+    body("empresa").
         optional(),
-    body("*.otro").
+    body("otro").
         optional(),
     (req, res, next) => {
         validateHelper(req, res, next)

@@ -1,33 +1,35 @@
-const { body } = require("express-validator")
+const { body,check } = require("express-validator")
 const validateHelper = require('@utils/validateHelper')
 
 const validateAutomoviles = [
-    body().exists().not().isEmpty().isArray(),
-    body("*.idDenunciaPropiedad").
-        exists().not().isEmpty().isNumeric(),
-    body("*.idDenunciaAutomovilesTipo").
-        exists().not().isEmpty().isNumeric(),
-    body("*.idDenunciaAutomovilesMarca").
-        exists().not().isEmpty().isNumeric(),
-    body("*.modelo").
+
+    body("idDenunciaPropiedad").
+    if(check("id").exists()).
+    not().exists().notEmpty(),
+
+    body("idDenunciaAutomovilesTipo").
+        optional().isNumeric(),
+    body("idDenunciaAutomovilesMarca").
+        optional().isNumeric(),
+    body("modelo").
         optional(),   
-    body("*.dominio").
+    body("dominio").
         optional(),
-    body("*.anioFabricacion").
+    body("anioFabricacion").
         optional(),
-    body("*.numMotor").
+    body("numMotor").
         optional(),
-    body("*.numChasis").
+    body("numChasis").
         optional(),
-    body("*.puertas").
+    body("puertas").
         optional(),
-    body("*.titular").
+    body("titular").
         optional(),
-    body("*.color").
+    body("color").
         optional(),
-    body("*.gnc").
+    body("gnc").
         optional().isBoolean(),
-    body("*.observaciones").
+    body("observaciones").
         optional(),
     (req, res, next) => {
         validateHelper(req, res, next)

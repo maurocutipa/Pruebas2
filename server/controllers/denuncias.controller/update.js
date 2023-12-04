@@ -58,8 +58,6 @@ UpdateController.updateDenunciaGeneral = async (req, res) => {
 
       const { id } = req.params;
 
-      console.log(data)
-      
       const query = `UPDATE denuncia SET ${keys.map((key) => `${key} = ?`).join(', ')} WHERE id_denuncia = ${id}`;
       const resQuery = await queryHandler(query, values);
 
@@ -83,8 +81,6 @@ UpdateController.updateDenunciaGenero = async (req, res) => {
       const values = Object.values(data);
 
       const { id } = req.params;
-
-      console.log(data)
       
       const query = `UPDATE denuncia_violencia_genero SET ${keys.map((key) => `${key} = ?`).join(', ')} WHERE id_denuncia_violencia_genero = ${id}`;
       const resQuery = await queryHandler(query, values);
@@ -101,7 +97,6 @@ UpdateController.updateDenunciaGenero = async (req, res) => {
   }
 };
 
-
 UpdateController.updateDenunciaFamiliar = async (req, res) => {
   try {
 
@@ -111,7 +106,6 @@ UpdateController.updateDenunciaFamiliar = async (req, res) => {
 
       const { id } = req.params;
 
-      console.log(data)
       
       const query = `UPDATE denuncia_violencia_familiar SET ${keys.map((key) => `${key} = ?`).join(', ')} WHERE id_denuncia_violencia_familiar = ${id}`;
       const resQuery = await queryHandler(query, values);
@@ -136,8 +130,6 @@ UpdateController.updateDenunciaAbigeato = async (req, res) => {
       const values = Object.values(data);
 
       const { id } = req.params;
-
-      console.log(data)
       
       const query = `UPDATE denuncia_abigeato SET ${keys.map((key) => `${key} = ?`).join(', ')} WHERE id_denuncia_abigeato = ${id}`;
       const resQuery = await queryHandler(query, values);
@@ -162,8 +154,6 @@ UpdateController.updateDenunciaAbigeatoDetalles = async (req, res) => {
       const values = Object.values(data);
 
       const { id } = req.params;
-
-      console.log(data)
       
       const query = `UPDATE denuncia_abigeato_detalles SET ${keys.map((key) => `${key} = ?`).join(', ')} WHERE id_denuncia_abigeato_detalles = ${id}`;
       const resQuery = await queryHandler(query, values);
@@ -188,8 +178,6 @@ UpdateController.updateDenunciaPropiedad= async (req, res) => {
       const values = Object.values(data);
 
       const { id } = req.params;
-
-      console.log(data)
       
       const query = `UPDATE denuncia_propiedad SET ${keys.map((key) => `${key} = ?`).join(', ')} WHERE id_denuncia_propiedad = ${id}`;
       const resQuery = await queryHandler(query, values);
@@ -206,7 +194,6 @@ UpdateController.updateDenunciaPropiedad= async (req, res) => {
   }
 };
 
-
 UpdateController.updateDenunciaDelitosPersonas = async (req, res) => {
   try {
 
@@ -216,8 +203,6 @@ UpdateController.updateDenunciaDelitosPersonas = async (req, res) => {
 
       const { id } = req.params;
 
-      console.log(data)
-      
       const query = `UPDATE denuncia_delitos_personas SET ${keys.map((key) => `${key} = ?`).join(', ')} WHERE id_denuncia_delitos_personas = ${id}`;
       const resQuery = await queryHandler(query, values);
 
@@ -233,7 +218,6 @@ UpdateController.updateDenunciaDelitosPersonas = async (req, res) => {
   }
 };
 
-
 UpdateController.updateDenunciaIncidenteVial = async (req, res) => {
   try {
 
@@ -243,8 +227,6 @@ UpdateController.updateDenunciaIncidenteVial = async (req, res) => {
 
       const { id } = req.params;
 
-      console.log(data)
-      
       const query = `UPDATE denuncia_incidentes_viales SET ${keys.map((key) => `${key} = ?`).join(', ')} WHERE id_denuncia_incidentes_viales = ${id}`;
       const resQuery = await queryHandler(query, values);
 
@@ -260,7 +242,6 @@ UpdateController.updateDenunciaIncidenteVial = async (req, res) => {
   }
 };
 
-
 UpdateController.updateDenunciaDelitosSexuales = async (req, res) => {
   try {
 
@@ -269,8 +250,6 @@ UpdateController.updateDenunciaDelitosSexuales = async (req, res) => {
       const values = Object.values(data);
 
       const { id } = req.params;
-
-      console.log(data)
       
       const query = `UPDATE denuncia_delitos_sexuales SET ${keys.map((key) => `${key} = ?`).join(', ')} WHERE id_denuncia_delitos_sexuales = ${id}`;
       const resQuery = await queryHandler(query, values);
@@ -287,7 +266,6 @@ UpdateController.updateDenunciaDelitosSexuales = async (req, res) => {
   }
 };
 
-
 UpdateController.updateDenunciaIncidenteVialVehiculo = async (req, res) => {
   try {
 
@@ -297,8 +275,6 @@ UpdateController.updateDenunciaIncidenteVialVehiculo = async (req, res) => {
 
       const { id } = req.params;
 
-      console.log(data)
-      
       const query = `UPDATE denuncia_incidentes_viales_vehiculos SET ${keys.map((key) => `${key} = ?`).join(', ')} WHERE id_denuncia_incidentes_viales_vehiculos = ${id}`;
       const resQuery = await queryHandler(query, values);
 
@@ -314,7 +290,6 @@ UpdateController.updateDenunciaIncidenteVialVehiculo = async (req, res) => {
   }
 };
 
-
 UpdateController.updateDenunciaDanos = async (req, res) => {
   try {
 
@@ -324,8 +299,6 @@ UpdateController.updateDenunciaDanos = async (req, res) => {
 
       const { id } = req.params;
 
-      console.log(data)
-      
       const query = `UPDATE denuncia_danos SET ${keys.map((key) => `${key} = ?`).join(', ')} WHERE id_denuncia_danos = ${id}`;
       const resQuery = await queryHandler(query, values);
 
@@ -341,7 +314,6 @@ UpdateController.updateDenunciaDanos = async (req, res) => {
   }
 };
 
-
 UpdateController.updateDenunciaMaltratoAnimal = async (req, res) => {
   try {
 
@@ -350,9 +322,7 @@ UpdateController.updateDenunciaMaltratoAnimal = async (req, res) => {
       const values = Object.values(data);
 
       const { id } = req.params;
-
-      console.log(data)
-      
+   
       const query = `UPDATE denuncia_maltrato_animal SET ${keys.map((key) => `${key} = ?`).join(', ')} WHERE id_denuncia_maltrato_animal = ${id}`;
       const resQuery = await queryHandler(query, values);
 
@@ -368,7 +338,6 @@ UpdateController.updateDenunciaMaltratoAnimal = async (req, res) => {
   }
 };
 
-
 UpdateController.updateDenunciaBusquedaPersona = async (req, res) => {
   try {
 
@@ -378,8 +347,6 @@ UpdateController.updateDenunciaBusquedaPersona = async (req, res) => {
 
       const { id } = req.params;
 
-      console.log(data)
-      
       const query = `UPDATE denuncia_busqueda_persona SET ${keys.map((key) => `${key} = ?`).join(', ')} WHERE id_denuncia_busqueda_persona = ${id}`;
       const resQuery = await queryHandler(query, values);
 

@@ -1,23 +1,25 @@
-const { body } = require("express-validator")
+const { body,check } = require("express-validator")
 const validateHelper = require('@utils/validateHelper')
 
 const validateCheques = [
-    body().exists().not().isEmpty().isArray(),
-    body("*.idDenunciaPropiedad").
-        exists().not().isEmpty().isNumeric(),
-    body("*.tipo").
+
+    body("idDenunciaPropiedad").
+        if(check("id").exists()).
+        not().exists().notEmpty(),
+
+    body("tipo").
         optional().isIn(['Cancelatorio','Certificado - Conformado','Cruzado','De Caja','De Viajero','En Blanco','Otro','Pago Diferido','Para Abono en Cuenta']),   
-    body("*.banco").
+    body("banco").
         optional(),
-    body("*.sucursal").
+    body("sucursal").
         optional(),
-    body("*.titularCuenta").
+    body("titularCuenta").
         optional(),
-    body("*.numeroCuenta").
+    body("numeroCuenta").
         optional(),
-    body("*.numeroCheque").
+    body("numeroCheque").
         optional(),
-    body("*.observaciones").
+    body("observaciones").
         optional(),
     (req, res, next) => {
         validateHelper(req, res, next)
