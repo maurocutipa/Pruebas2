@@ -6,6 +6,7 @@ const URLS = {
   crearDenunciaLegajo: (id) => `/legajos/denuncia-legajo/${id}`,
   getLegajo: (id) => `/legajos/${id}`,
   archivarDenuncia: '/legajos/archivar-denuncia',
+  crearDenunciaNoPenal: `/legajos/crear-denuncia-no-penal`,
 };
 
 export const getDenunciadosParaLegajo = (id) => {
@@ -24,11 +25,13 @@ export const crearDenunciaLegajo = (formData) => {
 };
 
 export const getLegajo = (id) => {
-  return api.get(URLS.getLegajo(id), {
-    withCredentials: true,
-  });
+  return internalApi.get(URLS.getLegajo(id));
 };
 
 export const archivarDenuncia = (body) => {
   return internalApi.post(URLS.archivarDenuncia, body);
+};
+
+export const crearDenunciaNoPenal = (body) => {
+  return internalApi.post(URLS.crearDenunciaNoPenal, body);
 };

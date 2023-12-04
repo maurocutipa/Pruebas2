@@ -6,8 +6,12 @@ const {
   getAccionTomada,
   getLegajoById,
   archivarDenuncia,
+  crearDenunciaNoPenal,
 } = require('../controllers/legajos.controller');
 const verifyJWT = require('../middlewares/verifyJWT');
+const {
+  comprobarAccionTomada,
+} = require('../middlewares/comprobarAccionTomada');
 
 const router = Router();
 
@@ -17,8 +21,14 @@ const router = Router();
 router.get('/:id', getLegajoById);
 
 router.get('/get-denunciados/:id', getDenunciadosParaLegajo);
-router.post('/denuncia-legajo/:id', crearDenunciaLegajo);
 router.get('/get-accion-tomada/:id', getAccionTomada);
-router.post('/archivar-denuncia', archivarDenuncia);
+
+router.post('/denuncia-legajo/:id', comprobarAccionTomada, crearDenunciaLegajo);
+router.post('/archivar-denuncia', comprobarAccionTomada, archivarDenuncia);
+router.post(
+  '/crear-denuncia-no-penal',
+  comprobarAccionTomada,
+  crearDenunciaNoPenal
+);
 
 module.exports = router;

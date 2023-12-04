@@ -1,211 +1,104 @@
-import { useEffect, useState } from 'react';
+import * as Yup from 'yup';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
-import { Dropdown } from 'primereact/dropdown';
-import { InputText } from 'primereact/inputtext';
-import { InputTextarea } from 'primereact/inputtextarea';
 import { Divider } from 'primereact/divider';
-import { useAppSelector } from '@/store/hooks';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
+import { RedaccionEmail } from '@/components/pages/BandejaDenuncias/DenunciaNoPenal/RedaccionEmail';
+import { Notificaciones } from '@/components/pages/BandejaDenuncias/DenunciaNoPenal/Notificaciones';
+import { useFormik } from 'formik';
+import { Campos } from '@/components/pages/BandejaDenuncias/DenunciaNoPenal/Campos';
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { crearDenunciaNoPenalThunk } from '@/store/denuncias/denunciaNoPenal/denunciaNoPenal.thunks';
+import { useEffect, useRef } from 'react';
+import { resetState } from '@/store/denuncias/denunciaNoPenal/denunciaNoPenal.slice';
+import { toastError, toastSuccess } from '@/utils/toastMessage';
+import { Toast } from 'primereact/toast';
+
+const validationSchema = Yup.object().shape({
+  asunto: Yup.string().required('El asunto es necesario'),
+  observaciones: Yup.string()
+    .required('La observación es necesaria')
+    .min(20, 'La obervación debe tener al menos 20 caracteres'),
+  competencia: Yup.string().required('La competencia es necesaria'),
+  remision: Yup.string().required('La remisión es necesaria'),
+});
 
 export const DenunciaNoPenal = () => {
-  const { data } = useAppSelector((state) => state.data);
-  const [competencias, setCompetencias] = useState([]);
+  const toast = useRef(null);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
+  const { form } = useAppSelector((state) => state.denunciaNoPenal);
+
+  const formik = useFormik({
+    initialValues: form,
+    initialErrors: form,
+    validationSchema,
+    onSubmit: async (values) => {
+      values.idDenuncia = Number(id);
+
+      const { meta } = await dispatch(crearDenunciaNoPenalThunk(values));
+      if (meta.requestStatus === 'fulfilled') {
+        toastSuccess(
+          toast,
+          'Se realizó la ratificación, puede regresar a la bandeja de denuncias'
+        );
+      } else {
+        toastError(toast, 'No se pudo realizar la ratificación');
+      }
+    },
+  });
 
   useEffect(() => {
-    setCompetencias(
-      data.competencias.filter(
-        (c) =>
-          c.idCompetencia !== 1 &&
-          c.idCompetencia !== 2 &&
-          c.idCompetencia !== 7
-      )
-    );
-  }, [data]);
+    return () => {
+      dispatch(resetState());
+    };
+  }, [dispatch]);
 
   return (
     <div className='px-8 py-4'>
+      <Toast ref={toast} />
       <h1 className='text-center'>Trámite de denuncia no penal - N° {id}</h1>
 
-      <div className='mt-6'>
-        <Button
-          icon='pi pi-angle-left'
-          label='Regresar a la bandeja'
-          className='text-lightblue-mpa p-0 mb-4'
-          type='button'
-          link
-          onClick={() => navigate('/bandeja-denuncias')}
-        />
+      <form onSubmit={formik.handleSubmit}>
+        <div className='mt-6'>
+          <Button
+            icon='pi pi-angle-left'
+            label='Regresar a la bandeja'
+            className='text-lightblue-mpa p-0 mb-4'
+            type='button'
+            link
+            onClick={() => navigate('/bandeja-denuncias')}
+          />
 
-        <Card className='shadow-1 px-7'>
-          <section id='campos'>
-            <h2>Seleccione los campos</h2>
+          <Card className='shadow-1 px-7'>
+            <Campos formik={formik} />
+            <Divider className='my-6' />
 
-            <div className='grid mt-4'>
-              <div className='col-12 xl:col-4'>
-                <label htmlFor='competencia'>Competencias:</label>
-                <Dropdown
-                  id='competencia'
-                  name='competencia'
-                  options={competencias}
-                  optionLabel='competencia'
-                  optionValue='idCompetencia'
-                  placeholder='Seleccione'
-                  className={`w-full mt-2 `}
-                  // onChange={formik.handleChange}
-                  // value={formik.values.denunciado}
-                  // onBlur={formik.handleBlur}
-                />
-              </div>
-              <div className='col-12 xl:col-4'>
-                <label htmlFor='remision'>Remisión:</label>
-                <Dropdown
-                  id='remision'
-                  name='remision'
-                  options={data.remisiones}
-                  optionLabel='remision'
-                  optionValue='idRemision'
-                  placeholder='Seleccione'
-                  className={`w-full mt-2 `}
-                  // onChange={formik.handleChange}
-                  // value={formik.values.denunciado}
-                  // onBlur={formik.handleBlur}
-                />
-              </div>
-            </div>
-          </section>
+            <Notificaciones />
+          </Card>
 
-          <Divider className='my-6' />
+          <RedaccionEmail formik={formik} />
+        </div>
 
-          <section id='notificaciones'>
-            <h2>Notificaciones</h2>
+        <div className='flex justify-content-between mt-6 mb-2'>
+          <Button
+            icon='pi pi-angle-left'
+            label={'Cancelar'}
+            onClick={() => navigate('/bandeja-denuncias')}
+            className='bg-red-700 hover:bg-red-800 border-red-700'
+            size='large'
+          />
 
-            <div className='mt-5'>
-              <div className='grid'>
-                <div className='col-12 xl:col-3'>
-                  <label htmlFor='tipoNotificacion'>Tipo Notificación</label>
-                  <Dropdown
-                    id='tipoNotificacion'
-                    name='tipoNotificacion'
-                    options={[]}
-                    placeholder='Seleccione'
-                    className={`w-full mt-2 `}
-                  />
-                </div>
-
-                <div className='col-12 xl:col-3'>
-                  <label htmlFor='persona'>Persona</label>
-                  <Dropdown
-                    id='persona'
-                    name='persona'
-                    options={[]}
-                    placeholder='Seleccione'
-                    className={`w-full mt-2 `}
-                  />
-                </div>
-
-                <div className='col-12 xl:col-3'>
-                  <label htmlFor='nombreApellido'>Nombre y Apellido</label>
-                  <InputText
-                    id='nombreApellido'
-                    name='nombreApellido'
-                    placeholder='Ingrese'
-                    className={`w-full mt-2 `}
-                  />
-                </div>
-
-                <div className='col-12 xl:col-3'>
-                  <label htmlFor='email'>Email</label>
-                  <InputText
-                    type='email'
-                    id='email'
-                    name='email'
-                    placeholder='Ingrese'
-                    className={`w-full mt-2 `}
-                  />
-                </div>
-
-                <div className='col-12 xl:col-2 mt-4'>
-                  <Button
-                    icon='pi pi-plus'
-                    label='Agregar'
-                    className='btn-blue-mpa w-full'
-                  />
-                </div>
-              </div>
-
-              <div className='mt-6'>
-                <DataTable
-                  value={[]}
-                  paginator
-                  rows={5}
-                  totalRecords={[].length}
-                  lazy
-                  emptyMessage='No se encontraron resultados'
-                  className='mb-4 shadow-1 mt-4'
-                  tableStyle={{ minWidth: '50rem' }}
-                  dataKey='id'
-                >
-                  <Column field='tipo' header='Tipo' body='tipo' />
-                  <Column field='nombre' header='Nombre' body='asd' />
-                  <Column field='mail' header='Mail' body='as' />
-                  <Column
-                    field='acciones'
-                    header='Eliminar'
-                    body='as'
-                    pt={{ headerCell: { className: 'w-2' } }}
-                  />
-                </DataTable>
-              </div>
-            </div>
-          </section>
-        </Card>
-
-        <Card className='shadow-1 px-7 mt-6'>
-          <div className=''>
-            <h2>Redacción del mail</h2>
-
-            <div className='grid mt-6'>
-              <div className='col-12 lg:col-5'>
-                <label htmlFor='asunto'>Asunto</label>
-                <InputText id='asunto' name='asuntos' className='w-full mt-2' />
-              </div>
-            </div>
-
-            <div className='grid mt-4'>
-              <div className='col-12'>
-                <label htmlFor='observaciones'>Observaciones</label>
-                <InputTextarea
-                  id='observaciones'
-                  name='observaciones'
-                  className={`w-full mt-2 `}
-                  rows={8}
-                  autoResize='none'
-                  // onChange={formik.handleChange}
-                  // onBlur={formik.handleBlur}
-                  // value={formik.values.descripcion}
-                />
-              </div>
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      <div className='flex justify-content-between mt-6 mb-2'>
-        <Button
-          icon='pi pi-angle-left'
-          label={'Cancelar'}
-          onClick={() => navigate('/bandeja-denuncias')}
-          className='bg-red-700 hover:bg-red-800 border-red-700'
-          size='large'
-        />
-
-        <Button label={'Guardar'} className='btn-blue-mpa' size='large' />
-      </div>
+          <Button
+            label={'Guardar Denuncia No Penal'}
+            disabled={!formik.isValid}
+            className='btn-blue-mpa'
+            size='large'
+            type='submit'
+          />
+        </div>
+      </form>
     </div>
   );
 };

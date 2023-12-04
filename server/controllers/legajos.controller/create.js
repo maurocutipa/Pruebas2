@@ -151,4 +151,41 @@ CreateController.archivarDenuncia = async (req, res) => {
   }
 };
 
+CreateController.crearDenunciaNoPenal = async (req, res) => {
+  const body = req.body;
+
+  try {
+    let query = `
+      INSERT INTO
+        denuncia_no_penal (id_denuncia, competencia, remision, asunto, observaciones)
+      VALUES (?, ?, ?, ?, ?)
+    `;
+
+    await queryHandler(query, [
+      body.idDenuncia,
+      body.competencia,
+      body.remision,
+      body.asunto,
+      body.observaciones,
+    ]);
+
+    query = `
+      UPDATE denuncia 
+        SET denuncia.accion = 'OTRO'
+      WHERE denuncia.id_denuncia = ?
+    `;
+
+    values = [body.idDenuncia];
+    await queryHandler(query, values);
+
+    res.status(200).json({
+      message: 'La denuncia se convirtio en no penal',
+      data: {},
+    });
+  } catch (error) {
+    console.log(error);
+    httpErrorHandler(res);
+  }
+};
+
 module.exports = CreateController;

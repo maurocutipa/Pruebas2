@@ -5,12 +5,13 @@ const competencias = [
   { idCompetencia: 'No penal', competencia: 'No penal' },
   { idCompetencia: 'Penal', competencia: 'Penal' },
   { idCompetencia: 'Menores', competencia: 'Menores' },
-  { idCompetencia: 'Civiles', competencia: 'Civiles' },
+  { idCompetencia: 'Civil', competencia: 'Civil' },
   { idCompetencia: 'Contravención', competencia: 'Contravención' },
   { idCompetencia: 'Ambiental', competencia: 'Ambiental' },
   { idCompetencia: 'Archivo', competencia: 'Archivo' },
   { idCompetencia: 'Familia', competencia: 'Familia' },
-  { idCompetencia: 'Otros', competencia: 'Otros' },
+  { idCompetencia: 'Otro', competencia: 'Otro' },
+  { idCompetencia: 'Juzgado de Género', competencia: 'Juzgado de Género' },
 ];
 
 const realizaciones = [
@@ -31,8 +32,14 @@ const estados = [
 ];
 
 const remisiones = [
-  { idRemision: 1, remision: 'Otra dependencia pública' },
-  { idRemision: 2, remision: 'Dentro del Ministerio Público de la Acusación' },
+  {
+    idRemision: 'Otra dependencia pública',
+    remision: 'Otra dependencia pública',
+  },
+  {
+    idRemision: 'Dentro del Ministerio Público de la Acusación',
+    remision: 'Dentro del Ministerio Público de la Acusación',
+  },
 ];
 
 const ratificaciones = [
