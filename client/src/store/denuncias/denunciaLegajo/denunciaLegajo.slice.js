@@ -22,6 +22,16 @@ const initialState = {
     },
     estaModificando: false,
   },
+  detenidosForm: {
+    form: {
+      id: '',
+      denunciado: '',
+      lugarDetencion: '',
+      fechaHoraDetencion: '',
+      juezDetencion: '',
+    },
+    estaModificando: false,
+  },
   denunciaALegajoForm: {
     fiscalia: '',
     resumenHechos: [],
@@ -39,6 +49,16 @@ const initialState = {
   seTomoAccion: false,
 };
 
+const deleteElementFromArray = (array, id) => {
+  return array.filter((element) => element.id !== id);
+};
+
+// a function to replace a specific element in an array using map
+const replaceElementInArray = (array, newElement) => {
+  const id = newElement.id;
+  return array.map((element) => (element.id === id ? newElement : element));
+};
+
 export const denunciaLegajoSlice = createSlice({
   name: 'denunciaLegajo',
   initialState,
@@ -51,17 +71,26 @@ export const denunciaLegajoSlice = createSlice({
 
       state.denunciaALegajoForm.fiscalia = fiscalia;
 
-      state.denunciaALegajoForm.resumenHechos =
-        state.denunciaALegajoForm.resumenHechos.map((r) =>
-          r.id === resumen.id ? resumen : r
-        );
+      // state.denunciaALegajoForm.resumenHechos =
+      //   state.denunciaALegajoForm.resumenHechos.map((r) =>
+      //     r.id === resumen.id ? resumen : r
+      //   );
+      state.denunciaALegajoForm.resumenHechos = replaceElementInArray(
+        state.denunciaALegajoForm.resumenHechos,
+        resumen
+      );
       state.resumenHechosForm.estaModificando = false;
     },
     eliminarResumenHecho: (state, { payload }) => {
-      state.denunciaALegajoForm.resumenHechos =
-        state.denunciaALegajoForm.resumenHechos.filter(
-          (resumen) => resumen.id !== payload
-        );
+      // state.denunciaALegajoForm.resumenHechos =
+      //   state.denunciaALegajoForm.resumenHechos.filter(
+      //     (resumen) => resumen.id !== payload
+      //   );
+
+      state.denunciaALegajoForm.resumenHechos = deleteElementFromArray(
+        state.denunciaALegajoForm.resumenHechos,
+        payload
+      );
     },
     setResumenHechosForm: (state, { payload }) => {
       state.resumenHechosForm.form = payload;
@@ -71,18 +100,56 @@ export const denunciaLegajoSlice = createSlice({
      * Formulario delitos asignados
      */
     modificarDelitoAsignado: (state, { payload }) => {
-      state.denunciaALegajoForm.delitos = state.denunciaALegajoForm.delitos.map(
-        (d) => (d.id === payload.id ? payload : d)
+      // state.denunciaALegajoForm.delitos = state.denunciaALegajoForm.delitos.map(
+      //   (d) => (d.id === payload.id ? payload : d)
+      // );
+
+      state.denunciaALegajoForm.delitos = replaceElementInArray(
+        state.denunciaALegajoForm.delitos,
+        payload
       );
+
       state.delitoAsignadoForm.estaModificando = false;
     },
     eliminarDelitoAsignado: (state, { payload }) => {
-      state.denunciaALegajoForm.delitos =
-        state.denunciaALegajoForm.delitos.filter((d) => d.id !== payload);
+      // state.denunciaALegajoForm.delitos =
+      //   state.denunciaALegajoForm.delitos.filter((d) => d.id !== payload);
+      state.denunciaALegajoForm.delitos = deleteElementFromArray(
+        state.denunciaALegajoForm.delitos,
+        payload
+      );
     },
     setDelitoAsignadoForm: (state, { payload }) => {
       state.delitoAsignadoForm.form = payload;
       state.delitoAsignadoForm.estaModificando = true;
+    },
+    /**
+     * Formulario detenidos
+     */
+    modificarDetenido: (state, { payload }) => {
+      // state.denunciaALegajoForm.detenidos =
+      //   state.denunciaALegajoForm.detenidos.map((d) =>
+      //     d.id === payload.id ? payload : d
+      //   );
+
+      state.denunciaALegajoForm.detenidos = replaceElementInArray(
+        state.denunciaALegajoForm.detenidos,
+        payload
+      );
+      state.detenidosForm.estaModificando = false;
+    },
+    eliminarDetenido: (state, { payload }) => {
+      // state.denunciaALegajoForm.detenidos =
+      //   state.denunciaALegajoForm.detenidos.filter((d) => d.id !== payload);
+
+      state.denunciaALegajoForm.detenidos = deleteElementFromArray(
+        state.denunciaALegajoForm.detenidos,
+        payload
+      );
+    },
+    setDetenidoForm: (state, { payload }) => {
+      state.detenidosForm.form = payload;
+      state.detenidosForm.estaModificando = true;
     },
     /**
      * Formulario Final: Convertir denuncia a legajo
@@ -157,15 +224,23 @@ export const findFiscalia = (fiscalias, id) => {
 // }
 
 export const {
+  // Resumen Hechos
   setResumenHechosForm,
   modificarResumenHecho,
   eliminarResumenHecho,
+  // Delitos
   setDelitoAsignadoForm,
   modificarDelitoAsignado,
   eliminarDelitoAsignado,
+  // Detenidos
+  setDetenidoForm,
+  modificarDetenido,
+  eliminarDetenido,
+  // Formulario Final
   agregarResumenHecho,
   agregarDelito,
   agregarFiscalia,
+  // Extra
   generarDataParaPdf,
   resetState,
 } = denunciaLegajoSlice.actions;
