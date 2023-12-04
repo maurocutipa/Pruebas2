@@ -24,11 +24,13 @@ IntervinienteController.mainIntervinienteCreate = async (req, res, next) => {
 
         const intData = await interntalAPI.post('/intervinientes/interviniente-create', interviniente)
 
-        const vicRel = await interntalAPI.post('/intervinientes/interviniente-victima-create', {
-            ...victimaRelacion,
-            idDenuncia,
-            idInterviniente: intData.data.id
-        })
+        if(Object.keys(victimaRelacion).length != 0){
+            const vicRel = await interntalAPI.post('/intervinientes/interviniente-victima-create', {
+                ...victimaRelacion,
+                idDenuncia,
+                idInterviniente: intData.data.id
+            })
+        }
 
         const denIntData = await interntalAPI.post('/intervinientes/interviniente-denuncia-create', {
             idDenuncia,
@@ -144,6 +146,41 @@ IntervinienteController.uploadFile = async (req,res) => {
 }
 
 //---------------update intervininete en ver denuncia
+IntervinienteController.mainIntervinienteUpdate = async (req, res, next) => {
+    try {
+        
+        let {interviniente,victimaRelacion,idDenuncia} = matchedData(req)
+        //formateo de fechas y horas
+        interviniente.fechaNacimiento = dayjs(interviniente.fechaNacimiento).format('YYYY-MM-DD')
+
+        const intData = await interntalAPI.post(`/interviniente-update/${interviniente.id}`, interviniente)
+
+        if(Object.keys(victimaRelacion).length != 0 ){
+                
+            const vicRel = await interntalAPI.post(`/interviniente-victima-update/${interviniente.id}`, {
+                ...victimaRelacion,
+                idDenuncia,
+            })
+    
+        }
+
+        res.status(200).json({
+            message: 'Interviniente actualizado completo',
+            id: intData.data.id
+        })
+
+    
+    } catch (error) {
+        if (error instanceof axios.AxiosError) {
+            showError(error.response.statusText + ' ' + error.request.path)
+            res.status(error.response.status).json(error.response.data)
+        }
+        else {
+            showError(error)
+            httpErrorHandler(res, 500, "500 SERVER ERROR", false, error.message)
+        }
+    }
+}
 
 IntervinienteController.updateInterviniente  = async (req, res) => {
     try {
@@ -177,7 +214,7 @@ IntervinienteController.updateIntervinienteVictima  = async (req, res) => {
         const keys = Object.keys(data).map(key => convertToSnakeCase(key))
         const values = Object.values(data)
         
-        const query = `UPDATE denuncia_victima SET ${keys.map((key) => `${key} = ?`).join(', ')} WHERE id = ${id}`;
+        const query = `UPDATE denuncia_victima SET ${keys.map((key) => `${key} = ?`).join(', ')} WHERE id_interviniente = ${id} AND id_denuncia = ${data.idDenuncia} `;
 
         const queryResult = await queryHandler(query,values);
 
