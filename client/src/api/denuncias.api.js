@@ -12,7 +12,7 @@ const URLS = {
   //parte web
   form: '/denuncias/create',
   formDenunciaIntrafamiliar: '/denuncias/familiar-create',
-  consultarDenuncia: '/denuncias/consultar'
+  consultarDenuncia: '/denuncias/consultar',
 };
 
 export const getAllDenuncias = (body) => {
@@ -48,15 +48,19 @@ export const estaRatificada = (id) => {
 export const crearDenuncia = (body) => {
   return publicApi.post(URLS.form, body, {
     headers: {
-      'Content-Type': 'multipart/form-data'
-    }
+      'Content-Type': 'multipart/form-data',
+    },
   });
 };
 
 export const crearDenunciaIntrafamiliar = (body) => {
-  return publicApi.post(URLS.formDenunciaIntrafamiliar, body, { 'Content-Type': 'application/json' });
-}
+  return publicApi.post(URLS.formDenunciaIntrafamiliar, body, {
+    'Content-Type': 'application/json',
+  });
+};
 
 export const consultarDenuncia = (body) => {
-  return publicApi.post(URLS.consultarDenuncia, body, { 'Content-Type': 'application/json' })
-}
+  return publicApi.post(URLS.consultarDenuncia, body, {
+    'Content-Type': 'application/json',
+  });
+};

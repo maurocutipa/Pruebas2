@@ -6,6 +6,8 @@ import dataSlice from './data/data.slice';
 import denunciasSlice from './denuncias/denuncias.slice';
 import denunciaLegajoSlice from './denuncias/denunciaLegajo/denunciaLegajo.slice';
 import ratificarDenunciaSlice from './denuncias/ratificarDenuncia/ratificarDenuncia.slice';
+import denunciaNoPenalSlice from './denuncias/denunciaNoPenal/denunciaNoPenal.slice';
+
 import legajosSlice from './legajo/legajos.slice';
 
 export const store = configureStore({
@@ -17,6 +19,7 @@ export const store = configureStore({
      */
     denuncias: denunciasSlice,
     denunciaLegajo: denunciaLegajoSlice,
+    denunciaNoPenal: denunciaNoPenalSlice,
     ratificarDenuncia: ratificarDenunciaSlice,
     /**
      * Legajos Slices
