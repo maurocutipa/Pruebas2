@@ -2,6 +2,7 @@ const { check, body } = require("express-validator")
 const validateHelper = require('../../utils/validateHelper')
 
 const validateUpdateGeneral = [
+    check("id").exists().not().isEmpty().isNumeric(),
     
     body("competencia").
         optional(),
