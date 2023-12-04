@@ -11,7 +11,7 @@ import { useAppSelector } from '@/store/hooks';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Steps } from 'primereact/steps';
 
-import { LacunaWebPKI } from 'web-pki';
+import { LacunaWebPKI, } from 'web-pki';
 
 import { finishSignature, startSignature } from '@/api/firmaDigital.api';
 
@@ -57,12 +57,17 @@ export const ModalFirmaDigital = ({
 
   const fileRef = useRef(null);
 
-  const pki = new LacunaWebPKI();
+  //const license = fs.readFileSync('../../../LacunaPkiLicense.config','base64')
+
+  const pki = new LacunaWebPKI("AhEAKi5tcGFqdWp1eS5nb2IuYXJDAGlwNDoxMC4wLjAuMC84LGlwNDoxMjcuMC4wLjAvOCxpcDQ6MTcyLjE2LjAuMC8xMixpcDQ6MTkyLjE2OC4wLjAvMTYCAENBAAAAAbTpr/N1lt6J9Epym9irhIaFQcqPB1dDmav4BMj+fWyart1sDggK6Kh3gEqw/aJ+K6uf9rH+SZ4d7RjQqA6A8UizcAtX6jz6qhn9bK26ss/jvrta4jgSnQQaOK7TtAJ64YhgPhtLz1DJLByjyZIls4qYoQgVK8GNm4zcceXMTFa3eBNqEkQS3NttZ+YQddkOQnTDaEjQc/oyG3ZTQ/QbNMnpnt6IUhYElZfkgIEGfrW/S1JdTLGuBsYXMDbjZkU42yqgJKPv0KfFvkgE9nO9Y3+c2mv67yaUMyPx7bR3dGONembWp9j5kT0JzUPxr3OcvvLIPiTEhzX2zlDXetgM0MQ=")
 
 
 
   const handleInputChange = (ev) => {
     pki.readCertificate(ev.target.value).success(function (certEncoded) {
+      console.log("CERT ENCODED");
+      console.log(certEncoded);
+
       setFirmaDigitalState((prev) => ({
         ...prev,
         certThumb: ev.target.value,
@@ -109,8 +114,9 @@ export const ModalFirmaDigital = ({
         }
       ))
 
-      const resp = await startSignature(data);
-      return resp;
+      const resp = await startSignature(data)
+
+      return resp
     }
   };
 
@@ -123,42 +129,45 @@ export const ModalFirmaDigital = ({
     });
   };
 
-  const accept = async () => {
+  const accept = () => {
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    startFirma().then(res => {
+      console.log(res);
+      const newState = res
+      setFirmaDigitalState((prev) => ({ ...prev, ...newState, blocked: true }))
+      console.log(newState);
+      if (
+        !newState.certThumb ||
+        !newState.toSignHash ||
+        !newState.digestAlgorithm ||
+        !newState.transferFile ||
+        !newState.codigo
+      ) return;
 
-    const newState = await startFirma();
+      pki.init({
+        ready: () => pki.signHash({
+          thumbprint: newState.certThumb,
+          hash: newState.toSignHash,
+          digestAlgorithm: newState.digestAlgorithm,
+        }).success((signature) => {
+          console.log(signature);
+          const body = {
+            codigo: newState.codigo,
+            signature,
+            transferFile: newState.transferFile,
+          };
 
-    setFirmaDigitalState((prev) => ({...prev, ...newState, blocked: true}))
-    console.log(newState);
-    if (
-      !newState.certThumb ||
-      !newState.toSignHash ||
-      !newState.digestAlgorithm ||
-      !newState.transferFile ||
-      !newState.codigo
-    ) return;
+          finishSignature(body);
+          setFirmaDigitalState((prev) => ({ ...prev, blocked: false }));
+          onHide();
+          execAction();
+        }).fail(err => {
+          console.error(err);
 
-    pki
-      .signHash({
-        thumbprint: newState.certThumb,
-        hash: newState.toSignHash,
-        digestAlgorithm: newState.digestAlgorithm,
-      })
-      .success(async (signature) => {
-        console.log(signature); 
-        const body = {
-          codigo: newState.codigo,
-          signature,
-          transferFile: newState.transferFile,
-        };
+        })
+      });
+    })
 
-        await finishSignature(body);
-        setFirmaDigitalState((prev) => ({ ...prev, blocked: false }));
-        onHide();
-        execAction();
-      }).fail(err => {
-        console.log(err);
-        setFirmaDigitalState((prev) => ({ ...prev, blocked: false }));
-      })
   };
 
   // wrap getCetificados in useCallback to avoid infinite loop
@@ -166,7 +175,7 @@ export const ModalFirmaDigital = ({
     pki.init({
       ready: () =>
         pki
-          .listCertificates({ filter: pki.filters.isWithinValidity })
+          .listCertificates()
           .success((certs) => {
             setCertificados(
               certs?.map((c) => ({
