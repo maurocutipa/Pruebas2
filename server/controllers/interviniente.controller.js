@@ -22,13 +22,8 @@ IntervinienteController.mainIntervinienteCreate = async (req, res, next) => {
         //formateo de fechas y horas
         interviniente.fechaNacimiento = dayjs(interviniente.fechaNacimiento).format('YYYY-MM-DD')
 
-        //nose porque no anda
-
         const intData = await interntalAPI.post('/intervinientes/interviniente-create', interviniente)
- 
-        console.log(intData.data.id)
 
-        /*
         const vicRel = await interntalAPI.post('/intervinientes/interviniente-victima-create', {
             ...victimaRelacion,
             idDenuncia,
@@ -40,11 +35,9 @@ IntervinienteController.mainIntervinienteCreate = async (req, res, next) => {
             idInterviniente: intData.data.id,
         })
 
-        */
-
         res.status(200).json({
             message: 'Interviniente creado completo',
-            id: queryResult.insertId
+            id: intData.data.id
         })
 
     
