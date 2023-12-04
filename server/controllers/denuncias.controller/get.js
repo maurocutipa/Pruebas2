@@ -435,7 +435,7 @@ GetController.getDenunciaById = async (req, res) => {
 
     //========================== Fin querys violencia intrafamiliar ======================
 
-    //=================================== Querys abigeato ===============================
+    //=================================== Querys abigeato ================================
     let detallesDenunciaAbigeato , detallesEspeciesDenunciaAbigeato= {}; 
     query = `
         SELECT 
@@ -448,7 +448,7 @@ GetController.getDenunciaById = async (req, res) => {
     
     if (datosGeneralesDenunciaAbigeato !== undefined) {
       query = `
-      SELECT 
+      SELECT
         abid.id_denuncia_abigeato_detalles as idDenunciaAbigeatoDetalles, 
         abid.id_denuncia_abigeato as idDenunciaAbigeato, 
         abid.id_denuncia_abigeato_detalles_especies as idDenunciaAbigeatoDetallesEspecies, 
@@ -456,7 +456,7 @@ GetController.getDenunciaById = async (req, res) => {
         abid.detalle as detalle
       FROM denuncia_abigeato_detalles abid
       WHERE abid.id_denuncia_abigeato = ?`;
-      [detallesDenunciaAbigeato] = await queryHandler(query, [datosGeneralesDenunciaAbigeato.idDenunciaAbigeato]);
+      detallesDenunciaAbigeato = await queryHandler(query, [datosGeneralesDenunciaAbigeato.idDenunciaAbigeato]);
 
       query = `
       SELECT 
@@ -468,6 +468,65 @@ GetController.getDenunciaById = async (req, res) => {
       WHERE abide.id_denuncia_abigeato = ?`;
       [detallesEspeciesDenunciaAbigeato] = await queryHandler(query, [datosGeneralesDenunciaAbigeato.idDenunciaAbigeato]);
     }
+
+    //================================== Fin Querys Abigeato ================================
+
+    //================================= Querys Maltrato animal ==============================
+    query = `
+      SELECT 
+        ma.id_denuncia_maltrato_animal as idDenunciaMaltratoAnimal, 
+        ma.id_denuncia as idDenuncia, 
+        ma.condicion_animal as condicionAnimal, 
+        ma.atencion_veterinaria as atencionVeterinaria, 
+        ma.relacion_animal as relacionAnimal, 
+        ma.tipo_animal as tipoAnimal, 
+        ma.tomo_conocimiento as tomoConocimiento, 
+        ma.convivencia_indeterminado as convivenciaIndeterminado, 
+        ma.convivencia_adultos_mayores as convivenciaAdultosMayores, 
+        ma.convivencia_ninos as convivenciaNinos, 
+        ma.convivencia_otro as convivenciaOtro, 
+        ma.convivencia_discapacidad as convivenciaDiscapacidad, 
+        ma.violencia_cometida as violenciaCometida, 
+        ma.abuso_animal as abusoAnimal, 
+        ma.abuso_funcionario as abusoFuncionario
+        FROM denuncia_maltrato_animal ma
+        WHERE ma.id_denuncia = ?`
+    const [datosDenunciaMaltratoAnimal] = await queryHandler(query, [id]);
+    // =========================== Fin Querys Maltrato Animal =============================
+
+    // ========================= Querys Delitos contra la persona =========================
+    query = `
+      SELECT
+        dp.id_denuncia_delitos_personas as idDenunciaDelitosPersonas, 
+        dp.id_denuncia as idDenuncia, 
+        dp.femicidio as femicidio, 
+        dp.lesiones as lesiones, 
+        dp.homicidio as homicidio
+        FROM denuncia_delitos_personas dp
+        WHERE dp.id_denuncia = ?`
+    const [datosDenunciaDelitosPersonas] = await queryHandler(query, [id]); 
+    // ========================= Fin de querys delitos contra personas =====================
+
+    // ====================================== Querys daños =================================
+    query = `
+      SELECT 
+        dan.id_denuncia_danos as idDenunciaDanos, 
+        dan.id_denuncia as idDenuncia, 
+        dan.dano_animal as danoAnimal, 
+        dan.dano_cosa_material as danoCosaMaterial, 
+        dan.dano_inmueble as danoInmueble, 
+        dan.dano_sistema_informatico as danoSistemaInformatico, 
+        dan.consecuencia_dano as consecuenciaDano, 
+        dan.consecuencia_destruccion as consecuenciaDestruccion, 
+        dan.consecuencia_detalles_otro as consecuenciaDetallesOtro, 
+        dan.consecuencia_inutilizacion as consecuenciaInutilizacion, 
+        dan.consecuencia_desaparicion as consecuenciaDesaparicion,
+        dan.consecuencia_otro as consecuenciaOtro,
+        dan.pertenencia as pertenencia
+        FROM denuncia_danos dan
+        WHERE dan.id_denuncia = ?`
+    const [datosDenunciaDanos] = await queryHandler(query, [id]); 
+    // =================================== Fin Querys daños =================================
 
     res.status(200).json({
       message: `Denuncia con el id: ${id}`,
@@ -497,7 +556,10 @@ GetController.getDenunciaById = async (req, res) => {
           datosGeneralesDenunciaAbigeato, 
           detallesDenunciaAbigeato, 
           detallesEspeciesDenunciaAbigeato
-        }
+        },
+        datosDenunciaMaltratoAnimal: datosDenunciaMaltratoAnimal,
+        datosDenunciaDelitosPersonas: datosDenunciaDelitosPersonas,
+        datosDenunciaDanos: datosDenunciaDanos
       },
     });
   } catch (error) {
