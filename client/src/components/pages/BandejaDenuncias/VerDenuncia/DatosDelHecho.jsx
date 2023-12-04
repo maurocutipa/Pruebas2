@@ -11,6 +11,9 @@ import { AnexoDelitosSexuales } from './TablasVerDenuncia/AnexoDelitosSexuales/A
 import { useEffect, useState } from 'react';
 import { AnexoAbigeato } from './TablasVerDenuncia/AnexoAbigeato/AnexoAbigeato';
 import { AnexoViolenciaIntrafamiliar } from './TablasVerDenuncia/AnexoViolenciaIntrafamiliar/AnexoViolenciaIntrafamiliar';
+import { AnexoMaltratoAnimal } from './TablasVerDenuncia/AnexoMaltratoAnimal/AnexoMaltratoAnimal';
+import { AnexoDanos } from './TablasVerDenuncia/AnexoDanos/AnexoDanos';
+import { AnexoDelitoPersonas } from './TablasVerDenuncia/AnexoDelitoPersonas/AnexoDelitoPersonas';
 
 export const DatosDelHecho = ({ datosDenuncia }) => {
   const denuncia = datosDenuncia.denuncia;
@@ -151,12 +154,18 @@ export const DatosDelHecho = ({ datosDenuncia }) => {
         </>
       ) : tipoDenuncia === 3 ? (
         <ObjetosSustraidosTable datosDenunciaPropiedad={datosDenuncia.datosDenunciaPropiedad} />
+      ) : tipoDenuncia === 4 ? (
+        <AnexoDelitoPersonas datosDenunciaDelitoPersonas={datosDenuncia.datosDenunciaDelitosPersonas}/>
       ) : tipoDenuncia === 8 ? (
         <AnexoDelitosSexuales datosDelitoSexual={datosDenuncia.datosDelitoSexual}/>
       ) : tipoDenuncia === 9 ?(
         <AnexoViolenciaIntrafamiliar datosViolenciaIntrafamiliar={datosDenuncia.datosViolenciaIntrafamiliar}/>
       ) : tipoDenuncia === 14 ? (
-        <AnexoAbigeato/>
+        <AnexoAbigeato datosAnexoAbigeato={datosDenuncia.datosDenunciaAbigeato}/>
+      ) : tipoDenuncia === 15 ?(
+        <AnexoDanos datosDenunciaDanos={datosDenuncia.datosDenunciaDanos}/>
+      ) : tipoDenuncia === 16 ?(
+        <AnexoMaltratoAnimal datosDenunciaMaltratoAnimal={datosDenuncia.datosDenunciaMaltratoAnimal}/>
       ) : null}
 
       <Divider />
@@ -168,8 +177,10 @@ export const DatosDelHecho = ({ datosDenuncia }) => {
           src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/1200px-PDF_file_icon.svg.png'
           className='w-1 p-1'
         />
-        <Button label='Generar y firmar' size='small' className='m-2 btn-blue-mpa' />
-        <Button label='Subir archivo' size='small' className='m-2 btn-blue-mpa' />
+        <br />
+        <Button label='Validar y Firmar con Pad' size='small' className='m-2 btn-blue-mpa' />
+        <Button label='Imprimir Denuncia' size='small' className='m-2 btn-blue-mpa' />
+        <Button label='Subir Denuncia Firmada en forma Ológrafa' size='small' className='m-2 btn-blue-mpa' />
       </section>
 
       <div className="flex justify-content-between flex-wrap">
