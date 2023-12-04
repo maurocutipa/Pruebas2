@@ -25,7 +25,8 @@ router.post('/interviniente-denuncia-create', validateCreateIntervinienteDenunci
 router.post('/interviniente-victima-create', validateCreateIntervinienteVitima, IntervinienteController.createIntervinienteVictima);
 //router.put('/upload/:id', validateUpload, IntervinienteController.uploadFile);
 
+router.post('/update',  validateMain, IntervinienteController.mainIntervinienteUpdate);
 router.post('/interviniente-update/:id',  validateUpdateInterviniente, IntervinienteController.updateInterviniente);
-router.post('/interviniente-victima-update', validateUpdateIntervinienteVitima, IntervinienteController.updateIntervinienteVictima);
+router.post('/interviniente-victima-update/:id', validateUpdateIntervinienteVitima, IntervinienteController.updateIntervinienteVictima);
 
 module.exports = router;
