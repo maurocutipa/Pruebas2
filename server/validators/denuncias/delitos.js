@@ -2,6 +2,8 @@ const { check, body } = require("express-validator")
 const validateHelper = require('../../utils/validateHelper')
 
 const validateUpdateDelitoPersona = [
+    check("id").exists().not().isEmpty().isNumeric(),
+
     body("femicidio").optional().isBoolean(),
     body("lesiones").optional().isBoolean(),
     body("homicidio").optional().isBoolean(),
@@ -11,6 +13,7 @@ const validateUpdateDelitoPersona = [
 ]
 
 const validateUpdateDelitoSexual = [
+    check("id").exists().not().isEmpty().isNumeric(),
     // hecho
     body("hechoAcercamiento").optional().isBoolean(),
     body("hechoContactoTecnologico").optional().isBoolean(),

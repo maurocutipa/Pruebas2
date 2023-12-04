@@ -2,8 +2,8 @@ const { body } = require("express-validator")
 const validateHelper = require('../../utils/validateHelper')
 
 const validateUpdateMaltratoAnimal = [
-    body("idDenuncia").
-        optional().isNumeric(),
+    check("id").exists().not().isEmpty().isNumeric(),
+    
     body("condicionAnimal").
         optional().isIn(['Murio','Vive']),
     body("atencionVeterinaria").

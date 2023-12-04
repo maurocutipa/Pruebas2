@@ -2,6 +2,7 @@ const { check, body } = require("express-validator")
 const validateHelper = require('../../utils/validateHelper')
 
 const validateUpdateBusquedaPersona = [
+    check("id").exists().not().isEmpty().isNumeric(),
 
     // Conyugue
     body("nombreConyugue").optional(),
