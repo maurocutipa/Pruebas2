@@ -2,18 +2,29 @@
 import { useFormik } from 'formik';
 import { Card } from 'primereact/card';
 import { Dropdown } from 'primereact/dropdown';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { InvalidFieldMessage } from '@/components/common/InvalidFieldMessage';
 import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
+import { Calendar } from 'primereact/calendar';
 
 export const Detenidos = ({ denunciados }) => {
+  const { detenidosForm } = useAppSelector((state) => state.denunciaLegajo);
+  const formik = useFormik({
+    initialValues: detenidosForm.form,
+    initialErrors: detenidosForm.form,
+    onSubmit: (value) => {
+      console.log(value);
+    },
+  });
+
   return (
     <Card className='shadow-1 px-7 py-3 mt-6'>
       <h2>Detenidos</h2>
 
-      <form onSubmit={() => {}}>
+      <form onSubmit={formik.handleSubmit}>
         <div className='grid mt-6'>
           <div className='col-12 md:col-6'>
             <label htmlFor='denunciados'>Denunciados</label>
@@ -25,16 +36,23 @@ export const Detenidos = ({ denunciados }) => {
               optionValue='id'
               placeholder='Seleccione'
               className={`w-full mt-2 `}
-              // onChange={formik.handleChange}
-              // value={formik.values.denunciado}
-              // onBlur={formik.handleBlur}
+              value={formik.values.denunciado}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
             {/* <InvalidFieldMessage formik={formik} name='denunciado' /> */}
           </div>
 
           <div className='col-12 md:col-6'>
             <label htmlFor='lugarDetencion'>Lugar de detención</label>
-            <InputText className='w-full mt-2' />
+            <InputText
+              className='w-full mt-2'
+              name='lugarDetencion'
+              id='lugarDetencion'
+              value={formik.values.lugarDetencion}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
             {/* <InvalidFieldMessage formik={formik} name='lugarDetencion' /> */}
           </div>
 
@@ -42,13 +60,30 @@ export const Detenidos = ({ denunciados }) => {
             <label htmlFor='fechaHoraDetencion'>
               Fecha y hora de detención
             </label>
-            <InputText className='w-full mt-2' />
-            {/* <InvalidFieldMessage formik={formik} name='fechaHoraDetencion' /> */}
+
+            <Calendar
+              dateFormat='dd/mm/yy'
+              placeholder='Seleccione la fecha'
+              className='w-full mt-2'
+              showIcon
+              name='fechaHoraDetencion'
+              id='fechaHoraDetencion'
+              value={formik.values.fechaHoraDetencion}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
           </div>
 
           <div className='col-12 md:col-6'>
             <label htmlFor='juezDetencion'>Juez que dispuso la detención</label>
-            <InputText className='w-full mt-2' />
+            <InputText
+              className='w-full mt-2'
+              name='juezDetencion'
+              id='juezDetencion'
+              value={formik.values.juezDetencion}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
             {/* <InvalidFieldMessage formik={formik} name='juezDetencion' /> */}
           </div>
 
@@ -58,7 +93,7 @@ export const Detenidos = ({ denunciados }) => {
               label={'Agregar'}
               className='btn-blue-mpa w-full'
               type='submit'
-              // disabled={!formik.isValid}
+              disabled={!formik.isValid}
             />
           </div>
         </div>
