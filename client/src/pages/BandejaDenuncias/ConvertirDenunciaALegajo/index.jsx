@@ -105,7 +105,10 @@ export const ConvertirDenunciaALegajo = () => {
               delitosAsignados={denunciaALegajoForm.delitos}
             />
 
-            <Detenidos denunciados={legajoData.denunciados} />
+            <Detenidos
+              denunciados={legajoData.denunciados}
+              detenidos={denunciaALegajoForm.detenidos}
+            />
           </div>
 
           <div className='flex justify-content-between mt-8 mb-2'>

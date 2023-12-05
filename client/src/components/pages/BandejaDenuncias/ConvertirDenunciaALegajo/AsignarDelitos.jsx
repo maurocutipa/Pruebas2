@@ -152,7 +152,13 @@ export const AsignarDelito = ({ denunciados, delitos, delitosAsignados }) => {
         <Column
           field='Acciones'
           header='Acciones'
-          body={(delito) => <AccionesTabla data={delito} action='delito' />}
+          body={(delito) => (
+            <AccionesTabla
+              data={delito}
+              action='delito'
+              disabled={delitoAsignadoForm.estaModificando}
+            />
+          )}
         />
       </DataTable>
     </Card>
