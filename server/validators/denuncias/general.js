@@ -2,7 +2,7 @@ const { check, body } = require("express-validator")
 const validateHelper = require('../../utils/validateHelper')
 
 const validateUpdateGeneral = [
-    check("id").exists().not().isEmpty().isNumeric(),
+    //check("id").exists().not().isEmpty().isNumeric(),              averiguar porque se va al body
     
     body("competencia").
         optional(),
