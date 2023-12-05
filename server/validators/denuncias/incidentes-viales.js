@@ -1,4 +1,4 @@
-const { body } = require("express-validator")
+const { check,body } = require("express-validator")
 const validateHelper = require('../../utils/validateHelper')
 
 const validateUpdateIncidentesViales = [
