@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAppSelector } from '@/store/hooks';
+import { Firma } from './Firma.jsx';
 import ReCAPTCHA from 'react-google-recaptcha';
 import MapView from './pages/Denuncias/templates/MapView';
 import { Button } from 'primereact/button';
@@ -15,7 +16,7 @@ import {
   getNacionalidades,
   getProvincias,
 } from '../api/adicional.api';
-import { useDelitosContraPersonasContext } from '../pages/Denuncia/Denuncia';
+import { useDelitosContraPersonasContext, useDenunciaContext } from '../pages/Denuncia/Denuncia';
 import { captcha } from '../api/auth.api';
 import { useNavigate } from 'react-router-dom';
 
@@ -23,6 +24,8 @@ export default function FormularioDenunciante(props) {
   const { data } = useAppSelector(state => state.data);
 
   const navigate = useNavigate();
+
+  const { firmasDenunciantes, setFirmasDenunciantes, firmaFuncionario, setFirmaFuncionario} = useDenunciaContext();
 
   const [dialogEnviando, setDialogEnviando] = useState(false);
   const [hasId, setHasId] = useState(false);
@@ -1045,6 +1048,11 @@ export default function FormularioDenunciante(props) {
           </div>
 
           <Divider className='my-6' />
+          
+          <Firma />
+          
+          <Divider className='my-6' />
+
           <form onSubmit={onSubmited} className='my-6'>
             <div className='grid mb-6'>
               <div className='col-12'>
