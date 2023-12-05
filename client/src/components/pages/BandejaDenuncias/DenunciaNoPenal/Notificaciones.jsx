@@ -55,13 +55,16 @@ export const Notificaciones = () => {
 
   const addNotificacion = () => {
     const persona = {
-      tipo: currentTipo == 1? "PERSONA":(currentTipo == 2? "GRUPO": "AGENDA"),
+      tipo: currentTipo&1? "PERSONA":"GRUPO",
+      tipoNotificacion: currentTipo == 1? "PERSONAL":currentTipo == 2? "GRUPAL":"AGENDA",
       nombre: currentTipo&1? nombreApellidoRef.current.value:grupos.find((g) => g.id === currentGrupo)?.nombre,
       mail: currentTipo&1? emailRef.current.value:"-",
       id: currentIndex
     };
+    
     setCurrentIndex(prev => prev + 1);
     dispatch(setNotificaciones([...notificaciones, persona]));
+    console.log(notificaciones);
   };
 
   const deleteNotificacion = (id) => {
