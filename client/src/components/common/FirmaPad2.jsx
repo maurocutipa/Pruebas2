@@ -1,8 +1,12 @@
 /* eslint-disable react/prop-types */
 import { Button as Btn } from 'primereact/button';
 import { useEffect } from 'react';
+import { useDenunciaContext } from '../../pages/Denuncia/Denuncia';
 
-export const FirmaPad2 = ({ height, width, disabled = false, setImage }) => {
+export const FirmaPad2 = ({ height=200, width=200, disabled = false, setImage,type, index }) => {
+
+  const { firmasDenunciantes, setFirmasDenunciantes, firmaFuncionario, setFirmaFuncionario} = useDenunciaContext();
+
   let BTN_TEXT_CANCEL = 'Cancelar';
   let BTN_TEXT_CLEAR = 'Borrar';
   let BTN_TEXT_OK = 'Guardar';
@@ -309,6 +313,24 @@ export const FirmaPad2 = ({ height, width, disabled = false, setImage }) => {
     }
 
     const image = signatureCanvas.toDataURL('image/png');
+
+    if (type === 'denunciante') {
+      const firmasDenunciantesNew=firmasDenunciantes.map((firmaDenunciante)=>{
+        if (firmaDenunciante.id === index) {
+          return {
+            ...firmaDenunciante,
+            image: image,
+          };
+        }
+        return firmaDenunciante;
+      });
+
+      setFirmasDenunciantes(firmasDenunciantesNew);
+    }
+
+    if (type === 'funcionario') {
+      //dispatch(setFirmaFuncionario(image));
+    }
   }
 
   function disconnect() {

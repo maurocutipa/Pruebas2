@@ -312,7 +312,7 @@ export const FirmaPad = ({ type, signatureRef, disabled }) => {
     var signatureCanvas = document.createElement('canvas');
     signatureCanvas.id = 'signatureCanvas';
     signatureCanvas.height = '300';
-    signatureCanvas.width = signatureRef.current.offsetWidth;
+    signatureCanvas.width = '300';
     var signatureCtx = signatureCanvas.getContext('2d');
 
     clearCanvas(signatureCanvas, signatureCtx);

@@ -73,6 +73,9 @@ export default function Denuncia() {
   const [testigos, setTestigos] = useState([]);
   const [funcionGrado, setFuncionGrado] = useState('');
 
+  const [firmasDenunciantes, setFirmasDenunciantes] = useState([]);
+  const [firmaFuncionario, setFirmaFuncionario] = useState(null);
+
   const [denuncia, setDenuncia] = useState({
     descripcionQue: '',
     descripcionComo: '',
@@ -373,10 +376,23 @@ export default function Denuncia() {
         conoceDenunciado = 1;
     });
     setIntervinientes(tablaIntervinientes);
+
     if (anonimo == 1) {
       setDenunciantes([]);
+      setFirmasDenunciantes([]);//habran 0 firmas con pad
     } else {
       setDenunciantes(tablaDenunciantes);
+      
+      const firmasDenunciantesNew = [];
+      tablaDenunciantes.forEach((el)=>{
+        let firmaNew = {id: el.id,image:''};
+        let firmaCurrent=firmasDenunciantes.find((firma)=>firma.id===el.id);
+        if(firmaCurrent){
+          firmaNew.image=firmaCurrent.image;
+        }
+        firmasDenunciantesNew.push(firmaNew);
+      })
+      setFirmasDenunciantes(firmasDenunciantesNew);
     }
     setVictimasRelaciones(tablaVictimasRelaciones);
     setFotosDni(fotos);
@@ -396,7 +412,7 @@ export default function Denuncia() {
     setDenunciados(denunciados);
     setVictimas(victimas)
     setTestigos(testigos);
-    changePaso(3);
+    changePaso(4);//3
 
     console.log(denuncia);
   };
@@ -1223,7 +1239,7 @@ export default function Denuncia() {
 
   return (
     <>
-      <DenunciaContext.Provider value={{ tipoValue, str, nacionalidades, provincias, departamentos, localidades, barrios }}>
+      <DenunciaContext.Provider value={{ tipoValue, str, nacionalidades, provincias, departamentos, localidades, barrios,firmasDenunciantes, setFirmasDenunciantes, firmaFuncionario, setFirmaFuncionario}}>
         <RoboHurtoContext.Provider value={{ telefonos, automoviles, bicicletas, autopartes, documentos, cheques, tarjetas, otros, selectedOptionsRoboHurto, setTelefonos, setAutomoviles, setBicicletas, setAutopartes, setDocumentos, setCheques, setTarjetas, setOtros, setSelectedOptionsRoboHurto }}>
           <IncidentesVialesContext.Provider value={{ automoviles, setAutomoviles }}>
             <DelitosContraPersonasContext.Provider value={{ lesiones, homicidio, femicidio, setLesiones, setHomicidio, setFemicidio }}>
