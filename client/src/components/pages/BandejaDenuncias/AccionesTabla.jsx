@@ -8,11 +8,14 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/store/hooks';
 import { deleteDenunciaThunk } from '@/store/denuncias/denuncias.thunks';
 import { setIdDenuncia } from '@/store/denuncias/denuncias.slice';
+import { downloadFile } from '@/utils/downloadfile';
 
-export const AccionesTabla = ({ id, setVisible, isRatificada, idLegajo }) => {
+export const AccionesTabla = ({ setVisible, denuncia }) => {
   const navigate = useNavigate();
   const menuLeft = useRef(null);
   const dispatch = useAppDispatch();
+
+  const { idDenuncia, idLegajo, ratificacion, accion } = denuncia;
 
   const eliminarDenuncia = () => {
     confirmDialog({
@@ -26,20 +29,23 @@ export const AccionesTabla = ({ id, setVisible, isRatificada, idLegajo }) => {
   };
 
   const ratificarDenuncia = () => {
-    navigate(`/ratificar-denuncia/${id}`);
+    navigate(`/ratificar-denuncia/${idDenuncia}`);
   };
 
   const descargarPdf = () => {
-    console.log('DESCARGADO', id);
+    downloadFile(
+      'https://www.sib.gob.ar/portal/wp-content/uploads/2020/08/Cuento-Los-Parques-Nacionales-nuestros-por-naturaleza.pdf',
+      'pdfloco'
+    );
   };
 
   const mostrarDetalles = () => {
-    navigate(`/ver-denuncia/${id}`);
+    navigate(`/ver-denuncia/${idDenuncia}`);
   };
 
   const realizarPase = () => {
     setVisible(true);
-    dispatch(setIdDenuncia(id));
+    dispatch(setIdDenuncia(idDenuncia));
   };
 
   const verLegajo = () => {
@@ -55,24 +61,33 @@ export const AccionesTabla = ({ id, setVisible, isRatificada, idLegajo }) => {
           command: () => mostrarDetalles(),
         },
         {
-          label: isRatificada ? 'Descargar PDF' : 'Ratificar denuncia',
-          command: () => (isRatificada ? descargarPdf() : ratificarDenuncia()),
+          label: ratificacion ? 'Descargar PDF' : 'Ratificar denuncia',
+          command: () => (ratificacion ? descargarPdf() : ratificarDenuncia()),
         },
-        {
-          label: 'Acción a realizar',
-          command: () => realizarPase(),
-        },
+        ...(() => {
+          if (!accion)
+            return [
+              {
+                label: 'Acción a realizar',
+                command: () => realizarPase(),
+              },
+            ];
+          return [];
+        })(),
         {
           label: 'Eliminar denuncia',
           command: () => eliminarDenuncia(),
         },
         ...(() => {
-          if (idLegajo) return [{
-            label: 'Ver legajo',
-            command: () => verLegajo(),
-          }]
-          return []
-        })()
+          if (idLegajo)
+            return [
+              {
+                label: 'Ver legajo',
+                command: () => verLegajo(),
+              },
+            ];
+          return [];
+        })(),
       ],
     },
   ];

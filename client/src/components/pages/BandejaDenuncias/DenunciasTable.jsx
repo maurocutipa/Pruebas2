@@ -198,12 +198,7 @@ export const DenunciasTable = () => {
           field='Acciones'
           header='Acciones'
           body={(denuncia) => (
-            <AccionesTabla
-              id={denuncia.idDenuncia}
-              setVisible={setVisible}
-              isRatificada={!!denuncia.ratificacion}
-              idLegajo={denuncia.idLegajo}
-            />
+            <AccionesTabla setVisible={setVisible} denuncia={denuncia} />
           )}
         />
       </DataTable>
