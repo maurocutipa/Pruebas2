@@ -9,6 +9,11 @@ const { matchedData } = require('express-validator');
 
 const UpdateController = {};
 
+//options para le matchedData
+const options = {
+  locations: ['body'], 
+};
+
 UpdateController.ratificarDenuncia = async (req, res) => {
   const { id } = req.params;
 
@@ -52,7 +57,9 @@ UpdateController.ratificarDenuncia = async (req, res) => {
 UpdateController.updateDenunciaGeneral = async (req, res) => {
   try {
 
-      const data = matchedData(req);
+
+
+      const data = matchedData(req,options);
       const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
       const values = Object.values(data);
 
@@ -76,7 +83,7 @@ UpdateController.updateDenunciaGeneral = async (req, res) => {
 UpdateController.updateDenunciaGenero = async (req, res) => {
   try {
 
-      const data = matchedData(req);
+      const data = matchedData(req,options);
       const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
       const values = Object.values(data);
 
@@ -100,7 +107,7 @@ UpdateController.updateDenunciaGenero = async (req, res) => {
 UpdateController.updateDenunciaFamiliar = async (req, res) => {
   try {
 
-      const data = matchedData(req);
+      const data = matchedData(req,options);
       const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
       const values = Object.values(data);
 
@@ -125,7 +132,7 @@ UpdateController.updateDenunciaFamiliar = async (req, res) => {
 UpdateController.updateDenunciaAbigeato = async (req, res) => {
   try {
 
-      const data = matchedData(req);
+      const data = matchedData(req,options);
       const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
       const values = Object.values(data);
 
@@ -149,7 +156,7 @@ UpdateController.updateDenunciaAbigeato = async (req, res) => {
 UpdateController.updateDenunciaAbigeatoDetalles = async (req, res) => {
   try {
 
-      const data = matchedData(req);
+      const data = matchedData(req,options);
       const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
       const values = Object.values(data);
 
@@ -173,7 +180,7 @@ UpdateController.updateDenunciaAbigeatoDetalles = async (req, res) => {
 UpdateController.updateDenunciaPropiedad= async (req, res) => {
   try {
 
-      const data = matchedData(req);
+      const data = matchedData(req,options);
       const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
       const values = Object.values(data);
 
@@ -197,7 +204,7 @@ UpdateController.updateDenunciaPropiedad= async (req, res) => {
 UpdateController.updateDenunciaDelitosPersonas = async (req, res) => {
   try {
 
-      const data = matchedData(req);
+      const data = matchedData(req,options);
       const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
       const values = Object.values(data);
 
@@ -221,7 +228,7 @@ UpdateController.updateDenunciaDelitosPersonas = async (req, res) => {
 UpdateController.updateDenunciaIncidenteVial = async (req, res) => {
   try {
 
-      const data = matchedData(req);
+      const data = matchedData(req,options);
       const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
       const values = Object.values(data);
 
@@ -245,7 +252,7 @@ UpdateController.updateDenunciaIncidenteVial = async (req, res) => {
 UpdateController.updateDenunciaDelitosSexuales = async (req, res) => {
   try {
 
-      const data = matchedData(req);
+      const data = matchedData(req,options);
       const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
       const values = Object.values(data);
 
@@ -269,7 +276,7 @@ UpdateController.updateDenunciaDelitosSexuales = async (req, res) => {
 UpdateController.updateDenunciaIncidenteVialVehiculo = async (req, res) => {
   try {
 
-      const data = matchedData(req);
+      const data = matchedData(req,options);
       const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
       const values = Object.values(data);
 
@@ -293,7 +300,7 @@ UpdateController.updateDenunciaIncidenteVialVehiculo = async (req, res) => {
 UpdateController.updateDenunciaDanos = async (req, res) => {
   try {
 
-      const data = matchedData(req);
+      const data = matchedData(req,options);
       const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
       const values = Object.values(data);
 
@@ -317,7 +324,7 @@ UpdateController.updateDenunciaDanos = async (req, res) => {
 UpdateController.updateDenunciaMaltratoAnimal = async (req, res) => {
   try {
 
-      const data = matchedData(req);
+      const data = matchedData(req,options);
       const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
       const values = Object.values(data);
 
@@ -341,7 +348,7 @@ UpdateController.updateDenunciaMaltratoAnimal = async (req, res) => {
 UpdateController.updateDenunciaBusquedaPersona = async (req, res) => {
   try {
 
-      const data = matchedData(req);
+      const data = matchedData(req,options);
       const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
       const values = Object.values(data);
 

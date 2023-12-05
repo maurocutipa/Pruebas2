@@ -1,8 +1,8 @@
-const { check, body } = require("express-validator")
+const { check, body, param } = require("express-validator")
 const validateHelper = require('../../utils/validateHelper')
 
 const validateUpdateGeneral = [
-    //check("id").exists().not().isEmpty().isNumeric(),              averiguar porque se va al body
+    check("id").exists().not().isEmpty().isNumeric(),             
     
     body("competencia").
         optional(),
