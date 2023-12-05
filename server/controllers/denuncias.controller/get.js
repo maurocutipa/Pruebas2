@@ -81,6 +81,7 @@ GetController.getDenuncias = async (req, res) => {
             d.realizacion,
             d.ratificacion,
             d.competencia,
+            d.accion,
             td.nombre AS tipoDenuncia,
             s.nombre AS seccional,
             l.id_legajo AS idLegajo,
@@ -390,7 +391,7 @@ GetController.getDenunciaById = async (req, res) => {
     vic.riesgo_vida as riesgoVida, 
     vic.estado as estado
     FROM denuncia_victima vic
-    WHERE id_denuncia = ?`
+    WHERE id_denuncia = ?`;
     const [datosVictima] = await queryHandler(query, [id]);
     //=========================== Fin Querys para delitos Sexuales =======================
 
@@ -436,16 +437,17 @@ GetController.getDenunciaById = async (req, res) => {
     //========================== Fin querys violencia intrafamiliar ======================
 
     //=================================== Querys abigeato ================================
-    let detallesDenunciaAbigeato , detallesEspeciesDenunciaAbigeato= {}; 
+    let detallesDenunciaAbigeato,
+      detallesEspeciesDenunciaAbigeato = {};
     query = `
         SELECT 
           abi.id_denuncia_abigeato as idDenunciaAbigeato, 
           abi.id_denuncia as idDenuncia, 
           abi.violencia_fisica as violenciaFisica
           FROM denuncia_abigeato abi
-          WHERE id_denuncia = ?`
-    const [datosGeneralesDenunciaAbigeato] = await queryHandler(query, [id]); 
-    
+          WHERE id_denuncia = ?`;
+    const [datosGeneralesDenunciaAbigeato] = await queryHandler(query, [id]);
+
     if (datosGeneralesDenunciaAbigeato !== undefined) {
       query = `
       SELECT
@@ -456,7 +458,9 @@ GetController.getDenunciaById = async (req, res) => {
         abid.detalle as detalle
       FROM denuncia_abigeato_detalles abid
       WHERE abid.id_denuncia_abigeato = ?`;
-      detallesDenunciaAbigeato = await queryHandler(query, [datosGeneralesDenunciaAbigeato.idDenunciaAbigeato]);
+      detallesDenunciaAbigeato = await queryHandler(query, [
+        datosGeneralesDenunciaAbigeato.idDenunciaAbigeato,
+      ]);
 
       query = `
       SELECT 
@@ -466,7 +470,9 @@ GetController.getDenunciaById = async (req, res) => {
         abide.detalle as detalle
       FROM denuncia_abigeato_detalles abide
       WHERE abide.id_denuncia_abigeato = ?`;
-      [detallesEspeciesDenunciaAbigeato] = await queryHandler(query, [datosGeneralesDenunciaAbigeato.idDenunciaAbigeato]);
+      [detallesEspeciesDenunciaAbigeato] = await queryHandler(query, [
+        datosGeneralesDenunciaAbigeato.idDenunciaAbigeato,
+      ]);
     }
 
     //================================== Fin Querys Abigeato ================================
@@ -490,7 +496,7 @@ GetController.getDenunciaById = async (req, res) => {
         ma.abuso_animal as abusoAnimal, 
         ma.abuso_funcionario as abusoFuncionario
         FROM denuncia_maltrato_animal ma
-        WHERE ma.id_denuncia = ?`
+        WHERE ma.id_denuncia = ?`;
     const [datosDenunciaMaltratoAnimal] = await queryHandler(query, [id]);
     // =========================== Fin Querys Maltrato Animal =============================
 
@@ -503,8 +509,8 @@ GetController.getDenunciaById = async (req, res) => {
         dp.lesiones as lesiones, 
         dp.homicidio as homicidio
         FROM denuncia_delitos_personas dp
-        WHERE dp.id_denuncia = ?`
-    const [datosDenunciaDelitosPersonas] = await queryHandler(query, [id]); 
+        WHERE dp.id_denuncia = ?`;
+    const [datosDenunciaDelitosPersonas] = await queryHandler(query, [id]);
     // ========================= Fin de querys delitos contra personas =====================
 
     // ====================================== Querys daños =================================
@@ -524,8 +530,8 @@ GetController.getDenunciaById = async (req, res) => {
         dan.consecuencia_otro as consecuenciaOtro,
         dan.pertenencia as pertenencia
         FROM denuncia_danos dan
-        WHERE dan.id_denuncia = ?`
-    const [datosDenunciaDanos] = await queryHandler(query, [id]); 
+        WHERE dan.id_denuncia = ?`;
+    const [datosDenunciaDanos] = await queryHandler(query, [id]);
     // =================================== Fin Querys daños =================================
 
     res.status(200).json({
@@ -549,17 +555,17 @@ GetController.getDenunciaById = async (req, res) => {
         datosViolenciaDeGenero: datosViolenciaDeGenero,
         datosDelitoSexual: {
           detallesDelitoSexual,
-          datosVictima
+          datosVictima,
         },
-        datosViolenciaIntrafamiliar: datosViolenciaIntrafamiliar, 
+        datosViolenciaIntrafamiliar: datosViolenciaIntrafamiliar,
         datosDenunciaAbigeato: {
-          datosGeneralesDenunciaAbigeato, 
-          detallesDenunciaAbigeato, 
-          detallesEspeciesDenunciaAbigeato
+          datosGeneralesDenunciaAbigeato,
+          detallesDenunciaAbigeato,
+          detallesEspeciesDenunciaAbigeato,
         },
         datosDenunciaMaltratoAnimal: datosDenunciaMaltratoAnimal,
         datosDenunciaDelitosPersonas: datosDenunciaDelitosPersonas,
-        datosDenunciaDanos: datosDenunciaDanos
+        datosDenunciaDanos: datosDenunciaDanos,
       },
     });
   } catch (error) {
