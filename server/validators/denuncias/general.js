@@ -27,9 +27,9 @@ const validateUpdateGeneral = [
     body("idBarrio").
         optional(),
     body("pisoHecho").
-        optional().isNumeric(),
+        optional(),
     body("departamentoHecho").
-        optional().isNumeric(),
+        optional(),
     body("calleHecho").
         optional(),
     body("numCalle").
