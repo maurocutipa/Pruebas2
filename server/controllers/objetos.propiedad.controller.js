@@ -7,13 +7,18 @@ const showError = require('@utils/showError')
 
 const ObjetosPropiedadController = {}
 
+//options para le matchedData
+const options = {
+    locations: ['body'], 
+};
+  
 
 //crear objetos propiedad
 
 ObjetosPropiedadController.createTelefonos = async(req,res) => {
     try {
 
-        const data = matchedData(req);
+        const data = matchedData(req,options);
         const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
         const values = Object.values(data);
 
@@ -35,7 +40,7 @@ ObjetosPropiedadController.createTelefonos = async(req,res) => {
 ObjetosPropiedadController.createAutomoviles = async(req,res) => {
     try {
 
-        const data = matchedData(req);
+        const data = matchedData(req,options);
         const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
         const values = Object.values(data);
         
@@ -59,7 +64,7 @@ ObjetosPropiedadController.createBicicletas = async(req,res) => {
     
     try {
 
-        const data = matchedData(req);
+        const data = matchedData(req,options);
         const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
         const values = Object.values(data);
 
@@ -81,7 +86,7 @@ ObjetosPropiedadController.createBicicletas = async(req,res) => {
 ObjetosPropiedadController.createAutopartes = async(req,res) => {
     try {
 
-        const data = matchedData(req);
+        const data = matchedData(req,options);
         const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
         const values = Object.values(data);
 
@@ -103,7 +108,7 @@ ObjetosPropiedadController.createAutopartes = async(req,res) => {
 ObjetosPropiedadController.createCheques = async(req,res) => {
     try {
 
-        const data = matchedData(req);
+        const data = matchedData(req,options);
         const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
         const values = Object.values(data);
 
@@ -125,7 +130,7 @@ ObjetosPropiedadController.createCheques = async(req,res) => {
 ObjetosPropiedadController.createDocumentacion = async(req,res) => {
     try {
 
-        const data = matchedData(req);
+        const data = matchedData(req,options);
         const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
         const values = Object.values(data);
 
@@ -147,7 +152,7 @@ ObjetosPropiedadController.createDocumentacion = async(req,res) => {
 ObjetosPropiedadController.createOtro = async(req,res) => {
     try {
 
-        const data = matchedData(req);
+        const data = matchedData(req,options);
         const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
         const values = Object.values(data);
 
@@ -169,7 +174,7 @@ ObjetosPropiedadController.createOtro = async(req,res) => {
 ObjetosPropiedadController.createTarjetas = async(req,res) => {
     try {
 
-        const data = matchedData(req);
+        const data = matchedData(req,options);
         const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
         const values = Object.values(data);
 
@@ -193,7 +198,7 @@ ObjetosPropiedadController.createTarjetas = async(req,res) => {
 ObjetosPropiedadController.updateTelefonos = async(req,res) => {
     try {
 
-        const data = matchedData(req);
+        const data = matchedData(req,options);
         const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
         const values = Object.values(data);
   
@@ -219,7 +224,7 @@ ObjetosPropiedadController.updateTelefonos = async(req,res) => {
 ObjetosPropiedadController.updateAutomoviles = async(req,res) => {
     try {
 
-        const data = matchedData(req);
+        const data = matchedData(req,options);
         const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
         const values = Object.values(data);
   
@@ -245,7 +250,7 @@ ObjetosPropiedadController.updateAutomoviles = async(req,res) => {
 ObjetosPropiedadController.updateBicicletas = async(req,res) => {
     try {
 
-        const data = matchedData(req);
+        const data = matchedData(req,options);
         const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
         const values = Object.values(data);
   
@@ -271,7 +276,7 @@ ObjetosPropiedadController.updateBicicletas = async(req,res) => {
 ObjetosPropiedadController.updateAutopartes = async(req,res) => {
     try {
 
-        const data = matchedData(req);
+        const data = matchedData(req,options);
         const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
         const values = Object.values(data);
   
@@ -297,7 +302,7 @@ ObjetosPropiedadController.updateAutopartes = async(req,res) => {
 ObjetosPropiedadController.updateCheques = async(req,res) => {
     try {
 
-        const data = matchedData(req);
+        const data = matchedData(req,options);
         const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
         const values = Object.values(data);
   
@@ -323,7 +328,7 @@ ObjetosPropiedadController.updateCheques = async(req,res) => {
 ObjetosPropiedadController.updateDocumentacion = async(req,res) => {
     try {
 
-        const data = matchedData(req);
+        const data = matchedData(req,options);
         const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
         const values = Object.values(data);
   
@@ -349,7 +354,7 @@ ObjetosPropiedadController.updateDocumentacion = async(req,res) => {
 ObjetosPropiedadController.updateOtro = async(req,res) => {
     try {
 
-        const data = matchedData(req);
+        const data = matchedData(req,options);
         const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
         const values = Object.values(data);
   
@@ -375,7 +380,7 @@ ObjetosPropiedadController.updateOtro = async(req,res) => {
 ObjetosPropiedadController.updateTarjetas = async(req,res) => {
     try {
 
-        const data = matchedData(req);
+        const data = matchedData(req,options);
         const keys = Object.keys(data).map((key) => convertToSnakeCase(key));
         const values = Object.values(data);
   
