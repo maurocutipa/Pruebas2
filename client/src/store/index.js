@@ -9,6 +9,7 @@ import ratificarDenunciaSlice from './denuncias/ratificarDenuncia/ratificarDenun
 import denunciaNoPenalSlice from './denuncias/denunciaNoPenal/denunciaNoPenal.slice';
 
 import legajosSlice from './legajo/legajos.slice';
+import personasSlice from './personas/personas.slice';
 
 export const store = configureStore({
   reducer: {
@@ -25,5 +26,9 @@ export const store = configureStore({
      * Legajos Slices
      */
     legajos: legajosSlice,
+    /**
+     * Personas Slices
+     */
+    personas: personasSlice,
   },
 });
