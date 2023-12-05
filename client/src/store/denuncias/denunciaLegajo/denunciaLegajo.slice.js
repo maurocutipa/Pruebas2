@@ -36,6 +36,7 @@ const initialState = {
     fiscalia: '',
     resumenHechos: [],
     delitos: [],
+    detenidos: [],
   },
   // Datos usados para crear el legajo
   legajoData: {
@@ -166,6 +167,12 @@ export const denunciaLegajoSlice = createSlice({
     agregarDelito: (state, { payload }) => {
       state.denunciaALegajoForm.delitos.push(payload);
     },
+    agregarDetenido: (state, { payload }) => {
+      state.denunciaALegajoForm.detenidos.push(payload);
+    },
+    /**
+     * Data para PDF
+     */
     generarDataParaPdf: (state, { payload }) => {
       state.dataParaPdf.resumenHechos =
         state.denunciaALegajoForm.resumenHechos.map((r) => ({
@@ -240,6 +247,7 @@ export const {
   agregarResumenHecho,
   agregarDelito,
   agregarFiscalia,
+  agregarDetenido,
   // Extra
   generarDataParaPdf,
   resetState,

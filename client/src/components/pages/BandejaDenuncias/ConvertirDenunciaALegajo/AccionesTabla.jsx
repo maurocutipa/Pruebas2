@@ -7,9 +7,11 @@ import {
   eliminarResumenHecho,
   setDelitoAsignadoForm,
   eliminarDelitoAsignado,
+  eliminarDetenido,
+  setDetenidoForm,
 } from '@/store/denuncias/denunciaLegajo/denunciaLegajo.slice';
 
-export const AccionesTabla = ({ data, action }) => {
+export const AccionesTabla = ({ data, action, disabled = false }) => {
   const dispatch = useAppDispatch();
 
   const eliminar = () => {
@@ -26,6 +28,10 @@ export const AccionesTabla = ({ data, action }) => {
         if (action === 'delito') {
           dispatch(eliminarDelitoAsignado(data.id));
         }
+
+        if (action === 'detenido') {
+          dispatch(eliminarDetenido(data.id));
+        }
       },
       draggable: false,
     });
@@ -38,6 +44,10 @@ export const AccionesTabla = ({ data, action }) => {
 
     if (action === 'delito') {
       dispatch(setDelitoAsignadoForm(data));
+    }
+
+    if (action === 'detenido') {
+      dispatch(setDetenidoForm(data));
     }
   };
 
@@ -52,6 +62,7 @@ export const AccionesTabla = ({ data, action }) => {
         severity='info'
         onClick={modificar}
         tooltip='Modificar'
+        disabled={disabled}
         tooltipOptions={{ position: 'top' }}
       />
 
@@ -63,6 +74,7 @@ export const AccionesTabla = ({ data, action }) => {
         severity='danger'
         onClick={eliminar}
         tooltip='Eliminar'
+        disabled={disabled}
         tooltipOptions={{ position: 'top' }}
       />
     </>

@@ -198,7 +198,13 @@ export const ResumenHechos = ({
         <Column
           field='Acciones'
           header='Acciones'
-          body={(resumen) => <AccionesTabla data={resumen} action='resumen' />}
+          body={(resumen) => (
+            <AccionesTabla
+              data={resumen}
+              action='resumen'
+              disabled={resumenHechosForm.estaModificando}
+            />
+          )}
         />
       </DataTable>
     </Card>
