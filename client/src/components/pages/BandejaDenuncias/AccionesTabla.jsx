@@ -20,10 +20,10 @@ export const AccionesTabla = ({ setVisible, denuncia }) => {
   const eliminarDenuncia = () => {
     confirmDialog({
       message: '¿Está seguro de eliminar esta denuncia?',
-      header: `Eliminar Denuncia: #${id}`,
+      header: `Eliminar Denuncia: #${idDenuncia}`,
       icon: 'pi pi-exclamation-triangle',
       acceptClassName: 'p-button-danger',
-      accept: () => dispatch(deleteDenunciaThunk(id)),
+      accept: () => dispatch(deleteDenunciaThunk(idDenuncia)),
       draggable: false,
     });
   };
