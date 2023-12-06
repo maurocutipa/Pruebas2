@@ -3,6 +3,7 @@ const queryHandler = require('@utils/queryHandler');
 const safeConcatQuery = require('@utils/safeConcatQuery');
 const convertToSnakeCase = require('@utils/convertToSnakeCase');
 const { matchedData } = require('express-validator');
+const { formatDateHour } = require('@utils/formatDate');
 const showError = require('@utils/showError');
 const { interntalAPI } = require('../../config/http');
 
@@ -65,10 +66,17 @@ CreateController.createDenuncia = async (req, res) => {
             funcion_grado = ?,
             flagrancia = ?,
             firma_denunciante = ?,
-            firma_autoridad = ?
+            firma_autoridad = ?,
+
+            -- CAMPOS DE RATIFICACION --
+            fecha_ratificacion = ?,
+            hora_ratificacion = ?,
+            ratificacion = 'SI',
+            id_user_ratificacion = ?
         WHERE id_denuncia = ?
     `;
 
+    const [fecha, hora] = formatDateHour(new Date()).split(' ');
     const firmoDenunciante = denuncia.firmasDenunciantes.length > 0 ? 1 : 0;
     const firmoAutoridad = denuncia.firmasFuncionarios.length > 0 ? 1 : 0;
     const values = [
@@ -78,9 +86,12 @@ CreateController.createDenuncia = async (req, res) => {
       denuncia.flagrancia,
       firmoDenunciante,
       firmoAutoridad,
+      fecha,
+      hora,
+      req.idUsuario,
       data.idDenuncia,
     ];
-    const resp = await queryHandler(query, values);
+    await queryHandler(query, values);
 
     res.status(200).json({
       ok: true,
