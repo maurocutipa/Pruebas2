@@ -7,35 +7,35 @@ const GetController = {}
 GetController.getLegajoById = async (req, res) => {
     try {
         const fields = `
-            id_legajo as idLegajo,
-            letra,
-            nro_exp as nroExp,
-            fecha_ingreso as fechaIngreso,
-            id_user_ingreso as idUserIngreso,
-            id_denuncia as idDenuncia,
-            preso,
-            id_sector as idSector,
-            id_juridiccion as idJuridiccion,
-            femicidio,
-            deposito,
-            violencia_genero as violenciaGenero,
-            id_fiscal_encargado as idFiscalEncargado,
-            rac,
-            fecha_finalizacion as fechaFinalizacion,
-            completitud_que as completitudQue,
-            completitud_quien as completitudQuien,
-            completitud_donde as completitudDonde,
-            completitud_cuando as completitudCuando,
-            completitud_como as completitudComo,
-            evidencia_suficiente_que as evidenciaSuficienteQue,
-            evidencia_suficiente_quien as evidenciaSuficienteQuien,
-            evidencia_suficiente_donde as evidenciaSuficienteDonde,
-            evidencia_suficiente_cuando as evidenciaSuficienteCuando,
-            evidencia_suficiente_como as evidenciaSuficienteComo,
-            estado
+            lg.id_legajo as idLegajo,
+            lg.letra,
+            lg.nro_exp as nroExp,
+            lg.fecha_ingreso as fechaIngreso,
+            us.username as userIngreso,
+            lg.id_denuncia as idDenuncia,
+            lg.preso,
+            lg.id_sector as idSector,
+            lg.id_juridiccion as idJuridiccion,
+            lg.femicidio,
+            lg.deposito,
+            lg.violencia_genero as violenciaGenero,
+            lg.id_fiscal_encargado as idFiscalEncargado,
+            lg.rac,
+            lg.fecha_finalizacion as fechaFinalizacion,
+            lg.completitud_que as completitudQue,
+            lg.completitud_quien as completitudQuien,
+            lg.completitud_donde as completitudDonde,
+            lg.completitud_cuando as completitudCuando,
+            lg.completitud_como as completitudComo,
+            lg.evidencia_suficiente_que as evidenciaSuficienteQue,
+            lg.evidencia_suficiente_quien as evidenciaSuficienteQuien,
+            lg.evidencia_suficiente_donde as evidenciaSuficienteDonde,
+            lg.evidencia_suficiente_cuando as evidenciaSuficienteCuando,
+            lg.evidencia_suficiente_como as evidenciaSuficienteComo,
+            lg.estado
         `
 
-        let query = `SELECT ${fields} FROM legajo WHERE id_legajo = ? AND estado = 1`;
+        let query = `SELECT ${fields} FROM legajo lg INNER JOIN usuarios us ON lg.id_user_ingreso = us.id_usuario WHERE lg.id_legajo = ? AND lg.estado = 1`;
         let result = await queryHandler(query, [req.params.id]);
 
 

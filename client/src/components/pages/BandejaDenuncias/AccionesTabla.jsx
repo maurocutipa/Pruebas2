@@ -55,6 +55,7 @@ export const AccionesTabla = ({ setVisible, denuncia }) => {
   };
 
   const verLegajo = () => {
+    dispatch(setIdDenuncia(idDenuncia));
     navigate(`/legajo/${idLegajo}`);
   };
 
