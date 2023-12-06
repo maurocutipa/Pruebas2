@@ -25,7 +25,7 @@ export default function FormularioDenunciante(props) {
 
   const navigate = useNavigate();
 
-  const { firmasDenunciantes, setFirmasDenunciantes, firmaFuncionario, setFirmaFuncionario} = useDenunciaContext();
+  const { firmasDenunciantes, setFirmasDenunciantes, firmaFuncionario, setFirmaFuncionario } = useDenunciaContext();
 
   const [dialogEnviando, setDialogEnviando] = useState(false);
   const [hasId, setHasId] = useState(false);
@@ -324,8 +324,24 @@ export default function FormularioDenunciante(props) {
     return await res;
   }
 
+  function hayFirmas() {
+    if (!firmaFuncionario) {
+      return false;
+    }
+
+    if (firmasDenunciantes) {
+      firmasDenunciantes.forEach(firmaDenunciante => {
+        if (!firmaDenunciante.image) {
+          return false;
+        }
+      });
+    }
+
+    return true;
+  }
+
   const send = async () => {
-    if (response != null) {
+    if (response != null && hayFirmas()) {
       console.log('Pido IP');
       const res = getIP().then((data) => {
         let cuerpo;
@@ -367,11 +383,20 @@ export default function FormularioDenunciante(props) {
               ...props.denuncia?.maltratoAnimal,
               idTipoDenuncia: props.strDenuncia,
 
-              flagrancia:props.flagrancia,
-              seccional:props.seccional,
-              funcionGrado:props.funcionGrado,
+              flagrancia: props.flagrancia,
+              seccional: props.seccional,
+              funcionGrado: props.funcionGrado,
             };
+
+            var firmas = {
+              firmasDenunciantes: firmasDenunciantes.map((firmaDenunciante)=>{
+                return firmaDenunciante.image;
+              }),
+              firmaFuncionario: [firmaFuncionario]
+            };
+
             denunciaCompleta = {
+              firmas: firmas,
               denuncia: datDen,
               intervinientes: props.intervinientes,
               denunciantes: props.denunciantes,
@@ -461,10 +486,17 @@ export default function FormularioDenunciante(props) {
         });
       });
     } else {
+      const message = !hayFirmas() ?
+        'Complete las firmas'
+        :
+        !response ?
+          'Complete el Captcha' :
+          'Complete las firmas y el Captcha';
+
       toast.current.show({
         severity: 'error',
         summary: 'Error',
-        detail: 'Complete el Captcha para continuar',
+        detail: `${message} para continuar.`,
         life: 3000,
       });
     }
@@ -484,8 +516,8 @@ export default function FormularioDenunciante(props) {
                     {den.idIntervinienteTipo === 1
                       ? 'Victima'
                       : den.idIntervinienteTipo === 5
-                      ? 'Denunciado'
-                      : den.idIntervinienteTipo === 9 && 'Testigo'}
+                        ? 'Denunciado'
+                        : den.idIntervinienteTipo === 9 && 'Testigo'}
                   </h3>
                   {/* <p><span className='font-bold'>Calidad: </span>{den.calidad}</p> */}
                   <div className='grid'>
@@ -589,8 +621,8 @@ export default function FormularioDenunciante(props) {
         {!datosViolenciaGenero.situacion
           ? ''
           : datosViolenciaGenero.situacion.map((item) => (
-              <p key={item.denuncia}>{item.label}</p>
-            ))}
+            <p key={item.denuncia}>{item.label}</p>
+          ))}
         <h3>
           Episodios que sufrió la víctima:{' '}
           {!datosViolenciaGenero.tipoViolencia
@@ -600,8 +632,8 @@ export default function FormularioDenunciante(props) {
         {!datosViolenciaGenero.tipoViolencia
           ? ''
           : datosViolenciaGenero.tipoViolencia.map((item) => (
-              <p key={item.denuncia}>{item.label}</p>
-            ))}
+            <p key={item.denuncia}>{item.label}</p>
+          ))}
         <h3>
           Conductas que posee el agresor:{' '}
           {!datosViolenciaGenero.perfilAgresor
@@ -611,8 +643,8 @@ export default function FormularioDenunciante(props) {
         {!datosViolenciaGenero.perfilAgresor
           ? ''
           : datosViolenciaGenero.perfilAgresor.map((item) => (
-              <p key={item.denuncia}>{item.label}</p>
-            ))}
+            <p key={item.denuncia}>{item.label}</p>
+          ))}
         <h3>
           Vulnerabilidades que presenta la víctima:{' '}
           {!datosViolenciaGenero.vulnerabilidades
@@ -622,8 +654,8 @@ export default function FormularioDenunciante(props) {
         {!datosViolenciaGenero.vulnerabilidades
           ? ''
           : datosViolenciaGenero.vulnerabilidades.map((item) => (
-              <p key={item.denuncia}>{item.label}</p>
-            ))}
+            <p key={item.denuncia}>{item.label}</p>
+          ))}
       </div>
     );
   };
@@ -635,16 +667,16 @@ export default function FormularioDenunciante(props) {
           <h4>
             Situaciones familiares{' '}
             {!datosViolenciaIntrafamiliar.viveConAgresor ||
-            !datosViolenciaIntrafamiliar.medidasRestriccion ||
-            !datosViolenciaIntrafamiliar.tituloPropiedad ||
-            !datosViolenciaIntrafamiliar.situacionHacinamiento
+              !datosViolenciaIntrafamiliar.medidasRestriccion ||
+              !datosViolenciaIntrafamiliar.tituloPropiedad ||
+              !datosViolenciaIntrafamiliar.situacionHacinamiento
               ? ': ----'
               : null}
           </h4>
           {datosViolenciaIntrafamiliar.viveConAgresor ||
-          datosViolenciaIntrafamiliar.medidasRestriccion ||
-          datosViolenciaIntrafamiliar.tituloPropiedad ||
-          datosViolenciaIntrafamiliar.situacionHacinamiento ? (
+            datosViolenciaIntrafamiliar.medidasRestriccion ||
+            datosViolenciaIntrafamiliar.tituloPropiedad ||
+            datosViolenciaIntrafamiliar.situacionHacinamiento ? (
             <ul>
               <li>
                 ¿La víctima convive con el agresor?:{' '}
@@ -681,14 +713,14 @@ export default function FormularioDenunciante(props) {
             {!datosViolenciaIntrafamiliar.tiposViolencia
               ? ': ----'
               : datosViolenciaIntrafamiliar.tiposViolencia.length == 0 &&
-                '----'}
+              '----'}
           </h4>
           <ul>
             {!datosViolenciaIntrafamiliar.tiposViolencia
               ? ''
               : datosViolenciaIntrafamiliar.tiposViolencia.map((item) => (
-                  <li key={item.code}>{item.label}</li>
-                ))}
+                <li key={item.code}>{item.label}</li>
+              ))}
           </ul>
         </div>
         <div>
@@ -702,8 +734,8 @@ export default function FormularioDenunciante(props) {
             {!datosViolenciaIntrafamiliar.perfilAgresor
               ? ''
               : datosViolenciaIntrafamiliar.perfilAgresor.map((item) => (
-                  <li key={item.code}>{item.label}</li>
-                ))}
+                <li key={item.code}>{item.label}</li>
+              ))}
           </ul>
         </div>
         <div>
@@ -717,8 +749,8 @@ export default function FormularioDenunciante(props) {
             {!datosViolenciaIntrafamiliar.victima
               ? ''
               : datosViolenciaIntrafamiliar.victima.map((item) => (
-                  <li key={item.code}>{item.label}</li>
-                ))}
+                <li key={item.code}>{item.label}</li>
+              ))}
           </ul>
         </div>
         <div>
@@ -727,14 +759,14 @@ export default function FormularioDenunciante(props) {
             {!datosViolenciaIntrafamiliar.caracteristicasVictima
               ? ': ----'
               : datosViolenciaIntrafamiliar.caracteristicasVictima.length ==
-                  0 && '----'}
+              0 && '----'}
           </h4>
           <ul>
             {!datosViolenciaIntrafamiliar.caracteristicasVictima
               ? ''
               : datosViolenciaIntrafamiliar.caracteristicasVictima.map(
-                  (item) => <li key={item.code}>{item.label}</li>
-                )}
+                (item) => <li key={item.code}>{item.label}</li>
+              )}
           </ul>
         </div>
       </div>
@@ -765,12 +797,12 @@ export default function FormularioDenunciante(props) {
                   {props.strDenuncia}
                 </div>
                 <div className="col-12 md:col-6 text-lg">
-                <span className='font-bold'>Flagrancia:&nbsp;</span>
-                  {props.flagrancia===1?'Si':'No'}
+                  <span className='font-bold'>Flagrancia:&nbsp;</span>
+                  {props.flagrancia === 1 ? 'Si' : 'No'}
                 </div>
                 <div className="col-12 md:col-6 text-lg">
-                <span className='font-bold'>Seccional:&nbsp;</span>
-                  {data.seccionales.find(sec => sec.idSeccional===props.seccional).seccional}
+                  <span className='font-bold'>Seccional:&nbsp;</span>
+                  {data.seccionales.find(sec => sec.idSeccional === props.seccional).seccional}
                 </div>
                 <div className="col-12 md:col-6 text-lg">
                   <span className='font-bold'>Funcion y grado:&nbsp;</span>
@@ -819,8 +851,8 @@ export default function FormularioDenunciante(props) {
                     <div>
                       {props.denuncia.pisoHecho &&
                         props.denuncia.pisoHecho +
-                          ', ' +
-                          props.denuncia.departamentoHecho}
+                        ', ' +
+                        props.denuncia.departamentoHecho}
                     </div>
                   </>
                 ) : (
@@ -901,10 +933,10 @@ export default function FormularioDenunciante(props) {
                 denuncia, no debe reportarlo nuevamente utilizando este sistema.
               </p>
               <p>
-              3. Esta aplicación te acerca la posibilidad de informar hechos
-                delictivos al MPA. Dentro de los 5 (cinco) días hábiles de efectuada una denuncia, 
-                el denunciante deberá apersonarse con su documento nacional de identidad en la delegación fiscal 
-                o fiscalía competente mas próxima a su ubicación o domicilio a efectos de validar su identidad y 
+                3. Esta aplicación te acerca la posibilidad de informar hechos
+                delictivos al MPA. Dentro de los 5 (cinco) días hábiles de efectuada una denuncia,
+                el denunciante deberá apersonarse con su documento nacional de identidad en la delegación fiscal
+                o fiscalía competente mas próxima a su ubicación o domicilio a efectos de validar su identidad y
                 suscribir la misma (conforme art. 332 del CPP), caso contrario el ayudante fiscal
                 o fiscal interviniente podrá archivarla.
                 Consulte las delegaciones fiscales:&nbsp;
@@ -1048,9 +1080,9 @@ export default function FormularioDenunciante(props) {
           </div>
 
           <Divider className='my-6' />
-          
+
           <Firma />
-          
+
           <Divider className='my-6' />
 
           <form onSubmit={onSubmited} className='my-6'>
