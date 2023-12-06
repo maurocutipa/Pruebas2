@@ -7,7 +7,6 @@ const initialState = {
     idDenuncia: '',
     competencia: '',
     remision: '',
-    notificados: [],
     asunto: '',
     observaciones: '',
   },

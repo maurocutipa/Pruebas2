@@ -29,6 +29,7 @@ export const DenunciaNoPenal = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { form } = useAppSelector((state) => state.denunciaNoPenal);
+  const { notificaciones } = useAppSelector((state) => state.personas);
 
   const formik = useFormik({
     initialValues: form,
@@ -37,7 +38,9 @@ export const DenunciaNoPenal = () => {
     onSubmit: async (values) => {
       values.idDenuncia = Number(id);
 
-      const { meta } = await dispatch(crearDenunciaNoPenalThunk(values));
+      const { meta } = await dispatch(
+        crearDenunciaNoPenalThunk({ ...values, notificaciones })
+      );
       if (meta.requestStatus === 'fulfilled') {
         toastSuccess(
           toast,
