@@ -13,6 +13,8 @@ const {
   comprobarAccionTomada,
 } = require('../middlewares/comprobarAccionTomada');
 
+const PersonaController = require('../controllers/personas.controller');
+
 const router = Router();
 
 //MAIN MIDDLEWARES
@@ -28,7 +30,8 @@ router.post('/archivar-denuncia', comprobarAccionTomada, archivarDenuncia);
 router.post(
   '/crear-denuncia-no-penal',
   comprobarAccionTomada,
-  crearDenunciaNoPenal
+  crearDenunciaNoPenal,
+  PersonaController.enviarNotificaciones
 );
 
 module.exports = router;

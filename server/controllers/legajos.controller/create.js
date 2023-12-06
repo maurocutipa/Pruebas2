@@ -151,7 +151,7 @@ CreateController.archivarDenuncia = async (req, res) => {
   }
 };
 
-CreateController.crearDenunciaNoPenal = async (req, res) => {
+CreateController.crearDenunciaNoPenal = async (req, res, next) => {
   const body = req.body;
 
   try {
@@ -178,10 +178,7 @@ CreateController.crearDenunciaNoPenal = async (req, res) => {
     values = [body.idDenuncia];
     await queryHandler(query, values);
 
-    res.status(200).json({
-      message: 'La denuncia se convirtio en no penal',
-      data: {},
-    });
+    next()
   } catch (error) {
     console.log(error);
     httpErrorHandler(res);

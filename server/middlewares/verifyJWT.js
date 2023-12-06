@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const verifyJWT = (req, res, next) => {
   const authHeader = req.cookies;
-  console.log(authHeader);
+  //console.log(authHeader);
 
   // if (process.NODE_ENV !== 'production') {
   //   next();
@@ -11,7 +11,7 @@ const verifyJWT = (req, res, next) => {
 
   if (!authHeader?.jwt) return res.sendStatus(401);
   const token = authHeader.jwt;
-  console.log('asdasfajwiqucwqiubcn');
+  //console.log('asdasfajwiqucwqiubcn');
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) return res.sendStatus(403); //token inválido
