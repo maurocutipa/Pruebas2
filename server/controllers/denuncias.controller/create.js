@@ -14,8 +14,7 @@ CreateController.createDenuncia = async (req, res) => {
   try {
     const denuncia = req.body.denuncia;
     let query;
-      console.log(req.idUsuario);
-      console.log('KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK');
+
     if (
       denuncia.idTipoDenuncia === 'Busqueda de Personas' ||
       denuncia.idTipoDenuncia === 'Actuación de Oficio'
@@ -69,13 +68,16 @@ CreateController.createDenuncia = async (req, res) => {
             firma_autoridad = ?
         WHERE id_denuncia = ?
     `;
+
+    const firmoDenunciante = denuncia.firmasDenunciantes.length > 0 ? 1 : 0;
+    const firmoAutoridad = denuncia.firmasFuncionarios.length > 0 ? 1 : 0;
     const values = [
       denuncia.seccional,
       req.idUsuario,
       denuncia.funcionGrado,
       denuncia.flagrancia,
-      0,
-      0,
+      firmoDenunciante,
+      firmoAutoridad,
       data.idDenuncia,
     ];
     const resp = await queryHandler(query, values);
