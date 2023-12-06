@@ -1,26 +1,23 @@
-const { transporter } = require('@config/nodemailer')
-const path = require('path')
+const { transporter } = require("@config/nodemailer");
+const showError = require("@utils/showError");
+const path = require("path");
 
+const sendEmail = async (toEmail, subject, body, text = false, attachments) => {
+  try {
+    // send mail with defined transport object
+    const info = await transporter.sendMail({
+      from: process.env.GMAIL_SENDER,
+      to: toEmail,
+      subject: subject,
+      text: text ? body : undefined,
+      html: text ? undefined : body,
+      attachments: attachments ? attachments : undefined,
+    });
+    return true
+  } catch (error) {
+    showError(error);
+    return false
+  }
+};
 
-
-const sendEmail = async (toEmail, body, text = false) => {
-  // send mail with defined transport object
-  const info = await transporter.sendMail({
-    from: process.env.GMAIL_SENDER,
-    to: toEmail,
-    subject: "Comprobante Denuncia",
-    text: text ? body : undefined,
-    html: text ? undefined : body,
-    attachments: [
-      {
-        filename: 'example.pdf',
-        path: path.join(__dirname, '../.cache/example.pdf'),
-        contentType: 'application/pdf'
-      }
-    ]
-  });
-
-  //console.log("Message sent: %s", info.messageId);
-}
-
-module.exports = sendEmail
+module.exports = sendEmail;
