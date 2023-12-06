@@ -14,7 +14,8 @@ CreateController.createDenuncia = async (req, res) => {
   try {
     const denuncia = req.body.denuncia;
     let query;
-
+      console.log(req.idUsuario);
+      console.log('KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK');
     if (
       denuncia.idTipoDenuncia === 'Busqueda de Personas' ||
       denuncia.idTipoDenuncia === 'Actuación de Oficio'
@@ -54,11 +55,9 @@ CreateController.createDenuncia = async (req, res) => {
       newBody.append(file.fieldname, fileToSend);
     });
     newBody.append('data', JSON.stringify(req.body));
-
     const { data } = await interntalAPI.post('/denuncias/create', newBody, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-
     query = `
         UPDATE denuncia
         SET id_seccional = ?,
@@ -80,7 +79,6 @@ CreateController.createDenuncia = async (req, res) => {
       data.idDenuncia,
     ];
     const resp = await queryHandler(query, values);
-    console.log(resp);
 
     res.status(200).json({
       ok: true,

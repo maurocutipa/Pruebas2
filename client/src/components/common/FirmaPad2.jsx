@@ -3,7 +3,7 @@ import { Button as Btn } from 'primereact/button';
 import { useEffect } from 'react';
 import { useDenunciaContext } from '../../pages/Denuncia/Denuncia';
 
-export const FirmaPad2 = ({ height=200, width=200, disabled = false, setImage,type, index }) => {
+export const FirmaPad2 = ({ height=480, width=800, disabled = false, setImage,type, index }) => {
 
   const { firmasDenunciantes, setFirmasDenunciantes, firmaFuncionario, setFirmaFuncionario} = useDenunciaContext();
 
@@ -313,7 +313,7 @@ export const FirmaPad2 = ({ height=200, width=200, disabled = false, setImage,ty
     }
 
     const image = signatureCanvas.toDataURL('image/png');
-
+    console.log(image);
     if (type === 'denunciante') {
       const firmasDenunciantesNew=firmasDenunciantes.map((firmaDenunciante)=>{
         if (firmaDenunciante.id === index) {
@@ -329,7 +329,7 @@ export const FirmaPad2 = ({ height=200, width=200, disabled = false, setImage,ty
     }
 
     if (type === 'funcionario') {
-      //dispatch(setFirmaFuncionario(image));
+      setFirmaFuncionario(image);
     }
   }
 
