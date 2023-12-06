@@ -14,8 +14,7 @@ CreateController.createDenuncia = async (req, res) => {
   try {
     const denuncia = req.body.denuncia;
     let query;
-    console.log(req.idUsuario);
-    console.log('KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK');
+
     if (
       denuncia.idTipoDenuncia === 'Busqueda de Personas' ||
       denuncia.idTipoDenuncia === 'Actuación de Oficio'
