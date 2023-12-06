@@ -87,16 +87,20 @@ GetController.getDenuncias = async (req, res) => {
             l.id_legajo AS idLegajo,
             l.letra AS letra,
             l.nro_exp AS nroExp,
-            sc.label AS fiscaliaAsignada
+            sc.label AS fiscaliaAsignada,
+            dc.nombre_original AS nombreOriginal,
+            dc.nombre_archivo AS nombreArchivo
         FROM denuncia d
         JOIN denuncia_tipos td ON d.id_tipo_denuncia = td.id_tipo_denuncia
         LEFT JOIN seccionales s ON d.id_seccional = s.id_seccional
         LEFT JOIN legajo l ON d.id_legajo = l.id_legajo
         LEFT JOIN sectores sc ON l.id_sector = sc.id_sector
+        LEFT JOIN denuncia_comprobante dc ON d.id_denuncia = dc.id_denuncia
         WHERE d.estado = 1 ${filters}
         LIMIT ${limit}
         OFFSET ${offset}
       `;
+
     const denuncias = await queryHandler(query, [
       ...filterValues,
       limit,

@@ -15,7 +15,14 @@ export const AccionesTabla = ({ setVisible, denuncia }) => {
   const menuLeft = useRef(null);
   const dispatch = useAppDispatch();
 
-  const { idDenuncia, idLegajo, ratificacion, accion } = denuncia;
+  const {
+    idDenuncia,
+    idLegajo,
+    ratificacion,
+    accion,
+    nombreArchivo,
+    nombreOriginal,
+  } = denuncia;
 
   const eliminarDenuncia = () => {
     confirmDialog({
@@ -33,10 +40,9 @@ export const AccionesTabla = ({ setVisible, denuncia }) => {
   };
 
   const descargarPdf = () => {
-    downloadFile(
-      'https://www.sib.gob.ar/portal/wp-content/uploads/2020/08/Cuento-Los-Parques-Nacionales-nuestros-por-naturaleza.pdf',
-      'pdfloco'
-    );
+    const pdfTest =
+      'https://www.sib.gob.ar/portal/wp-content/uploads/2020/08/Cuento-Los-Parques-Nacionales-nuestros-por-naturaleza.pdf';
+    downloadFile(nombreArchivo || pdfTest, nombreOriginal);
   };
 
   const mostrarDetalles = () => {
