@@ -3,18 +3,22 @@ import {useParams} from 'react-router-dom'
 
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { getLegajoThunk } from '@/store/legajo/legajos.thunks';
+import { getDenunciaByIdThunk } from '@/store/denuncias/denuncias.thunks';
 import { HeaderLegajo } from '../../components/pages/Legajo/HeaderLegajo';
 
 export const Legajo = () => {
 
   const dispatch = useAppDispatch();
   const { currentLegajo } = useAppSelector((state) => state.legajos);
+  const { currentDenuncia, selectedIdDenuncia } = useAppSelector((state) => state.denuncias);
 
   const { id } = useParams();
     
 
   useEffect(() => {
+    
     dispatch(getLegajoThunk(id))
+    dispatch(getDenunciaByIdThunk(selectedIdDenuncia))
   }, [dispatch, id])
   
 
