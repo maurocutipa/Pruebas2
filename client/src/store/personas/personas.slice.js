@@ -1,24 +1,21 @@
-import { createSlice } from "@reduxjs/toolkit";
-import {
-    getPersonasThunks,
-    getGruposThunks
-  } from './personas.thunks';
-
+import { createSlice } from '@reduxjs/toolkit';
+import { getPersonasThunks, getGruposThunks } from './personas.thunks';
 
 const initialState = {
   loading: true,
   personas: [],
   grupos: [],
-  notificaciones: []
+  notificaciones: [],
 };
 
 export const personasSlice = createSlice({
-  name: "personas",
+  name: 'personas',
   initialState,
   reducers: {
     setNotificaciones: (state, { payload }) => {
-      state.notificaciones = payload
-    }
+      state.notificaciones = payload;
+    },
+    resetState: () => initialState,
   },
   extraReducers: (builder) => {
     builder
@@ -28,7 +25,7 @@ export const personasSlice = createSlice({
       })
       .addCase(getPersonasThunks.fulfilled, (state, { payload }) => {
         state.loading = false;
-        state.personas = payload
+        state.personas = payload;
       })
       .addCase(getPersonasThunks.rejected, (state) => {
         state.loading = false;
@@ -38,16 +35,15 @@ export const personasSlice = createSlice({
         state.loading = true;
       })
       .addCase(getGruposThunks.fulfilled, (state, { payload }) => {
-        state.grupos = payload
+        state.grupos = payload;
         state.loading = false;
       })
       .addCase(getGruposThunks.rejected, (state) => {
         state.loading = false;
-      })
+      });
   },
 });
 
-export const { setNotificaciones } = personasSlice.actions;
-
+export const { setNotificaciones, resetState } = personasSlice.actions;
 
 export default personasSlice.reducer;

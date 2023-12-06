@@ -38,7 +38,6 @@ export const DenunciasTable = () => {
   const { denuncias, totalRecords, loading } = useAppSelector(
     (state) => state.denuncias
   );
-  console.log(denuncias);
 
   const [visible, setVisible] = useState(false);
   useState(false);
