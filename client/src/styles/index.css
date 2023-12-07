@@ -3,6 +3,7 @@
   --blue-mpa-800: #071866;
   --blue-mpa-700: #0a2083;
   --lightblue-mpa-900: #1f3dc2;
+  --blue-mpa-1000: #11223A;
 }
 
 body {
@@ -42,12 +43,12 @@ body {
 }
 
 .link {
-  background-color: var(--blue-mpa-900);
-  border: var(--blue-mpa-900);
+  background-color: var(--blue-mpa-1000);
+  border: var(--blue-mpa-1000);
 }
 
 .link:hover {
-  background-color: #142057;
+  background-color: rgb(25, 46, 75);
 }
 
 .signature-canvas {
