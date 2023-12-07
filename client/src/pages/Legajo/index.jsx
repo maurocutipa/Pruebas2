@@ -23,7 +23,7 @@ export const Legajo = () => {
   
 
   return (
-    <div className='px-8 py-4'>
+    <div className='px-8 pt-7 pb-4'>
       <HeaderLegajo />
     </div>
   );
