@@ -18,7 +18,7 @@ const PersonaController = require('../controllers/personas.controller');
 const router = Router();
 
 //MAIN MIDDLEWARES
-//router.use('/', verifyJWT);
+router.use('/', verifyJWT);
 
 router.get('/:id', getLegajoById);
 

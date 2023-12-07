@@ -42,13 +42,14 @@ export const ConvertirDenunciaALegajo = () => {
   }, [dispatch, id]);
 
   const handleConvertirALegajo = async () => {
-    setShowPdf(true);
-    dispatch(
-      generarDataParaPdf({
-        delitos: data.delitos,
-        fiscalias: data.delegacionesFiscales,
-      })
-    );
+    // setShowPdf(true);
+    // dispatch(
+    //   generarDataParaPdf({
+    //     delitos: data.delitos,
+    //     fiscalias: data.delegacionesFiscales,
+    //   })
+    // );
+    execAction();
   };
 
   const execAction = async () => {
