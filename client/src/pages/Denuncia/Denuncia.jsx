@@ -356,6 +356,7 @@ export default function Denuncia() {
   };
 
   const changePaso = (paso) => {
+    console.log(denuncia);
     setPaso(paso);
     window.scrollTo(0, 0);
   };
@@ -412,7 +413,7 @@ export default function Denuncia() {
     setDenunciados(denunciados);
     setVictimas(victimas)
     setTestigos(testigos);
-    changePaso(4);//3
+    changePaso(3);
 
     console.log(denuncia);
   };

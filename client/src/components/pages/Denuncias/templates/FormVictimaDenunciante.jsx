@@ -328,7 +328,6 @@ export const FormVictimaDenunciante = (props) => {
         });
 
         //ver como editar foto
-        console.log(props.rowData);
         if (props.rowData.departamento) {
             let dpto = props.rowData.departamento;
             if (props.rowData.idLocalidad) {
