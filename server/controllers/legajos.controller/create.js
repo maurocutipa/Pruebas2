@@ -7,21 +7,10 @@ const CreateController = {};
 CreateController.crearDenunciaLegajo = async (req, res) => {
   const { id } = req.params;
   const body = req.body;
+  const currentDate = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
   try {
-    let query = `
-        SELECT
-          accion
-        FROM denuncia
-        WHERE id_denuncia = ? 
-      `;
-    const [denuncia] = await queryHandler(query, [body.idDenuncia]);
-    if (denuncia.accion) {
-      return res
-        .status(400)
-        .json({ message: 'Ya se tomaron acciones para esta denuncia' });
-    }
-
+    // ============================= OBTENER LA LETRA DEL SECTOR =====================================
     query = `
         SELECT
           j.letra,
@@ -31,19 +20,24 @@ CreateController.crearDenunciaLegajo = async (req, res) => {
         WHERE id_sector = ?
       `;
 
-    // Letra del sector: sector.letra
     const [sector] = await queryHandler(query, [body.fiscalia]);
 
+    // ============================= OBTENER EL NUMERO DEL LEGAJO =====================================
     query = `
         SELECT
           MAX(l.nro_exp) AS nroExp
         FROM legajo l
         WHERE l.letra = ?
       `;
-    // Nro maximo del expediente dada la letra: legajo.nroExp
     const [legajo] = await queryHandler(query, [sector.letra]);
 
-    const currentDate = dayjs().format('YYYY-MM-DD HH:mm:ss');
+    // ============================= CREAR LEGAJO =====================================
+    // TODO: fiscal_encargado
+    query = `
+        INSERT INTO
+          legajo (letra, nro_exp, id_denuncia, id_sector, id_juridiccion, fecha_ingreso, id_user_ingreso)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `;
 
     let newNroExpediente = legajo.nroExp ? legajo.nroExp + 1 : 1;
     let values = [
@@ -55,16 +49,9 @@ CreateController.crearDenunciaLegajo = async (req, res) => {
       currentDate,
       req.idUsuario,
     ];
-
-    // TODO: fiscal_encargado
-    query = `
-        INSERT INTO
-          legajo (letra, nro_exp, id_denuncia, id_sector, id_juridiccion, fecha_ingreso, id_user_ingreso)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-      `;
     const nuevoLegajo = await queryHandler(query, values);
 
-    // Insertar los delitos e intervinientes
+    // ============================= CREAR LOS DELITOS =====================================
     const intervinientesDelitos = body.delitos;
     await Promise.all(
       intervinientesDelitos.map((i) => {
@@ -78,6 +65,7 @@ CreateController.crearDenunciaLegajo = async (req, res) => {
       })
     );
 
+    // ============================= CREAR RESUMEN DE LOS HECHOS =====================================
     const resumenHechos = body.resumenHechos;
     await Promise.all(
       resumenHechos.map(async (r) => {
@@ -101,6 +89,30 @@ CreateController.crearDenunciaLegajo = async (req, res) => {
       })
     );
 
+    // ============================= CREAR DETENIDOS =====================================
+    const detenidos = body.detenidos;
+    await Promise.all(
+      detenidos.map((d) => {
+        const query = `
+        INSERT INTO
+          interviniente_preso (id_interviniente, id_legajo, fecha_desde, id_user_alta, fecha_alta, juez, lugar_detencion)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `;
+
+        const values = [
+          d.denunciado,
+          nuevoLegajo.insertId,
+          new Date(d.fechaHoraDetencion),
+          req.idUsuario,
+          currentDate,
+          d.juezDetencion,
+          d.lugarDetencion,
+        ];
+        return queryHandler(query, values);
+      })
+    );
+
+    // ============================= MODIFICAR DENUNCIA =====================================
     query = `
         UPDATE denuncia 
           SET denuncia.id_legajo = ?,
@@ -178,7 +190,7 @@ CreateController.crearDenunciaNoPenal = async (req, res, next) => {
     values = [body.idDenuncia];
     await queryHandler(query, values);
 
-    next()
+    next();
   } catch (error) {
     console.log(error);
     httpErrorHandler(res);

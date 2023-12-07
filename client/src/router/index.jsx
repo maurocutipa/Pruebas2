@@ -15,6 +15,7 @@ import { PrivateRoutes } from './auth/PrivateRoutes';
 import { PublicRoutes } from './auth/PublicRoutes';
 import { useAuth } from '@/hooks/useAuth';
 import Denuncia from '../pages/Denuncia/Denuncia';
+import { Art321 } from '../pages/Legajo/Art321';
 
 export const AppRouter = () => {
   const { user, loading } = useAuth();
@@ -32,7 +33,6 @@ export const AppRouter = () => {
 
         <Route path='/' element={<PrivateRoutes isAuth={!!user} />}>
           <Route element={<Header_ />}>
-
             <Route path='/firmar' element={<Firmar />} />
             <Route path='/bandeja-denuncias' element={<BandejaDenuncias />} />
 
@@ -59,10 +59,12 @@ export const AppRouter = () => {
             />
 
             <Route path='/legajo/:id' element={<Legajo />} />
+            <Route path='/certificar-art-321/:id' element={<Art321 />} />
+
             <Route
               path='/denuncias'
               // element={<h1>holaaaa</h1>}
-              element={<Denuncia/>}
+              element={<Denuncia />}
             />
           </Route>
         </Route>
