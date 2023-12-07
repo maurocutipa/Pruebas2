@@ -56,19 +56,32 @@ const Header_ = () => {
         );
       },
     },
+    {
+      template : () => {
+        return(
+          <Link to ={'/pruebas'}>
+            <Button 
+            className='link'
+            label='Pruebas'
+            icon= 'pi pi-inbox'
+            iconPos='left'
+            />
+          </Link>
+        )
+      }
+    }
   ];
 
   const start = (
     <>
-      <Link to={'/'}>
+     
         <img
           alt='logo'
           src='https://mpajujuy.gob.ar/images/imgTitle.png'
           height='40'
           className='mr-5'
         />
-      </Link>
-    </>
+     </>
   );
 
   const itemsMenu = [

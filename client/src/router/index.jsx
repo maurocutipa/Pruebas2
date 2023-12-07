@@ -10,7 +10,7 @@ import { ArchivarDenuncia } from '@/pages/BandejaDenuncias/ArchivarDenuncia';
 import { DenunciaNoPenal } from '@/pages/BandejaDenuncias/DenunciaNoPenal';
 import { Firmar } from '@/pages/Firmar';
 import { Legajo } from '@/pages/Legajo';
-
+import {Prueba} from "../components/pages/Legajo/TableLetradosParticipante"
 import { PrivateRoutes } from './auth/PrivateRoutes';
 import { PublicRoutes } from './auth/PublicRoutes';
 import { useAuth } from '@/hooks/useAuth';
@@ -65,6 +65,10 @@ export const AppRouter = () => {
               path='/denuncias'
               // element={<h1>holaaaa</h1>}
               element={<Denuncia />}
+            />
+            <Route
+              path='/pruebas'
+              element={<Prueba/>}
             />
           </Route>
         </Route>
