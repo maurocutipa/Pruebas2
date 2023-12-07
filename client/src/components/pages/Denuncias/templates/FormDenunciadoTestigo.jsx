@@ -85,7 +85,6 @@ export const FormDenunciadoTestigo = (props) => {
                 data.idIntervinienteTipo = 9;
             var denTest = new PersonaDenunciada();
             Object.assign(denTest, data);
-            console.log(data);
 
             if(denTest.conocimientoDatosPersonales==0){
                 denTest.alias = undefined;
@@ -153,13 +152,10 @@ export const FormDenunciadoTestigo = (props) => {
                 //     denTest.tipoIdentificacion = undefined
             }
 
-            console.log(denTest);
-
             if (denTest.id == '') {
                 denTest.id = props.array.length + 1;
                 var arr = props.array;
-                arr.push(denTest)
-                console.log(arr);
+                arr.push(denTest);
                 props.setArray(arr);
                 // props.setArray([...props.array, denTest]);
             }
@@ -377,9 +373,7 @@ export const FormDenunciadoTestigo = (props) => {
                                     placeholder="Selecciona una opcion"
                                     onChange={(e) => {
                                         var coords;
-                                        console.log(e.value);
                                         var localidad = props.localidades.find((localidad) => { return localidad.value == e.value; });
-                                        console.log(localidad);
                                         coords = { lat: Number(localidad.latitud), lng: Number(localidad.longitud) };
                                         setCoords(coords);
                                         form.setFieldValue('idLocalidad', e.value);

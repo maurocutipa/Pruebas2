@@ -450,7 +450,6 @@ export default function FormularioDenunciante(props) {
             <SelectButton
               value={existeTestigo}
               onChange={(e) => {
-                console.log("Nuevo valor de existeTestigo:", e.value);
                 setExisteTestigo(e.value);
               }}
               options={siNoSabe}
