@@ -1,2 +1,2 @@
 export * from "./TableLetradosParticipante"
-export * from "./prueba"
+export * from "./Prueba"
