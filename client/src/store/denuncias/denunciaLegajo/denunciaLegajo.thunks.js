@@ -4,6 +4,7 @@ import {
   getDenunciadosParaLegajo,
   crearDenunciaLegajo,
   getAccionTomada,
+  getProfesionalesParaLegajo,
 } from '@/api/legajo.api';
 
 export const getDenunciadosParaLegajoThunk = createAsyncThunk(
@@ -12,6 +13,19 @@ export const getDenunciadosParaLegajoThunk = createAsyncThunk(
     try {
       const { data } = await getDenunciadosParaLegajo(id);
 
+      return data.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const getProfesionalesParaLegajoThunk = createAsyncThunk(
+  'legajos/getProfesionalesParaLegajo',
+  async (id, { rejectWithValue }) => {
+    try {
+      const { data } = await getProfesionalesParaLegajo(id);
+      
       return data.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

@@ -2,6 +2,7 @@ const { Router } = require('express');
 
 const {
   getDenunciadosParaLegajo,
+  getProfesionalesParaLegajo,
   crearDenunciaLegajo,
   getAccionTomada,
   getLegajoById,
@@ -23,6 +24,7 @@ router.use('/', verifyJWT);
 router.get('/:id', getLegajoById);
 
 router.get('/get-denunciados/:id', getDenunciadosParaLegajo);
+router.get('/get-profesionales/:id', getProfesionalesParaLegajo);
 router.get('/get-accion-tomada/:id', getAccionTomada);
 
 router.post('/denuncia-legajo/:id', comprobarAccionTomada, crearDenunciaLegajo);

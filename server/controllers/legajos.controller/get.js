@@ -55,6 +55,39 @@ GetController.getLegajoById = async (req, res) => {
     }
 }
 
+GetController.getProfesionalesParaLegajo = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        query = `
+        SELECT 
+          a.id_abogado AS id,
+          a.nombre,
+          a.apellido,
+          a.matricula,
+          a.dni
+        FROM interviniente_profesional ip
+        LEFT JOIN abogados a ON ip.id_abogado = a.id_abogado
+        WHERE id_legajo = ?`;
+        const profesionales = await queryHandler(query, [id]);
+
+        if (!profesionales[0]) {
+            return res.status(404).json({
+                message: `Profesionales de denuncia id:${id} no existen`,
+                data: { profesionales },
+            });
+        }
+
+        res.status(200).json({
+            message: 'ok',
+            data: { profesionales },
+        });
+    } catch (error) {
+        console.log(error);
+        httpErrorHandler(res);
+    }
+};
+
 GetController.getDenunciadosParaLegajo = async (req, res) => {
     const { id } = req.params;
 

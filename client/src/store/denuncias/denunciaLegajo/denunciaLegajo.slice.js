@@ -3,6 +3,7 @@ import {
   crearDenunciaLegajoThunk,
   getAccionTomadaThunk,
   getDenunciadosParaLegajoThunk,
+  getProfesionalesParaLegajoThunk,
 } from './denunciaLegajo.thunks';
 
 const initialState = {
@@ -41,6 +42,7 @@ const initialState = {
   // Datos usados para crear el legajo
   legajoData: {
     denunciados: [],
+    profesionales: []
   },
   dataParaPdf: {
     fiscalia: '',
@@ -202,6 +204,19 @@ export const denunciaLegajoSlice = createSlice({
         getDenunciadosParaLegajoThunk.fulfilled,
         (state, { payload }) => {
           state.legajoData.denunciados = payload.denunciados;
+        }
+      )
+      .addCase(
+        getProfesionalesParaLegajoThunk.fulfilled,
+        (state, { payload }) => {
+          state.legajoData.profesionales = payload.profesionales;
+        }
+      )
+      .addCase(
+        getProfesionalesParaLegajoThunk.rejected,
+        (state, { payload }) => {
+          console.log(payload)
+          state.legajoData.profesionales = [];
         }
       )
       // Convertir denuncia a legajo

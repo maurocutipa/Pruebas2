@@ -1,6 +1,7 @@
 import { internalApi } from '.';
 
 const URLS = {
+  getProfesionalesParaLegajo: (id) => `/legajos/get-profesionales/${id}`,
   getDenunciadosParaLegajo: (id) => `/legajos/get-denunciados/${id}`,
   getAccionTomada: (id) => `/legajos/get-accion-tomada/${id}`,
   crearDenunciaLegajo: (id) => `/legajos/denuncia-legajo/${id}`,
@@ -11,6 +12,11 @@ const URLS = {
 
 export const getDenunciadosParaLegajo = (id) => {
   return internalApi.get(URLS.getDenunciadosParaLegajo(id));
+};
+
+export const getProfesionalesParaLegajo = (id) => {
+  console.log(id)
+  return internalApi.get(URLS.getProfesionalesParaLegajo(id));
 };
 
 export const getAccionTomada = (id) => {
